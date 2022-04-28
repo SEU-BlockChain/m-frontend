@@ -1,10 +1,10 @@
 <template>
-  dynamic
+  collection
 </template>
 
 <script>
   export default {
-    name: "Dynamic",
+    name: "Collection",
     emits: ["active"],
     created() {
       this.$emit("active", 2)

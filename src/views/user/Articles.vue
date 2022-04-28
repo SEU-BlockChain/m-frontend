@@ -1,13 +1,13 @@
 <template>
-  dynamic
+  article
 </template>
 
 <script>
   export default {
-    name: "Dynamic",
+    name: "Articles",
     emits: ["active"],
     created() {
-      this.$emit("active", 2)
+      this.$emit("active", 0)
     }
   }
 </script>

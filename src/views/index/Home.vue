@@ -4,7 +4,11 @@
 
 <script>
   export default {
-    name: "Home"
+    name: "Home",
+    emits: ["active"],
+    created() {
+      this.$emit("active", 0)
+    }
   }
 </script>
 

@@ -54,6 +54,34 @@ const routes = [
     ]
   },
   {
+    path: "/user",
+    component: () => import("wraps/UserDetailWrap"),
+    redirect: "/user/articles",
+    meta: {
+      title: "我的主页",
+      auth: 1,
+      depth: 0,
+    },
+    children: [
+      {
+        path: "articles",
+        component: () => import("views/user/Articles"),
+      },
+      {
+        path: "comments",
+        component: () => import("views/user/Comments"),
+      },
+      {
+        path: "collections",
+        component: () => import("views/user/Collections"),
+      },
+      {
+        path: "stars",
+        component: () => import("views/user/Stars"),
+      }
+    ]
+  },
+  {
     path: "/login",
     component: () => import("views/sign/Login"),
     meta: {
@@ -75,6 +103,15 @@ const routes = [
     meta: {
       auth: 0,
       title: "注册"
+    }
+  },
+  {
+    path: "/edit-info",
+    component: () => import("views/single/EditInfo"),
+    meta: {
+      title: "账号资料",
+      auth: 1,
+      depth: 1,
     }
   },
   {

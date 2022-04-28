@@ -1,33 +1,31 @@
 <template>
-  <div class="animation-wrap">
-    <img class="login-back" :src="this.$settings.cos_url+'static/login-back.jpg?'"/>
-    <div class="bar clear-fix">
-      <var-icon class="left" color="white" size="30px" name="window-close" @click="this.$router.return()"/>
-      <div class="bar-text right" @click="this.$router.push('/sign-up')">注册</div>
-    </div>
+  <img class="login-back" :src="this.$settings.cos_url+ 'static/login-back.webp'"/>
+  <div class="bar clear-fix">
+    <var-icon class="left" color="white" size="30px" name="window-close" @click="this.$router.return()"/>
+    <div class="bar-text right" @click="this.$router.push('/sign-up')">注册</div>
+  </div>
 
-    <div class="tabs">
-      <var-tabs color="rgba(0,0,0,0)" v-model:active="active">
-        <var-tab class="tab">账号密码登录</var-tab>
-        <var-tab class="tab">手机快捷登录</var-tab>
-      </var-tabs>
-    </div>
+  <div class="tabs">
+    <var-tabs color="rgba(0,0,0,0)" v-model:active="active">
+      <var-tab class="tab">账号密码登录</var-tab>
+      <var-tab class="tab">手机快捷登录</var-tab>
+    </var-tabs>
+  </div>
 
-    <div class="input">
-      <var-tabs-items v-model:active="active">
-        <var-tab-item>
-          <username placeholder="用户名" v-model:username="username"/>
-          <password v-model:password="password"/>
-        </var-tab-item>
-        <var-tab-item>
-          <phone placeholder="手机号" v-model:phone="phone"/>
-          <msg-code v-model:code="code" method="login" :phone="phone"/>
-        </var-tab-item>
-      </var-tabs-items>
+  <div class="input">
+    <var-tabs-items v-model:active="active">
+      <var-tab-item>
+        <username placeholder="用户名" v-model:username="username"/>
+        <password v-model:password="password"/>
+      </var-tab-item>
+      <var-tab-item>
+        <phone placeholder="手机号" v-model:phone="phone"/>
+        <msg-code v-model:code="code" method="login" :phone="phone"/>
+      </var-tab-item>
+    </var-tabs-items>
 
-      <var-button type="primary" block :disabled="!is_valid" @click="login">登录</var-button>
-      <div class="right forget" @click="this.$router.push('reset-password')">忘记密码?</div>
-    </div>
+    <var-button type="primary" block :disabled="!is_valid" @click="login">登录</var-button>
+    <div class="right forget" @click="this.$router.push('reset-password')">忘记密码?</div>
   </div>
 </template>
 
@@ -109,7 +107,8 @@
 
 <style scoped>
   .login-back {
-    width: 100%;
+    width: 100vw;
+    height: 40vw;
     opacity: .9;
     vertical-align: bottom;
   }

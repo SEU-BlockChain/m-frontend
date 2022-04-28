@@ -1,13 +1,11 @@
 <template>
-  <div class="animation-wrap">
-    <var-icon class="back" size="40px" name="chevron-left" @click="this.$router.return()"/>
-    <div class="title">注册</div>
-    <div class="wrap">
-      <username placeholder="用户名" v-model:username="username"/>
-      <password placeholder="密码" v-model:password="password"/>
-      <password placeholder="确认密码" v-model:password="confirm_password" :confirm="password"/>
-      <var-button type="primary" block :disabled="!is_valid" @click="register">注册</var-button>
-    </div>
+  <var-icon class="back" size="40px" name="chevron-left" @click="this.$router.return()"/>
+  <div class="title">注册</div>
+  <div class="wrap">
+    <username placeholder="用户名" v-model:username="username"/>
+    <password placeholder="密码" v-model:password="password"/>
+    <password placeholder="确认密码" v-model:password="confirm_password" :confirm="password"/>
+    <var-button type="primary" block :disabled="!is_valid" @click="register">注册</var-button>
   </div>
 </template>
 
