@@ -15,5 +15,11 @@ npm run serve
 npm run build
 ```
 
+### Deploy
+```
+cd dist
+tcb hosting deploy -r sh -e m-blockchain-2g4474sl2f180285
+```
+
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).

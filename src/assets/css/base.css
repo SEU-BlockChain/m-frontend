@@ -1,0 +1,105 @@
+@import "./normalize.css";
+@import "./transition.css";
+
+:root {
+    --mask: rgba(200, 200, 200, 0.5);
+    --font-size: 14px;
+    --line-height: 1.5;
+}
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragion Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+a {
+    text-decoration: none;
+}
+
+::-webkit-scrollbar {
+    width: 5px; /* 纵向滚动条*/
+    height: 5px; /* 横向滚动条 */
+    background-color: #fff;
+}
+
+/*定义滚动条轨道 内阴影*/
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
+    background-color: #ccc;
+}
+
+/*定义滑块 内阴影*/
+::-webkit-scrollbar-thumb {
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
+    background-color: #aaa;
+    border-radius: 10px;
+}
+
+.clear-fix::after {
+    clear: both;
+    content: "";
+    display: block;
+    width: 0;
+    height: 0;
+    visibility: hidden;
+}
+
+.clear-fix {
+    zoom: 1;
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+.background {
+    background-color: #f0f1f5;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -99;
+}
+
+.card {
+    --card-footer-margin: 0;
+    --card-padding: 0;
+    --card-footer-padding: 0
+}
+
+.center {
+    width: 50%;
+    height: 50%;
+    overflow: auto;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+
+.pointer:hover {
+    cursor: pointer;
+}
+
+.animation-wrap {
+    width: 100vw;
+    background-color: #f0f1f5;
+    min-height: 100vh;
+}

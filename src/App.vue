@@ -1,30 +1,78 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
-  <router-view/>
+  <div class="background"/>
+  <router-view v-if="this.$store.state.is_init"/>
+  <var-loading class="center" v-else/>
+  <var-back-top bottom="70px" right="15px" :duration="300"/>
 </template>
 
+<script>
+  export default {
+    name: "app",
+    watch: {
+      $route(to, from) {
+        if (to.path === "/login") {
+          if (from.path !== "/sign-up") {
+            this.animation = "steady-up"
+          } else {
+            this.animation = "right-steady"
+          }
+        } else if (from.path === "/login") {
+          if (to.path !== "/sign-up") {
+            this.animation = "down-steady"
+          } else {
+            this.animation = "steady-left"
+          }
+        } else {
+          this.animation = this.animate(to, from)
+        }
+      }
+    },
+    data() {
+      return {
+        animation: ""
+      }
+    },
+    methods: {
+      animate(to, from) {
+        if (to.meta.depth === from.meta.depth) return ""
+        return to.meta.depth > from.meta.depth ? "steady-left" : "right-steady"
+      }
+    },
+    beforeCreate() {
+      let token = this.$cookies.get("token")
+      if (token) {
+        let login = this.$request.api.get(
+          "user/user_info/"
+        ).then(res => {
+          if (res.data.code === 107) {
+            this.$store.commit("login", res.data.result.user)
+            return new Promise(resolve => {
+              resolve()
+            })
+          } else {
+            this.$cookies.remove("token")
+            return new Promise((resolve, reject) => {
+              reject(res.data.msg)
+            })
+          }
+        }).catch(err => {
+          this.$tip({
+            content: err,
+            type: "error",
+            duration: 2000,
+          })
+          return new Promise((resolve, reject) => {
+            reject(err)
+          })
+        })
+        this.$store.commit("initialize", login)
+      } else {
+        this.$store.commit("initialize", null)
+      }
+    },
+  }
+</script>
+
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
+  @import "assets/css/base.css";
 </style>
