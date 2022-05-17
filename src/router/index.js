@@ -65,21 +65,61 @@ const routes = [
     children: [
       {
         path: "articles",
-        component: () => import("views/user/Articles"),
+        component: () => import("views/user_detail/Articles"),
       },
       {
         path: "comments",
-        component: () => import("views/user/Comments"),
+        component: () => import("views/user_detail/Comments"),
       },
       {
         path: "collections",
-        component: () => import("views/user/Collections"),
+        component: () => import("views/user_detail/Collections"),
       },
       {
         path: "stars",
-        component: () => import("views/user/Stars"),
+        component: () => import("views/user_detail/Stars"),
       }
     ]
+  },
+  {
+    path: "/user/follow",
+    meta: {
+      title: "好友",
+      auth: 1,
+      depth: 0,
+    },
+    component: () => import("views/user_detail/Follow"),
+  },
+  {
+    path: "/user/black-list",
+    meta: {
+      title: "黑名单",
+      auth: 1,
+      depth: 0,
+    },
+    component: () => import("views/user_detail/BlackList"),
+  },
+  {
+    path: "/user/:id",
+    component: () => import("views/other_user/UserInfo"),
+    meta: {
+      title: "用户信息"
+    }
+  },
+  {
+    path: "/bbs",
+    component: () => import("views/bbs/Index"),
+    meta: {
+      title: "讨论区"
+    }
+  },
+  {
+    path: "/bbs/post-article",
+    component: () => import("views/bbs/PostArticle"),
+    meta: {
+      title: "发表文章",
+      auth: 1
+    }
   },
   {
     path: "/login",
@@ -107,9 +147,18 @@ const routes = [
   },
   {
     path: "/edit-info",
-    component: () => import("views/single/EditInfo"),
+    component: () => import("views/user_detail/EditInfo"),
     meta: {
       title: "账号资料",
+      auth: 1,
+      depth: 1,
+    }
+  },
+  {
+    path: "/change-icon",
+    component: () => import("views/user_detail/ChangeIcon"),
+    meta: {
+      title: "修改头像",
       auth: 1,
       depth: 1,
     }

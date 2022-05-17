@@ -40,7 +40,7 @@
     methods: {
       register() {
         this.$request.api.post(
-          "user/register/",
+          "user/sign/register/",
           {
             username: this.username,
             password: this.password,

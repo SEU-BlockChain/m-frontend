@@ -1,7 +1,7 @@
 <template>
   <img class="login-back" :src="this.$settings.cos_url+ 'static/login-back.webp'"/>
   <div class="bar clear-fix">
-    <var-icon class="left" color="white" size="30px" name="window-close" @click="this.$router.return()"/>
+    <var-icon class="left" color="white" size="30px" name="window-close" @click="this.$router.return('/')"/>
     <div class="bar-text right" @click="this.$router.push('/sign-up')">注册</div>
   </div>
 
@@ -71,7 +71,7 @@
     methods: {
       login() {
         this.$request.api.post(
-          "user/login/",
+          "user/sign/login/",
           {
             username: this.active ? this.phone : this.username,
             password: this.active ? this.code : this.password
@@ -83,7 +83,7 @@
               type: "success",
               duration: 1000,
             })
-            this.$cookies.set("token", res.data.result.token)
+            this.$cookies.set("token", res.data.result.user.token)
             this.$store.commit("login", res.data.result["user"])
             this.$router.replace(this.$route.query.next || "/")
           } else {

@@ -103,3 +103,24 @@ a {
     background-color: #f0f1f5;
     min-height: 100vh;
 }
+
+.w-container table {
+    border-collapse: collapse;
+}
+
+.w-container table th, .container table td {
+    border: 1px solid #ccc;
+    min-width: 50px;
+    height: 20px;
+    text-align: left;
+}
+
+.w-container table th {
+    background-color: #f1f1f1;
+    text-align: center
+}
+
+.w-container img {
+    border-radius: 3px;
+    max-width: 100%;
+}

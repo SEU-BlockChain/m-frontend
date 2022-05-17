@@ -1,26 +1,28 @@
 <template>
+
   <img class="profile-back" :src="this.$settings.cos_url+ 'static/profile-back.webp'"/>
   <div class="user-info">
     <img class="avatar var-elevation--1" :src="icon">
     <div v-if="this.$store.state.is_login" class="ribbon var-elevation--1" @click="this.$router.push('/user')">个人主页
       <var-icon name="menu-right"/>
     </div>
+
     <div class="info-wrap">
       <div v-if="this.$store.state.is_login">
         <div class="name">{{this.$store.state.user.username}}
           <var-chip size="mini" class="id">UID:{{this.$store.state.user.id}}</var-chip>
         </div>
         <var-divider style="--divider-color:#f0f1f5"/>
-        <div class="interact">
-          <span class="interact-num">0</span>
+        <div class="interact" @click="this.$router.push({path:'/user/follow',query:{type:'as_followed'}})">
+          <span class="interact-num">{{this.$store.state.user.fans_num}}</span>
           <span class="interact-text">粉丝</span>
         </div>
-        <div class="interact">
-          <span class="interact-num">0</span>
+        <div class="interact" @click="this.$router.push({path:'/user/follow',query:{type:'as_follower'}})">
+          <span class="interact-num">{{this.$store.state.user.attention_num}}</span>
           <span class="interact-text">关注</span>
         </div>
         <div class="interact">
-          <span class="interact-num">0</span>
+          <span class="interact-num">{{this.$store.state.user.up_num}}</span>
           <span class="interact-text">获赞</span>
         </div>
       </div>
@@ -120,6 +122,7 @@
 
   .avatar {
     width: 100px;
+    height: 100px;
     border-radius: 50%;
     position: relative;
     left: 20px;

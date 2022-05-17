@@ -110,7 +110,7 @@
       },
       reset_password() {
         this.$request.api.post(
-          "user/reset_password/",
+          "user/sign/reset_password/",
           {
             phone: this.phone,
             code: this.code,

@@ -42,7 +42,7 @@
       let token = this.$cookies.get("token")
       if (token) {
         let login = this.$request.api.get(
-          "user/user_info/"
+          "user/self/info/"
         ).then(res => {
           if (res.data.code === 107) {
             this.$store.commit("login", res.data.result.user)

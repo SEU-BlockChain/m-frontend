@@ -1,10 +1,11 @@
 let cos_url = "https://cos.chain.seutools.com/"
-let api_url = "https://api.chain.seutools.com/"
-// let api_url = "http://127.0.0.1:8000/"
+// let api_url = "https://api.chain.seutools.com/"
+let api_url = "http://127.0.0.1:8000/"
 
 
 let re_pattens = {
   username: /^[a-zA-Z0-9\u4e00-\u9fa5]{1,16}$/,
+  description: /^.{0,100}$/,
   password: /^[a-zA-Z0-9-*/+.~!@#$%^&()]{6,16}$/,
   phone: /^1[3-9][0-9]{9}$/,
   code: /^[0-9]{4}$/,
@@ -12,7 +13,11 @@ let re_pattens = {
 
 let validators = {
   username: [
-    v => re_pattens.username.test(v) || "请输入9位一卡通号",
+    v => 16 >= v.length && v.length >= 1 || '长度在 1 到 16 个字符',
+    v => re_pattens.username.test(v) || "不能含有非法字符",
+  ],
+  description: [
+    v => re_pattens.description.test(v) || "字数100字符内",
   ],
   password: [
     v => 16 >= v.length && v.length >= 6 || '长度在 6 到 16 个字符',

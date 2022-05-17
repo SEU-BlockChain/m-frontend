@@ -10,27 +10,36 @@
 
   <div class="head var-elevation--3">
     <div class="right">
-      <div class="interact-item">
-        <div class="interact-item-num">0</div>
+      <div class="interact-item" @click="this.$router.push({path:'/user/follow',query:{type:'as_followed'}})">
+        <div class="interact-item-num">{{user.fans_num}}</div>
         <div class="interact-item-text">粉丝</div>
       </div>
       <div class="divider"/>
-      <div class="interact-item">
-        <div class="interact-item-num">0</div>
+      <div class="interact-item" @click="this.$router.push({path:'/user/follow',query:{type:'as_follower'}})">
+        <div class="interact-item-num">{{user.attention_num}}</div>
         <div class="interact-item-text">关注</div>
       </div>
       <div class="divider"/>
       <div class="interact-item">
-        <div class="interact-item-num">0</div>
+        <div class="interact-item-num">{{user.up_num}}</div>
         <div class="interact-item-text">获赞</div>
       </div>
     </div>
-    <div class="offset">
-      <img class="avatar" :src="this.$settings.cos_url+user.icon">
-      <div class="name">{{user.username}}</div>
-      <Level :experience="user.experience"/>
-    </div>
+    <img class="avatar offset" :src="this.$settings.cos_url+user.icon">
+    <div class="name offset">{{user.username}}</div>
+    <Level class="offset" :experience="user.experience"/>
   </div>
+
+  <var-card class="card button" elevation="1">
+    <template #extra>
+      <div class="button-container">
+        <div class="button-item" @click="this.$router.push('/user/black-list')">
+          <img class="button-img" src="~assets/img/black-list.png" alt="">
+          <div class="button-text">黑名单</div>
+        </div>
+      </div>
+    </template>
+  </var-card>
 
   <div class="body">
     <var-sticky>
@@ -106,12 +115,11 @@
     top: -30px;
   }
 
-
   .avatar {
     width: 80px;
+    height: 80px;
     border-radius: 50%;
     position: relative;
-    top: -10px;
   }
 
   .name {
@@ -124,6 +132,7 @@
     text-align: center;
     width: 50px;
     display: inline-block;
+    z-index: 100;
   }
 
   .divider {
@@ -145,5 +154,36 @@
     background-color: white;
     border-radius: 5px 5px 0 0;
     min-height: 100vh;
+  }
+
+  .button {
+    margin: 10px 0;
+    padding: 10px 0;
+  }
+
+  .button-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .button-item {
+    padding: 10px;
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .button-img {
+    width: 40%;
+    margin: 0 30%;
+  }
+
+  .button-text {
+    text-align: center;
+    font-size: 12px;
+    line-height: 15px;
+    color: #777777;
   }
 </style>
