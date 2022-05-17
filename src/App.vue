@@ -1,6 +1,14 @@
 <template>
   <div class="background"/>
-  <router-view v-if="this.$store.state.is_init"/>
+
+  <router-view v-if="this.$store.state.is_init" v-slot="{ Component }">
+    <Transition name="fade">
+      <keep-alive>
+        <component :is="Component"/>
+      </keep-alive>
+    </Transition>
+  </router-view>
+
   <var-loading class="center" v-else/>
   <var-back-top bottom="70px" right="15px" :duration="300"/>
 </template>
@@ -25,6 +33,7 @@
         } else {
           this.animation = this.animate(to, from)
         }
+        console.log(this.animation);
       }
     },
     data() {
@@ -75,4 +84,18 @@
 
 <style>
   @import "assets/css/base.css";
+
+  .fade-enter-active {
+    transition: all 0.3s ease-out;
+  }
+
+  .fade-leave-active {
+    transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
+  }
+
+  .fade-enter-from,
+  .fade-leave-to {
+    transform: translateX(20px);
+    opacity: 0;
+  }
 </style>

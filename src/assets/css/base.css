@@ -98,12 +98,6 @@ a {
     cursor: pointer;
 }
 
-.animation-wrap {
-    width: 100vw;
-    background-color: #f0f1f5;
-    min-height: 100vh;
-}
-
 .w-container table {
     border-collapse: collapse;
 }

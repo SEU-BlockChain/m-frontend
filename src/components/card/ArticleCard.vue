@@ -15,13 +15,15 @@
             </div>
             <div class="time">{{this.$calc.filters.date(article.update_time)}}</div>
           </div>
-          <div class="title">{{article.title}}</div>
-          <div class="content w-container" v-html="article.description"/>
+          <div class="title" @click="to_article">{{article.title}}</div>
+          <div class="content w-container" v-html="article.description" @click="to_article"/>
           <div class="foot">
             <div class="category">
-              <var-chip size="small" :round="false">{{article.category.category}}</var-chip>
+              <var-chip size="small" :round="false" @click="change_category(article.category.id)">
+                {{article.category.category}}
+              </var-chip>
             </div>
-            <div class="interact">
+            <div class="interact" @click="to_article">
               <img class="interact-icon" src="~assets/img/view.svg" height="20" alt="">
               <div class="interact-text">{{article.view_num}}</div>
 
@@ -44,6 +46,15 @@
     name: "ArticleCard",
     props: {
       article: null
+    },
+    emits: ["change_category"],
+    methods: {
+      change_category(id) {
+        this.$emit("change_category", id)
+      },
+      to_article() {
+        this.$router.push(`/bbs/article/${this.article.id}`)
+      }
     }
   }
 </script>

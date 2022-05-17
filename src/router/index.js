@@ -110,7 +110,7 @@ const routes = [
     path: "/bbs",
     component: () => import("views/bbs/Index"),
     meta: {
-      title: "讨论区"
+      title: "讨论区",
     }
   },
   {
@@ -119,6 +119,13 @@ const routes = [
     meta: {
       title: "发表文章",
       auth: 1
+    }
+  },
+  {
+    path: "/bbs/article/:id",
+    component: () => import("views/bbs/Article"),
+    meta: {
+      title: "文章详情",
     }
   },
   {

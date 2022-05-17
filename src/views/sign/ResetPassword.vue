@@ -146,10 +146,6 @@
     padding: 10px 0;
   }
 
-  .animation-wrap {
-    background-color: white;
-  }
-
   .title {
     margin: 25px;
     font-size: 25px;

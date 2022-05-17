@@ -83,7 +83,8 @@
         v-model:loading="loading"
         @load="load_article"
       >
-        <article-card :key="article.id" :article="article" v-for="article in article_list"/>
+        <article-card :key="article.id" :article="article" v-for="article in article_list"
+                      @change_category="change_category"/>
       </var-list>
     </div>
   </div>
@@ -131,6 +132,10 @@
       }
     },
     methods: {
+      change_category(id) {
+        this.category_id = id
+        this.reload()
+      },
       change_order(num) {
         this.order_num = num
         this.show_order = false
@@ -138,6 +143,7 @@
       },
       reload() {
         this.clear()
+        this.$settings.scrollAnimation(0)
         this.load_article()
       },
       load_article() {

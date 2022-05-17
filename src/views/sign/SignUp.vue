@@ -75,10 +75,6 @@
     padding: 10px 0;
   }
 
-  .animation-wrap {
-    background-color: white;
-  }
-
   .wrap {
     padding: 20px 40px;
   }
