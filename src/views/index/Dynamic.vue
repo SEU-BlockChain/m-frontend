@@ -1,5 +1,5 @@
 <template>
-  dynamic
+  <div class="animation-wrap">dynamic</div>
 </template>
 
 <script>

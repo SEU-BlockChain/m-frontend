@@ -15,8 +15,8 @@
             </div>
             <div class="time">{{this.$calc.filters.date(article.update_time)}}</div>
           </div>
-          <div class="title" @click="to_article">{{article.title}}</div>
-          <div class="content w-container" v-html="article.description" @click="to_article"/>
+          <div class="title break" @click="to_article">{{article.title}}</div>
+          <div class="content w-container limited-xy" v-html="article.description" @click="to_article"/>
           <div class="foot">
             <div class="category">
               <var-chip size="small" :round="false" @click="change_category(article.category.id)">
@@ -27,9 +27,9 @@
               <img class="interact-icon" src="~assets/img/view.svg" height="20" alt="">
               <div class="interact-text">{{article.view_num}}</div>
 
-              <img class="interact-icon" :class="{upActive:article.is_up===true}" src="~assets/img/up.svg" height="20"
+              <img class="interact-icon" :class="{active:article.is_up===true}" src="~assets/img/up.svg" height="20"
                    alt="">
-              <div class="interact-text" :class="{upActive1:article.is_up===true}">{{article.up_num}}</div>
+              <div class="interact-text" :class="{active:article.is_up===true}">{{article.up_num}}</div>
 
               <img class="interact-icon" src="~assets/img/comment.svg" height="20" alt="">
               <div class="interact-text">{{article.comment_num}}</div>
@@ -104,9 +104,7 @@
     font-size: 17px;
     font-weight: 600;
     line-height: 24px;
-    white-space: normal;
-    word-break: break-all;
-    word-wrap: break-word;
+
   }
 
   .content {
@@ -142,12 +140,10 @@
     color: #999;
   }
 
-  .upActive {
-    filter: drop-shadow(-500px 0 #4ebaee) !important;
-  }
 
-  .upActive1 {
-    color: #4ebaee !important;
+  .active {
+    filter: drop-shadow(-500px 0 #4ebaee);
+    color: #4ebaee;
   }
 
 </style>

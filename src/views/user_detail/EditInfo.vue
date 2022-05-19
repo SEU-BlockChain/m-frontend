@@ -1,109 +1,111 @@
 <template>
-  <var-app-bar class="app-bar" color="white" :elevation="false" text-color="#333" title="账号资料">
-    <template #left>
-      <var-button
-        round
-        text
-        color="transparent"
-        text-color="#333"
-        @click="this.$router.return('/user')"
-      >
-        <var-icon name="chevron-left" :size="24"/>
-      </var-button>
-    </template>
-  </var-app-bar>
-
-  <div class="wrap">
-
-    <div class="item" @click="this.$router.push('/change-icon')">
-      <div class="item-text">头像</div>
-      <div class="item-content">
-        <img class="avatar" :src="this.$settings.cos_url+user.icon">
-        <var-icon size="25" name="chevron-right"/>
-      </div>
-    </div>
-    <var-divider margin="0" inset="10"/>
-
-    <div class="item">
-      <div class="item-text">用户ID</div>
-      <div class="item-content">
-        <div>{{user.id}}</div>
-        <div class="space"/>
-      </div>
-    </div>
-    <var-divider margin="0" inset="10"/>
-
-    <div class="item" @click="pop('username')">
-      <div class="item-text">用户名</div>
-      <div class="item-content">
-        <div>{{user.username}}</div>
-        <var-icon size="25" name="chevron-right"/>
-      </div>
-    </div>
-    <var-divider margin="0" inset="10"/>
-
-
-    <div class="item">
-      <div class="item-text">注册时间</div>
-      <div class="item-content">
-        <div>{{user.date_joined.replace("T", " ").substring(0, 10)}}</div>
-        <div class="space"/>
-      </div>
-    </div>
-    <var-divider margin="0" inset="10"/>
-
-    <div class="item" @click="pop('phone')">
-      <div class="item-text">手机号码</div>
-      <div class="item-content">
-        <div>{{user.phone||"未绑定"}}</div>
-        <var-icon size="25" name="chevron-right"/>
-      </div>
-    </div>
-    <var-divider margin="0" inset="10"/>
-
-    <div class="item" @click="pop('description')">
-      <div class="item-text">个性签名</div>
-      <div class="item-content">
-        <div>{{user.description||"还没有个性签名"}}</div>
-        <var-icon size="25" name="chevron-right"/>
-      </div>
-    </div>
-  </div>
-
-
-  <var-popup style="border-radius: 5px" position="center" v-model:show="show">
-    <div class="pop">
-      <div class="pop-title">{{title}}</div>
-      <div class="pop-body">
-
-        <div v-if="type==='username'">
-          <username placeholder="用户名" v-model:username="username"/>
-        </div>
-
-        <div v-else-if="type==='phone'">
-          <div v-if="this.$store.state.user.phone">
-            <phone disabled placeholder="手机号"
-                   v-model:phone="this.$store.state.user.phone"/>
-            <msg-code v-model:code="code" method="unbind_phone"
-                      :phone="this.$store.state.user.phone"/>
-          </div>
-          <div v-else>
-            <phone placeholder="手机号" v-model:phone="phone"/>
-            <msg-code v-model:code="code" method="bind_phone" :phone="phone"/>
-          </div>
-        </div>
-
-        <div v-else-if="type==='description'">
-          <var-input placeholder="请输入个性签名" :rules="validators.description" textarea v-model="description"/>
-        </div>
-      </div>
-      <div class="pop-submit">
-        <var-button block size="small" :disabled="!is_valid" type="success" @click="submit">
-          确定
+  <div class="animation-wrap">
+    <var-app-bar class="app-bar" color="white" :elevation="false" text-color="#333" title="账号资料">
+      <template #left>
+        <var-button
+          round
+          text
+          color="transparent"
+          text-color="#333"
+          @click="this.$router.return('/user')"
+        >
+          <var-icon name="chevron-left" :size="24"/>
         </var-button>
+      </template>
+    </var-app-bar>
+
+    <div class="wrap">
+
+      <div class="item" @click="this.$router.push('/change-icon')">
+        <div class="item-text">头像</div>
+        <div class="item-content">
+          <img class="avatar" :src="this.$settings.cos_url+user.icon">
+          <var-icon size="25" name="chevron-right"/>
+        </div>
+      </div>
+      <var-divider margin="0" inset="10"/>
+
+      <div class="item">
+        <div class="item-text">用户ID</div>
+        <div class="item-content">
+          <div>{{user.id}}</div>
+          <div class="space"/>
+        </div>
+      </div>
+      <var-divider margin="0" inset="10"/>
+
+      <div class="item" @click="pop('username')">
+        <div class="item-text">用户名</div>
+        <div class="item-content">
+          <div>{{user.username}}</div>
+          <var-icon size="25" name="chevron-right"/>
+        </div>
+      </div>
+      <var-divider margin="0" inset="10"/>
+
+
+      <div class="item">
+        <div class="item-text">注册时间</div>
+        <div class="item-content">
+          <div>{{user.date_joined.replace("T", " ").substring(0, 10)}}</div>
+          <div class="space"/>
+        </div>
+      </div>
+      <var-divider margin="0" inset="10"/>
+
+      <div class="item" @click="pop('phone')">
+        <div class="item-text">手机号码</div>
+        <div class="item-content">
+          <div>{{user.phone||"未绑定"}}</div>
+          <var-icon size="25" name="chevron-right"/>
+        </div>
+      </div>
+      <var-divider margin="0" inset="10"/>
+
+      <div class="item" @click="pop('description')">
+        <div class="item-text">个性签名</div>
+        <div class="item-content">
+          <div>{{user.description||"还没有个性签名"}}</div>
+          <var-icon size="25" name="chevron-right"/>
+        </div>
       </div>
     </div>
-  </var-popup>
+
+
+    <var-popup style="border-radius: 5px" position="center" v-model:show="show">
+      <div class="pop">
+        <div class="pop-title">{{title}}</div>
+        <div class="pop-body">
+
+          <div v-if="type==='username'">
+            <username placeholder="用户名" v-model:username="username"/>
+          </div>
+
+          <div v-else-if="type==='phone'">
+            <div v-if="this.$store.state.user.phone">
+              <phone disabled placeholder="手机号"
+                     v-model:phone="this.$store.state.user.phone"/>
+              <msg-code v-model:code="code" method="unbind_phone"
+                        :phone="this.$store.state.user.phone"/>
+            </div>
+            <div v-else>
+              <phone placeholder="手机号" v-model:phone="phone"/>
+              <msg-code v-model:code="code" method="bind_phone" :phone="phone"/>
+            </div>
+          </div>
+
+          <div v-else-if="type==='description'">
+            <var-input placeholder="请输入个性签名" :rules="validators.description" textarea v-model="description"/>
+          </div>
+        </div>
+        <div class="pop-submit">
+          <var-button block size="small" :disabled="!is_valid" type="success" @click="submit">
+            确定
+          </var-button>
+        </div>
+      </div>
+    </var-popup>
+  </div>
 </template>
 
 <script>

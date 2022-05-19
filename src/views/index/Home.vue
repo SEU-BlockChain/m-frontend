@@ -1,5 +1,5 @@
 <template>
-  home
+  <div class="animation-wrap">home</div>
 </template>
 
 <script>

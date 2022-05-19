@@ -1,100 +1,105 @@
 <template>
-  <var-app-bar
-    class="app-bar"
-    color="#f0f1f5"
-    :elevation="false"
-    text-color="#333"
-    title-position="center"
-  >
-    <template #left>
-      <var-button
-        round
-        text
-        color="transparent"
-        text-color="#333"
-        @click="this.$router.return('/community')"
-      >
-        <var-icon name="chevron-left" :size="24"/>
-      </var-button>
-    </template>
-    <template #right>
-      <var-button
-        text
-        text-color="#333"
-        @click="show=true"
-      >
-        草稿箱
-      </var-button>
-      <var-button
-        text outline
-        size="small"
-        type="primary"
-        @click="save_draft"
-      >
-        保存为草稿
-      </var-button>
-      <div style="width: 10px"/>
-      <var-button
-        size="small"
-        type="success"
-        @click="post_article"
-      >
-        发布
-      </var-button>
-    </template>
-  </var-app-bar>
-  <div class="wrap">
-    <var-input
-      class="title"
-      placeholder="标题（必填）"
-      v-model="title"
-      blur-color="#ccc"
-      :maxlength="30"
-      clearable/>
-    <article-editor ref="editor"/>
-  </div>
-
-  <div class="category var-elevation--5">
-    <var-radio-group v-model="category">
-      <var-radio :checked-value="1">官方</var-radio>
-      <var-radio :checked-value="2">杂谈</var-radio>
-    </var-radio-group>
-  </div>
-
-  <var-popup style="border-radius: 10px" v-model:show="show">
-    <div class="drafts">
-      <var-list
-        :finished="finished"
-        v-model:loading="loading"
-        @load="load_drafts"
-      >
-        <div :key="draft" v-for="draft in draft_list">
-          <div class="draft" @click="get_draft(draft.id)">
-            <div class="draft-info">
-              <div class="draft-title">
-                <var-chip size="small" type="info" :round="false">{{draft.category.category}}</var-chip>
-                {{this.$calc.filters.max_width(draft.title,15) }}
-              </div>
-              <var-button
-                text outline
-                size="small"
-                type="danger"
-                @click.stop="delete_draft(draft.id,true)"
-              >删除
-              </var-button>
-            </div>
-            <div class="time">{{this.$calc.filters.date(draft.update_time)}}</div>
-          </div>
-          <var-divider margin="0"/>
-        </div>
-      </var-list>
+  <div class="animation-wrap">
+    <var-app-bar
+      class="app-bar"
+      color="#f0f1f5"
+      :elevation="false"
+      text-color="#333"
+      title-position="center"
+    >
+      <template #left>
+        <var-button
+          round
+          text
+          color="transparent"
+          text-color="#333"
+          @click="this.$router.return('/community')"
+        >
+          <var-icon name="chevron-left" :size="24"/>
+        </var-button>
+      </template>
+      <template #right>
+        <var-button
+          text
+          text-color="#333"
+          @click="show=true"
+          v-if="this.update_id===undefined"
+        >
+          草稿箱
+        </var-button>
+        <var-button
+          text outline
+          size="small"
+          type="primary"
+          @click="save_draft"
+          v-if="this.update_id===undefined"
+        >
+          保存为草稿
+        </var-button>
+        <div style="width: 10px"/>
+        <var-button
+          size="small"
+          type="success"
+          @click="post_article"
+        >
+          发布
+        </var-button>
+      </template>
+    </var-app-bar>
+    <div class="wrap">
+      <var-input
+        class="title"
+        placeholder="标题（必填）"
+        v-model="title"
+        blur-color="#ccc"
+        :maxlength="30"
+        clearable/>
+      <article-editor ref="editor"/>
     </div>
-  </var-popup>
+
+    <div class="category var-elevation--5">
+      <var-radio-group v-model="category">
+        <var-radio :disabled="this.update_id!==undefined" :checked-value="1">官方</var-radio>
+        <var-radio :disabled="this.update_id!==undefined" :checked-value="2">杂谈</var-radio>
+      </var-radio-group>
+    </div>
+
+    <var-popup style="border-radius: 10px" v-model:show="show">
+      <div class="drafts">
+        <var-list
+          :finished="finished"
+          v-model:loading="loading"
+          @load="load_drafts"
+        >
+          <div :key="draft" v-for="draft in draft_list">
+            <div class="draft" @click="get_draft(draft.id)">
+              <div class="draft-info">
+                <div class="draft-title">
+                  <var-chip size="small" type="info" :round="false">{{draft.category.category}}</var-chip>
+                  {{this.$calc.filters.max_width(draft.title,15) }}
+                </div>
+                <var-button
+                  text outline
+                  size="small"
+                  type="danger"
+                  @click.stop="delete_draft(draft.id,true)"
+                >删除
+                </var-button>
+              </div>
+              <div class="time">{{this.$calc.filters.date(draft.update_time)}}</div>
+            </div>
+            <var-divider margin="0"/>
+          </div>
+        </var-list>
+      </div>
+    </var-popup>
+  </div>
 </template>
 
 <script>
   import ArticleEditor from "components/input/ArticleEditor";
   import {SlateTransforms} from '@wangeditor/editor'
+  import request from "../../assets/js/request";
 
   export default {
     name: "PostArticle",
@@ -110,7 +115,8 @@
         finished: false,
         loading: false,
         next: null,
-        draft_id: null
+        draft_id: null,
+        update_id: this.$route.query.id
       }
     },
 
@@ -200,16 +206,29 @@
         if (!this.is_valid()) return
 
         let editor = this.$refs.editor.editor
-        this.$request.api.post(
-          "/bbs/article/",
-          {
-            title: this.title,
-            content: editor.getHtml(),
-            raw_content: JSON.stringify(editor.children),
-            category_id: this.category
-          }
-        ).then(res => {
-          if (res.data.code === 113) {
+        let request
+        if (this.update_id === undefined) {
+          request = this.$request.api.post(
+            "/bbs/article/",
+            {
+              title: this.title,
+              content: editor.getHtml(),
+              raw_content: JSON.stringify(editor.children),
+              category_id: this.category
+            }
+          )
+        } else {
+          request = this.$request.api.put(
+            `/bbs/article/${this.update_id}/`,
+            {
+              title: this.title,
+              content: editor.getHtml(),
+              raw_content: JSON.stringify(editor.children),
+            })
+        }
+
+        request.then(res => {
+          if (res.data.code === 113 || res.data.code === 114) {
             this.$tip({
               content: "发布成功",
               type: "success",
@@ -287,6 +306,27 @@
           })
         }
       }
+    },
+    created() {
+      if (this.$route.query.id) {
+        this.$request.api.get(
+          `bbs/article/${this.$route.query.id}/raw`
+        ).then(res => {
+          if (res.data.code === 111) {
+            this.title = res.data.result.title
+            this.category_id = res.data.result.category.id
+            let editor = this.$refs.editor.editor
+            SlateTransforms.insertNodes(editor, JSON.parse(res.data.result.raw_content))
+            SlateTransforms.removeNodes(editor, {at: [0]})
+          } else {
+            this.$tip({
+              content: res.data.msg,
+              type: "warning",
+              duration: 1000,
+            })
+          }
+        })
+      }
     }
   }
 </script>
@@ -301,7 +341,7 @@
   }
 
   .wrap {
-    margin-top: 54px;
+    padding-top: 54px;
     min-height: 100vh;
     background-color: white;
   }

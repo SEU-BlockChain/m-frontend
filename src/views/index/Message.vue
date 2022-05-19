@@ -1,5 +1,5 @@
 <template>
-  message
+  <div class="animation-wrap">message</div>
 </template>
 
 <script>

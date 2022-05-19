@@ -75,6 +75,7 @@ let filters = {
     return "刚刚"
   },
   max_width(str, width) {
+    if (!str?.length) return str
     if (str.length <= width) {
       return str
     } else {
@@ -82,8 +83,41 @@ let filters = {
     }
   }
 }
+
+let up_down = function (is_up, obj) {
+  if (!is_up) {
+    if (obj.is_up === null) {
+      obj.is_up = false
+      obj.down_num++
+    } else {
+      if (obj.is_up) {
+        obj.up_num--
+        obj.down_num++
+        obj.is_up = false
+      } else {
+        obj.down_num--
+        obj.is_up = null
+      }
+    }
+  } else {
+    if (obj.is_up === null) {
+      obj.is_up = true
+      obj.up_num++
+    } else {
+      if (obj.is_up) {
+        obj.up_num--
+        obj.is_up = null
+      } else {
+        obj.up_num++
+        obj.down_num--
+        obj.is_up = true
+      }
+    }
+  }
+}
 export default {
   calc_rank,
   DateParser,
-  filters
+  filters,
+  up_down
 }

@@ -1,55 +1,58 @@
 <template>
-  <var-app-bar class="app-bar var-elevation--2" color="white" :elevation="false" text-color="#333" title="黑名单">
-    <template #left>
-      <var-button
-        round
-        text
-        color="transparent"
-        text-color="#333"
-        @click="this.$router.return('/user')"
-      >
-        <var-icon name="chevron-left" :size="24"/>
-      </var-button>
-    </template>
-  </var-app-bar>
-  <div style="height: 54px"/>
-  <div class="back">
-    <div class="search">
-      <var-input class="search-input" placeholder="搜索" :hint="false" :line="false" v-model="search" @input="filter">
-        <template #prepend-icon>
-          <var-icon @click="filter" name="magnify-plus-outline"/>
-        </template>
-      </var-input>
-      <div class="total">
-        共{{total}}人
-      </div>
-      <var-divider margin="0"/>
-
-      <div class="back">
-        <var-list
-          :finished="finished"
-          v-model:loading="loading"
-          @load="load"
+  <div class="animation-wrap">
+    <var-app-bar class="app-bar var-elevation--2" color="white" :elevation="false" text-color="#333" title="黑名单">
+      <template #left>
+        <var-button
+          round
+          text
+          color="transparent"
+          text-color="#333"
+          @click="this.$router.return('/user')"
         >
-          <div :key="item" v-for="item in list">
-            <div class="container">
-              <img class="avatar" :src="this.$settings.cos_url+item.icon"
-                   @click="this.$router.push(`/user/${item.id}`)"/>
-              <div class="name">{{item.username}}</div>
-              <div class="button">
-                <var-button v-if="item.not_blacked" class="right btn" type="warning" size="small" @click="black(item)">
-                  拉黑
-                </var-button>
-                <var-button v-else class="right btn" type="success" size="small" @click="not_black(item)">
-                  取消拉黑
-                </var-button>
-              </div>
-            </div>
-            <var-divider margin="0"/>
-          </div>
-        </var-list>
-      </div>
+          <var-icon name="chevron-left" :size="24"/>
+        </var-button>
+      </template>
+    </var-app-bar>
 
+    <div class="back">
+      <div class="search">
+        <var-input class="search-input" placeholder="搜索" :hint="false" :line="false" v-model="search" @input="filter">
+          <template #prepend-icon>
+            <var-icon @click="filter" name="magnify-plus-outline"/>
+          </template>
+        </var-input>
+        <div class="total">
+          共{{total}}人
+        </div>
+        <var-divider margin="0"/>
+
+        <div class="back">
+          <var-list
+            :finished="finished"
+            v-model:loading="loading"
+            @load="load"
+          >
+            <div :key="item" v-for="item in list">
+              <div class="container">
+                <img class="avatar" :src="this.$settings.cos_url+item.icon"
+                     @click="this.$router.push(`/user/${item.id}`)"/>
+                <div class="name">{{item.username}}</div>
+                <div class="button">
+                  <var-button v-if="item.not_blacked" class="right btn" type="warning" size="small"
+                              @click="black(item)">
+                    拉黑
+                  </var-button>
+                  <var-button v-else class="right btn" type="success" size="small" @click="not_black(item)">
+                    取消拉黑
+                  </var-button>
+                </div>
+              </div>
+              <var-divider margin="0"/>
+            </div>
+          </var-list>
+        </div>
+
+      </div>
     </div>
   </div>
 </template>
@@ -117,8 +120,9 @@
   }
 
   .back {
-    min-height: 100vh;
     background-color: white;
+    padding-top: 54px;
+    min-height: calc(100vh - 123px);
   }
 
   .search {

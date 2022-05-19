@@ -1,5 +1,7 @@
 <template>
-  <var-button @click="logout">退出登陆</var-button>
+  <div class="animation-wrap">
+    <var-button @click="logout">退出登陆</var-button>
+  </div>
 </template>
 
 <script>

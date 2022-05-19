@@ -1,46 +1,48 @@
 <template>
-  <var-app-bar
-    class="var-elevation--1"
-    title-position="center"
-    color="#333"
-    text-color="#bbb"
-  >
-    <template #left>
-      <div @click="this.$router.return('/edit-info')">
-        <var-icon name="chevron-left" :size="24"/>
-        <span>返回</span>
-      </div>
-    </template>
-  </var-app-bar>
+  <div class="animation-wrap">
+    <var-app-bar
+      class="var-elevation--1"
+      title-position="center"
+      color="#333"
+      text-color="#bbb"
+    >
+      <template #left>
+        <div @click="this.$router.return('/edit-info')">
+          <var-icon name="chevron-left" :size="24"/>
+          <span>返回</span>
+        </div>
+      </template>
+    </var-app-bar>
 
-  <div class="background"/>
-  <div class="frame">
-    <img class="img" v-if="!is_change" :src="icon" alt="修改头像">
-    <VuePictureCropper
-      v-else
-      :boxStyle="{
+    <div class="background"/>
+    <div class="frame">
+      <img class="img" v-if="!is_change" :src="icon" alt="修改头像">
+      <VuePictureCropper
+        v-else
+        :boxStyle="{
         width: '100%',
         backgroundColor: '#f8f8f8',
         position:'absolute'
       }"
-      :img="pic"
-      :options="{
+        :img="pic"
+        :options="{
         viewMode: 1,
         dragMode: 'move',
         aspectRatio: 1
       }"
-    />
-  </div>
+      />
+    </div>
 
-  <var-row>
-    <var-col :span="18" :offset="3" style="margin-top: 30px;">
-      <var-button block type="info" @click="select">选择图片</var-button>
-      <input type="file" id="upload" style="display: none;" name="icon" accept="image/bmp,image/jpeg,image/png">
-    </var-col>
-    <var-col :span="18" :offset="3" style="margin-top: 10px;">
-      <var-button block type="success" @click="submit">确定</var-button>
-    </var-col>
-  </var-row>
+    <var-row>
+      <var-col :span="18" :offset="3" style="margin-top: 30px;">
+        <var-button block type="info" @click="select">选择图片</var-button>
+        <input type="file" id="upload" style="display: none;" name="icon" accept="image/bmp,image/jpeg,image/png">
+      </var-col>
+      <var-col :span="18" :offset="3" style="margin-top: 10px;">
+        <var-button block type="success" @click="submit">确定</var-button>
+      </var-col>
+    </var-row>
+  </div>
 </template>
 
 <script>
@@ -133,6 +135,9 @@
 </script>
 
 <style scoped>
+  .animation-wrap{
+    background-color: transparent;
+  }
   .background {
     background-color: rgba(0, 0, 0, .9);
   }

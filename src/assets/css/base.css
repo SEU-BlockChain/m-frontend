@@ -98,8 +98,24 @@ a {
     cursor: pointer;
 }
 
+.animation-wrap {
+    width: 100vw;
+    min-height: 100vh;
+    background-color: #f0f1f5;
+}
+
 .w-container table {
     border-collapse: collapse;
+}
+
+.w-container p {
+    margin-bottom: .1em;
+    display: block;
+    margin-block-start: .5em;
+    margin-block-end: .5em;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+    line-height: 1.5;
 }
 
 .w-container table th, .container table td {
@@ -117,4 +133,34 @@ a {
 .w-container img {
     border-radius: 3px;
     max-width: 100%;
+}
+
+.limited-xy img {
+    max-width: 100%;
+    max-height: 30vh;
+}
+
+.break {
+    white-space: normal;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+
+.flex-center {
+    display: flex;
+    align-content: center
+}
+
+.new {
+    animation: bg-color 2s;
+    animation-iteration-count: 1
+}
+
+@keyframes bg-color {
+    0% {
+        background-color: #f5f5dc;
+    }
+    100% {
+        background-color: transparent;
+    }
 }

@@ -1,45 +1,46 @@
 <template>
-  <var-app-bar class="app-bar var-elevation--2" color="white" :elevation="false" text-color="#333" title="我的好友">
-    <template #left>
-      <var-button
-        round
-        text
-        color="transparent"
-        text-color="#333"
-        @click="this.$router.return('/user')"
-      >
-        <var-icon name="chevron-left" :size="24"/>
-      </var-button>
-    </template>
-  </var-app-bar>
-
-  <var-tabs class="bar" v-model:active="active">
-    <var-tab style="width: 30%;margin: 0 10%" @click="toggle(0)">我关注的</var-tab>
-    <var-tab style="width: 30%;margin: 0 10%" @click="toggle(1)">我的粉丝</var-tab>
-  </var-tabs>
-  <div style="height: 98px"/>
-  <div class="search">
-    <var-input class="search-input" placeholder="搜索" :hint="false" :line="false" v-model="search" @input="filter">
-      <template #prepend-icon>
-        <var-icon @click="filter" name="magnify-plus-outline"/>
+  <div class="animation-wrap">
+    <var-app-bar class="app-bar var-elevation--2" color="white" :elevation="false" text-color="#333" title="我的好友">
+      <template #left>
+        <var-button
+          round
+          text
+          color="transparent"
+          text-color="#333"
+          @click="this.$router.return('/user')"
+        >
+          <var-icon name="chevron-left" :size="24"/>
+        </var-button>
       </template>
-    </var-input>
-  </div>
-  <div class="total">
-    共{{total}}人
-  </div>
-  <div class="back">
-    <var-list
-      :finished="finished"
-      v-model:loading="loading"
-      @load="load"
-    >
-      <div :key="item" v-for="item in list">
-        <simple-user-card :user="item"/>
-      </div>
-    </var-list>
-  </div>
+    </var-app-bar>
 
+    <var-tabs class="bar" v-model:active="active">
+      <var-tab style="width: 30%;margin: 0 10%" @click="toggle(0)">我关注的</var-tab>
+      <var-tab style="width: 30%;margin: 0 10%" @click="toggle(1)">我的粉丝</var-tab>
+    </var-tabs>
+    <div style="height: 98px"/>
+    <div class="search">
+      <var-input class="search-input" placeholder="搜索" :hint="false" :line="false" v-model="search" @input="filter">
+        <template #prepend-icon>
+          <var-icon @click="filter" name="magnify-plus-outline"/>
+        </template>
+      </var-input>
+    </div>
+    <div class="total">
+      共{{total}}人
+    </div>
+    <div class="back">
+      <var-list
+        :finished="finished"
+        v-model:loading="loading"
+        @load="load"
+      >
+        <div :key="item" v-for="item in list">
+          <simple-user-card :user="item"/>
+        </div>
+      </var-list>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -68,6 +69,7 @@
         this.$router.replace({path: "/user/follow", query: {type: to ? "as_followed" : "as_follower"}})
         this.list = []
         this.finished = false
+        this.loading = true
         this.load()
       },
       filter() {

@@ -1,34 +1,35 @@
 <template>
-  <var-icon class="back" size="40px" name="chevron-left" @click="this.$router.return()"/>
-  <div class="title">重置密码</div>
+  <div class="animation-wrap">
+    <var-icon class="back" size="40px" name="chevron-left" @click="this.$router.return()"/>
+    <div class="title">重置密码</div>
 
+    <var-steps :active="active">
+      <var-step>确认账号</var-step>
+      <var-step>重置密码</var-step>
+      <var-step>重置成功</var-step>
+    </var-steps>
 
-  <var-steps :active="active">
-    <var-step>确认账号</var-step>
-    <var-step>重置密码</var-step>
-    <var-step>重置成功</var-step>
-  </var-steps>
+    <div class="input-wrap">
+      <div v-if="active===0">
+        <phone v-model:phone="phone"/>
+        <msg-code v-model:code="code" method="reset_password" :phone="phone"/>
+      </div>
 
-  <div class="input-wrap">
-    <div v-if="active===0">
-      <phone v-model:phone="phone"/>
-      <msg-code v-model:code="code" method="reset_password" :phone="phone"/>
-    </div>
+      <div v-if="active===1">
+        <var-input placeholder="电话号码" :line="false" disabled v-model="phone"/>
+        <br>
+        <password placeholder="新密码" v-model:password="password"/>
+        <password placeholder="确认密码" v-model:password="confirm_password" :confirm="password"/>
+      </div>
 
-    <div v-if="active===1">
-      <var-input placeholder="电话号码" :line="false" disabled v-model="phone"/>
+      <div v-if="active===2">
+        <var-icon class="success" size="100px" color="green" name="check-circle-outline"/>
+        <div style="text-align: center">修改完成，{{t}}秒后跳转到登陆页</div>
+      </div>
+
       <br>
-      <password placeholder="新密码" v-model:password="password"/>
-      <password placeholder="确认密码" v-model:password="confirm_password" :confirm="password"/>
+      <var-button v-if="active<2" type="primary" block @click="next">下一步</var-button>
     </div>
-
-    <div v-if="active===2">
-      <var-icon class="success" size="100px" color="green" name="check-circle-outline"/>
-      <div style="text-align: center">修改完成，{{t}}秒后跳转到登陆页</div>
-    </div>
-
-    <br>
-    <var-button v-if="active<2" type="primary" block @click="next">下一步</var-button>
   </div>
 </template>
 

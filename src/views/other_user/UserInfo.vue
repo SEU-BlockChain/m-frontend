@@ -1,74 +1,75 @@
 <template>
-  <img class="banner" :src="this.$settings.cos_url+ 'static/user-back.webp'"/>
+  <div class="animation-wrap">
+    <img class="banner" :src="this.$settings.cos_url+ 'static/user-back.webp'"/>
 
-  <div class="bar clear-fix">
-    <var-icon class="left" color="white" size="40px" name="chevron-left" @click="this.$router.return('/profile')"/>
-    <div class="bar-text left">返回</div>
-    <div class="manage right">
-      <var-icon size="26" name="dots-vertical" @click="show=true"/>
+    <div class="bar clear-fix">
+      <var-icon class="left" color="white" size="40px" name="chevron-left" @click="this.$router.return('/profile')"/>
+      <div class="bar-text left">返回</div>
+      <div class="manage right">
+        <var-icon size="26" name="dots-vertical" @click="show=true"/>
+      </div>
     </div>
-  </div>
 
-  <div v-if="user" class="head var-elevation--3">
-    <var-button class="right btn" size="small" type="primary" outline text>
-      <template #default>
-        <var-icon name="message-processing-outline" size="14"/>
-        私信
-      </template>
-    </var-button>
+    <div v-if="user" class="head var-elevation--3">
+      <var-button class="right btn" size="small" type="primary" outline text>
+        <template #default>
+          <var-icon name="message-processing-outline" size="14"/>
+          私信
+        </template>
+      </var-button>
 
-    <var-button v-if="!user.followed" class="right btn" size="small" type="primary" @click="follow">
-      <template #default>
-        <div style="padding: 0 20px">
-          <var-icon name="plus" size="14"/>
-          关注
+      <var-button v-if="!user.followed" class="right btn" size="small" type="primary" @click="follow">
+        <template #default>
+          <div style="padding: 0 20px">
+            <var-icon name="plus" size="14"/>
+            关注
+          </div>
+        </template>
+      </var-button>
+
+      <var-button v-else class="right btn" size="small" @click="not_follow">
+        <template #default>
+          <div style="padding: 0 20px">
+            <var-icon name="minus" size="14"/>
+            {{user.follower?"已互关" :"取消关注"}}
+          </div>
+        </template>
+      </var-button>
+
+      <div class="offset">
+        <img class="avatar" :src="this.$settings.cos_url+user.icon">
+        <div>
+          <span class="name">{{user.username}}</span>
+          <var-chip size="mini">LV{{this.$calc.calc_rank(user.experience).level}}</var-chip>
         </div>
-      </template>
-    </var-button>
-
-    <var-button v-else class="right btn" size="small" @click="not_follow">
-      <template #default>
-        <div style="padding: 0 20px">
-          <var-icon name="minus" size="14"/>
-          {{user.follower?"已互关" :"取消关注"}}
+      </div>
+      <div class="offset2">
+        <var-divider/>
+        <div class="interact">
+          <span class="interact-num">{{user.fans_num}}</span>
+          <span class="interact-text">粉丝</span>
         </div>
-      </template>
-    </var-button>
+        <div class="interact">
+          <span class="interact-num">{{user.attention_num}}</span>
+          <span class="interact-text">关注</span>
+        </div>
+        <div class="interact">
+          <span class="interact-num">{{user.up_num}}</span>
+          <span class="interact-text">获赞</span>
+        </div>
+      </div>
+    </div>
+    {{user}}
 
-    <div class="offset">
-      <img class="avatar" :src="this.$settings.cos_url+user.icon">
-      <div>
-        <span class="name">{{user.username}}</span>
-        <var-chip size="mini">LV{{this.$calc.calc_rank(user.experience).level}}</var-chip>
+    <var-popup position="bottom" v-model:show="show">
+      <div class="popup">
+        <div class="pop-item" @click="black">
+          <img class="pop-img" src="~assets/img/black.svg" alt="">
+          <div class="pop-text">拉黑</div>
+        </div>
       </div>
-    </div>
-    <div class="offset2">
-      <var-divider/>
-      <div class="interact">
-        <span class="interact-num">{{user.fans_num}}</span>
-        <span class="interact-text">粉丝</span>
-      </div>
-      <div class="interact">
-        <span class="interact-num">{{user.attention_num}}</span>
-        <span class="interact-text">关注</span>
-      </div>
-      <div class="interact">
-        <span class="interact-num">{{user.up_num}}</span>
-        <span class="interact-text">获赞</span>
-      </div>
-    </div>
+    </var-popup>
   </div>
-  {{user}}
-
-  <var-popup position="bottom" v-model:show="show">
-    <div class="popup">
-      <div class="pop-item" @click="black">
-        <img class="pop-img" src="~assets/img/black.svg" alt="">
-        <div class="pop-text">拉黑</div>
-      </div>
-    </div>
-  </var-popup>
-
 </template>
 
 <script>

@@ -1,0 +1,89 @@
+/*steady-up*/
+.steady-up-enter-active {
+    position: fixed;
+    transition: all .2s;
+    z-index: 10000;
+}
+
+.steady-up-leave-active {
+    position: absolute;
+    transition: all .2s;
+}
+
+.steady-up-enter-from {
+    opacity: .5;
+    transform: translateY(100vh);
+}
+
+/*down-steady*/
+.down-steady-enter-active {
+    position: absolute;
+    transition: all .2s;
+}
+
+.down-steady-leave-active {
+    position: fixed;
+    transition: all .2s;
+    z-index: 10000;
+
+}
+
+.down-steady-leave-to {
+    opacity: .5;
+    transform: translateY(100vh);
+}
+
+/*steady-left*/
+.steady-left-enter-active {
+    position: fixed;
+    transition: all .2s;
+    z-index: 10000;
+
+}
+
+.steady-left-leave-active {
+    position: absolute;
+    transition: all .2s;
+}
+
+.steady-left-leave-to {
+    opacity: 0;
+    transform: translateX(-50vw);
+}
+
+.steady-left-enter-from {
+    opacity: .5;
+    transform: translateX(100vw);
+}
+
+/*right-steady*/
+.right-steady-enter-active {
+    position: absolute;
+    transition: all .2s;
+}
+
+.right-steady-leave-active {
+    position: fixed;
+    transition: all .2s;
+    z-index: 10000;
+
+}
+
+.right-steady-leave-to {
+    opacity: .5;
+    transform: translateX(100vw);
+}
+
+.slide-fade-enter-active {
+    transition: all 0.3s ease-out;
+}
+
+.slide-fade-leave-active {
+    transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+    transform: translateX(20px);
+    opacity: 0;
+}

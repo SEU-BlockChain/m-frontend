@@ -1,47 +1,49 @@
 <template>
-  <div class="top">
-    <div class="search">
-      <var-input class="search-input" placeholder="搜索" :hint="false" :line="false" v-model="search" @input="filter">
-        <template #prepend-icon>
-          <var-icon @click="filter" name="magnify-plus-outline"/>
-        </template>
-      </var-input>
-    </div>
-    <div class="option">
-      <img class="option-icon" src="~assets/img/column.svg" alt="">
-      <div class="option-text">专栏</div>
-    </div>
-    <div class="option">
-      <img class="option-icon" src="~assets/img/news.svg" alt="">
-      <div class="option-text">资讯</div>
-    </div>
-    <div class="option">
-      <img class="option-icon" src="~assets/img/ask.svg" alt="">
-      <div class="option-text">问答</div>
+  <div class="animation-wrap">
+    <div class="top">
+      <div class="search">
+        <var-input class="search-input" placeholder="搜索" :hint="false" :line="false" v-model="search" @input="filter">
+          <template #prepend-icon>
+            <var-icon @click="filter" name="magnify-plus-outline"/>
+          </template>
+        </var-input>
+      </div>
+      <div class="option">
+        <img class="option-icon" src="~assets/img/column.svg" alt="">
+        <div class="option-text">专栏</div>
+      </div>
+      <div class="option">
+        <img class="option-icon" src="~assets/img/news.svg" alt="">
+        <div class="option-text">资讯</div>
+      </div>
+      <div class="option">
+        <img class="option-icon" src="~assets/img/ask.svg" alt="">
+        <div class="option-text">问答</div>
+      </div>
+
+      <div class="bbs">
+        <var-card class="card" @click="this.$router.push('/bbs')">
+          <template #extra>
+            <div class="card-wrap">
+              <img class="card-icon" src="~assets/img/bbs.svg" alt="">
+              <div>
+                <div class="card-text">讨论区</div>
+                <div class="card-desc">区块链交流·见解分享</div>
+              </div>
+              <div class="card-enter">
+                进入讨论区>
+              </div>
+            </div>
+          </template>
+        </var-card>
+      </div>
     </div>
 
-    <div class="bbs">
-      <var-card class="card" @click="this.$router.push('/bbs')">
-        <template #extra>
-          <div class="card-wrap">
-            <img class="card-icon" src="~assets/img/bbs.svg" alt="">
-            <div>
-              <div class="card-text">讨论区</div>
-              <div class="card-desc">区块链交流·见解分享</div>
-            </div>
-            <div class="card-enter">
-              进入讨论区>
-            </div>
-          </div>
-        </template>
-      </var-card>
-    </div>
-  </div>
-
-  <div class="body">
-    <div class="notice">
-      <var-icon name="file-document-outline"/>
-      官方公告
+    <div class="body">
+      <div class="notice">
+        <var-icon name="file-document-outline"/>
+        官方公告
+      </div>
     </div>
   </div>
 </template>

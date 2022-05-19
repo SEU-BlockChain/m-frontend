@@ -1,104 +1,104 @@
 <template>
-  <div class="head">
-    <var-app-bar
-      class="app-bar"
-      color="#f0f1f5"
-      :elevation="false"
-      text-color="#333"
-      title-position="center"
-    >
-      <template #left>
-        <var-button
-          round
-          text
-          color="transparent"
-          text-color="#333"
-          @click="this.$router.return('/community')"
-        >
-          <var-icon name="chevron-left" :size="24"/>
-        </var-button>
-      </template>
-      <template #default>
-        <div class="title">讨论区</div>
-      </template>
-      <template #right>
-        <var-button
-          round
-          text
-          color="transparent"
-          text-color="#333"
-          @click="this.$router.return('/community')"
-        >
-          <var-icon name="magnify-plus-outline" :size="24"/>
-        </var-button>
-      </template>
-    </var-app-bar>
-    <var-tabs
-      color="#f0f1f5"
-      active-color="#4ebaee"
-      inactive-color="#777"
-      v-model:active="category_id"
-      @change="reload"
-    >
-      <var-tab>全部</var-tab>
-      <var-tab>官方公告</var-tab>
-      <var-tab>杂谈</var-tab>
-    </var-tabs>
-    <var-divider margin="0"/>
-  </div>
-
-  <div class="body">
-    <div class="order">
-      <div>筛选条件</div>
-      <var-menu :offset-y="25" :offset-x="-10" v-model:show="show_order">
-        <div @click="show_order = !show_order">{{order_list[order_num].text}}
-          <var-icon name="menu-down"/>
-        </div>
-        <template #menu>
-          <div class="menu">
-            <var-cell @click="change_order(0)">最新回复</var-cell>
-            <var-cell @click="change_order(1)">最新发布</var-cell>
-            <var-cell @click="change_order(2)">最多点赞</var-cell>
-            <var-cell @click="change_order(3)">最多评论</var-cell>
-          </div>
-        </template>
-      </var-menu>
-    </div>
-
-    <div class="top">
-      <div class="top-item">
-        <var-chip class="top-chip" type="info" size="small" :round="false">置顶</var-chip>
-        <div class="top-text">123</div>
-      </div>
-      <div class="top-item">
-        <var-chip class="top-chip" type="info" size="small" :round="false">置顶</var-chip>
-        <div class="top-text">456</div>
-      </div>
-    </div>
-    <var-divider margin="0"/>
-
-    <div class="article-container">
-      <var-list
-        :finished="finished"
-        v-model:loading="loading"
-        @load="load_article"
+  <div class="animation-wrap">
+    <div class="head">
+      <var-app-bar
+        class="app-bar"
+        color="#f0f1f5"
+        :elevation="false"
+        text-color="#333"
+        title-position="center"
       >
-        <article-card :key="article.id" :article="article" v-for="article in article_list"
-                      @change_category="change_category"/>
-      </var-list>
+        <template #left>
+          <var-button
+            round
+            text
+            color="transparent"
+            text-color="#333"
+            @click="this.$router.return('/community')"
+          >
+            <var-icon name="chevron-left" :size="24"/>
+          </var-button>
+        </template>
+        <template #default>
+          <div class="title">讨论区</div>
+        </template>
+        <template #right>
+          <var-button
+            round
+            text
+            color="transparent"
+            text-color="#333"
+            @click="this.$router.return('/community')"
+          >
+            <var-icon name="magnify-plus-outline" :size="24"/>
+          </var-button>
+        </template>
+      </var-app-bar>
+      <var-tabs
+        color="#f0f1f5"
+        active-color="#4ebaee"
+        inactive-color="#777"
+        v-model:active="category_id"
+        @change="reload"
+      >
+        <var-tab>全部</var-tab>
+        <var-tab>官方公告</var-tab>
+        <var-tab>杂谈</var-tab>
+      </var-tabs>
+      <var-divider margin="0"/>
     </div>
-  </div>
 
-  <var-button class="post-article" type="success" round @click="this.$router.push('/bbs/post-article')">
-    <var-icon size="28" name="plus"/>
-  </var-button>
+    <div class="body">
+      <div class="order">
+        <div>筛选条件</div>
+        <var-menu :offset-y="25" :offset-x="-10" v-model:show="show_order">
+          <div @click="show_order = !show_order">{{order_text}}
+            <var-icon name="menu-down"/>
+          </div>
+          <template #menu>
+            <div class="menu">
+              <var-cell @click="change_order(order)" v-for="order in order_list">{{order.text}}
+              </var-cell>
+            </div>
+          </template>
+        </var-menu>
+      </div>
+
+      <div class="top" v-if="category_id===0">
+        <div class="top-item">
+          <var-chip class="top-chip" type="info" size="small" :round="false">置顶</var-chip>
+          <div class="top-text">123</div>
+        </div>
+        <div class="top-item">
+          <var-chip class="top-chip" type="info" size="small" :round="false">置顶</var-chip>
+          <div class="top-text">456</div>
+        </div>
+      </div>
+      <var-divider margin="0"/>
+
+      <div class="article-container">
+        <var-list
+          :finished="finished"
+          v-model:loading="loading"
+          @load="load_article"
+        >
+          <article-card :key="article.id" :article="article" v-for="article in article_list"/>
+        </var-list>
+      </div>
+    </div>
+
+
+    <var-button class="post-article" type="success" round @click="this.$router.push('/bbs/post-article')">
+      <var-icon size="28" name="plus"/>
+    </var-button>
+  </div>
 </template>
 
 <script>
   import ArticleCard from "components/card/ArticleCard";
 
   export default {
-    name: "index",
+    name: "Index",
     components: {
       ArticleCard
     },
@@ -106,7 +106,8 @@
       return {
         category_id: 0,
         show_order: false,
-        order_num: 0,
+        ordering: "-update_time",
+        order_text: "最新回复",
         order_list: [
           {
             text: "最新回复",
@@ -128,16 +129,14 @@
         top: [],
         finished: false,
         loading: false,
+        next: null,
         article_list: []
       }
     },
     methods: {
-      change_category(id) {
-        this.category_id = id
-        this.reload()
-      },
-      change_order(num) {
-        this.order_num = num
+      change_order(order) {
+        this.ordering = order.ordering
+        this.order_text = order.text
         this.show_order = false
         this.reload()
       },
@@ -148,7 +147,7 @@
       },
       load_article() {
         this.$request.api.get(
-          this.next || `/bbs/article/?category_id=${this.category_id || ""}&ordering=${this.order_list[this.order_num].ordering}`,
+          this.next || `/bbs/article/?category_id=${this.category_id || ""}&ordering=${this.ordering}`,
         ).then(res => {
           if (res.data.code === 112) {
             for (let i of res.data.result.results) {
@@ -169,7 +168,8 @@
       clear() {
         this.article_list = []
         this.finished = false
-        this.loading = false
+        this.loading = true
+        this.next = null
       }
     },
     mounted() {
@@ -177,7 +177,7 @@
       document.addEventListener("scroll", () => {
         _this.show_order = false
       })
-    }
+    },
   }
 </script>
 

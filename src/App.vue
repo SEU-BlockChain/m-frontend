@@ -2,15 +2,16 @@
   <div class="background"/>
 
   <router-view v-if="this.$store.state.is_init" v-slot="{ Component }">
-    <Transition name="fade">
-      <keep-alive>
+    <Transition :name="animation">
+      <keep-alive :include="include">
         <component :is="Component"/>
       </keep-alive>
     </Transition>
   </router-view>
 
   <var-loading class="center" v-else/>
-  <var-back-top bottom="70px" right="15px" :duration="300"/>
+
+  <var-back-top v-if="!this.$store.state.hide_top" bottom="70px" right="15px" :duration="300"/>
 </template>
 
 <script>
@@ -33,11 +34,20 @@
         } else {
           this.animation = this.animate(to, from)
         }
-        console.log(this.animation);
+
+        if (to.meta.keepAlive) {
+          this.include.indexOf(to.name) === -1 && this.include.push(to.name);
+        }
+
+        if (from.meta.keepAlive && to.meta.depth < from.meta.depth) {
+          let index = this.include.indexOf(from.name);
+          index !== -1 && this.include.splice(index, 1);
+        }
       }
     },
     data() {
       return {
+        include: [],
         animation: ""
       }
     },
@@ -84,18 +94,4 @@
 
 <style>
   @import "assets/css/base.css";
-
-  .fade-enter-active {
-    transition: all 0.3s ease-out;
-  }
-
-  .fade-leave-active {
-    transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
-  }
-
-  .fade-enter-from,
-  .fade-leave-to {
-    transform: translateX(20px);
-    opacity: 0;
-  }
 </style>

@@ -1,57 +1,59 @@
 <template>
-  <img class="banner" :src="this.$settings.cos_url+ 'static/user-back.webp'"/>
-  <div class="bar clear-fix">
-    <var-icon class="left" color="white" size="40px" name="chevron-left" @click="this.$router.return('/profile')"/>
-    <div class="bar-text left">返回</div>
-    <var-button class="right edit" text-color="#fc8bab" text outline type="primary"
-                @click="this.$router.push('/edit-info')">编辑信息
-    </var-button>
-  </div>
-
-  <div class="head var-elevation--3">
-    <div class="right">
-      <div class="interact-item" @click="this.$router.push({path:'/user/follow',query:{type:'as_followed'}})">
-        <div class="interact-item-num">{{user.fans_num}}</div>
-        <div class="interact-item-text">粉丝</div>
-      </div>
-      <div class="divider"/>
-      <div class="interact-item" @click="this.$router.push({path:'/user/follow',query:{type:'as_follower'}})">
-        <div class="interact-item-num">{{user.attention_num}}</div>
-        <div class="interact-item-text">关注</div>
-      </div>
-      <div class="divider"/>
-      <div class="interact-item">
-        <div class="interact-item-num">{{user.up_num}}</div>
-        <div class="interact-item-text">获赞</div>
-      </div>
+  <div class="animation-wrap">
+    <img class="banner" :src="this.$settings.cos_url+ 'static/user-back.webp'"/>
+    <div class="bar clear-fix">
+      <var-icon class="left" color="white" size="40px" name="chevron-left" @click="this.$router.return('/profile')"/>
+      <div class="bar-text left">返回</div>
+      <var-button class="right edit" text-color="#fc8bab" text outline type="primary"
+                  @click="this.$router.push('/edit-info')">编辑信息
+      </var-button>
     </div>
-    <img class="avatar offset" :src="this.$settings.cos_url+user.icon">
-    <div class="name offset">{{user.username}}</div>
-    <Level class="offset" :experience="user.experience"/>
-  </div>
 
-  <var-card class="card button" elevation="1">
-    <template #extra>
-      <div class="button-container">
-        <div class="button-item" @click="this.$router.push('/user/black-list')">
-          <img class="button-img" src="~assets/img/black-list.png" alt="">
-          <div class="button-text">黑名单</div>
+    <div class="head var-elevation--3">
+      <div class="right">
+        <div class="interact-item" @click="this.$router.push({path:'/user/follow',query:{type:'as_followed'}})">
+          <div class="interact-item-num">{{user.fans_num}}</div>
+          <div class="interact-item-text">粉丝</div>
+        </div>
+        <div class="divider"/>
+        <div class="interact-item" @click="this.$router.push({path:'/user/follow',query:{type:'as_follower'}})">
+          <div class="interact-item-num">{{user.attention_num}}</div>
+          <div class="interact-item-text">关注</div>
+        </div>
+        <div class="divider"/>
+        <div class="interact-item">
+          <div class="interact-item-num">{{user.up_num}}</div>
+          <div class="interact-item-text">获赞</div>
         </div>
       </div>
-    </template>
-  </var-card>
+      <img class="avatar offset" :src="this.$settings.cos_url+user.icon">
+      <div class="name offset">{{user.username}}</div>
+      <Level class="offset" :experience="user.experience"/>
+    </div>
 
-  <div class="body">
-    <var-sticky>
-      <var-tabs v-model:active="active">
-        <var-tab @click="this.$router.replace('/user/articles')">发布</var-tab>
-        <var-tab @click="this.$router.replace('/user/comments')">评论</var-tab>
-        <var-tab @click="this.$router.replace('/user/collections')">合集</var-tab>
-        <var-tab @click="this.$router.replace('/user/stars')">收藏</var-tab>
-      </var-tabs>
-      <var-divider margin="0"/>
-      <router-view @active="change_active"/>
-    </var-sticky>
+    <var-card class="card button" elevation="1">
+      <template #extra>
+        <div class="button-container">
+          <div class="button-item" @click="this.$router.push('/user/black-list')">
+            <img class="button-img" src="~assets/img/black-list.png" alt="">
+            <div class="button-text">黑名单</div>
+          </div>
+        </div>
+      </template>
+    </var-card>
+
+    <div class="body">
+      <var-sticky>
+        <var-tabs v-model:active="active">
+          <var-tab @click="this.$router.replace('/user/articles')">发布</var-tab>
+          <var-tab @click="this.$router.replace('/user/comments')">评论</var-tab>
+          <var-tab @click="this.$router.replace('/user/collections')">合集</var-tab>
+          <var-tab @click="this.$router.replace('/user/stars')">收藏</var-tab>
+        </var-tabs>
+        <var-divider margin="0"/>
+        <router-view @active="change_active"/>
+      </var-sticky>
+    </div>
   </div>
 </template>
 

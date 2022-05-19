@@ -3,20 +3,18 @@
     <img class="avatar" :src="this.$settings.cos_url+user.icon" @click="this.$router.push(`/user/${user.id}`)"/>
     <div @click="this.$router.push(`/user/${user.id}`)">
       <div class="name">{{user.username}}</div>
-      <div class="desc">{{user.description&&user.description.length>19?
-        user.description.substring(0,20)+"...":user.description}}
-      </div>
+      <div class="desc">{{this.$calc.filters.max_width(user.description,20)||"还没有签名"}}</div>
       <div class="time">关注时间:{{user.create_time.substring(0,19).replace("T"," ")}}</div>
     </div>
     <div class="button">
-      <var-button v-if="user.followed" class="right btn shadow" size="small" @click="not_follow">
+      <var-button v-if="user.followed" text outline class="right btn shadow" size="small" @click="not_follow">
         <template #default>
           <var-icon size="14" name="minus"/>
           {{user.follower?"已互关" :"取消关注"}}
         </template>
       </var-button>
 
-      <var-button v-else class="right btn" size="small" type="primary" @click="follow">
+      <var-button v-else class="right btn" text outline size="small" type="primary" @click="follow">
         <template #default>
           <var-icon size="14" name="plus"/>
           关注
