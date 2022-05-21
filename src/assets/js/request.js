@@ -9,6 +9,7 @@ let api = axios.create({
 
 api.interceptors.request.use(
   config => {
+    config.url = config.url.replace("http://chain", "")
     const token = document.cookie.match(/token=(.*?)(;|$)/)
     token && (config.headers.Authorization = token[1]);
     return config;

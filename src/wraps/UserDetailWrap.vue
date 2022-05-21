@@ -43,16 +43,18 @@
     </var-card>
 
     <div class="body">
-      <var-sticky>
-        <var-tabs v-model:active="active">
-          <var-tab @click="this.$router.replace('/user/articles')">发布</var-tab>
-          <var-tab @click="this.$router.replace('/user/comments')">评论</var-tab>
-          <var-tab @click="this.$router.replace('/user/collections')">合集</var-tab>
-          <var-tab @click="this.$router.replace('/user/stars')">收藏</var-tab>
-        </var-tabs>
-        <var-divider margin="0"/>
-        <router-view @active="change_active"/>
-      </var-sticky>
+      <var-tabs sticky color="white" v-model:active="active">
+        <var-tab @click="this.$router.replace('/user/articles')">发布</var-tab>
+        <var-tab @click="this.$router.replace('/user/comments')">评论</var-tab>
+        <var-tab @click="this.$router.replace('/user/collections')">合集</var-tab>
+        <var-tab @click="this.$router.replace('/user/stars')">收藏</var-tab>
+      </var-tabs>
+      <var-divider margin="0"/>
+      <router-view v-slot="{ Component }">
+        <keep-alive>
+          <component @active="change_active" :is="Component"/>
+        </keep-alive>
+      </router-view>
     </div>
   </div>
 </template>
@@ -153,7 +155,7 @@
 
   .body {
     margin-top: 10px;
-    background-color: white;
+    background-color: #fafafa;
     border-radius: 5px 5px 0 0;
     min-height: 100vh;
   }
@@ -188,4 +190,5 @@
     line-height: 15px;
     color: #777777;
   }
+
 </style>

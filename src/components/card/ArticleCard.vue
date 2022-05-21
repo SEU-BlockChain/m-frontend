@@ -3,7 +3,7 @@
     <var-card class="card" elevation="0">
       <template #extra>
         <div class="article-container">
-          <div class="head">
+          <div v-if="!hide_author" class="head">
             <div class="user-info" @click="this.$router.push(`/user/${article.author.id}`)">
               <img class="avatar" :src="this.$settings.cos_url+article.author.icon">
               <div class="username">{{article.author.username}}</div>
@@ -13,7 +13,11 @@
                 </var-chip>
               </div>
             </div>
-            <div class="time">{{this.$calc.filters.date(article.update_time)}}</div>
+            <div class="time" v-if="use_create_time">{{this.$calc.filters.date(article.create_time)}}</div>
+            <div class="time" v-else>{{this.$calc.filters.date(article.update_time)}}</div>
+          </div>
+          <div v-else>
+            <div class="time2">{{this.$calc.filters.date(article.update_time)}}</div>
           </div>
           <div class="title break" @click="to_article">{{article.title}}</div>
           <div class="content w-container limited-xy" v-html="article.description" @click="to_article"/>
@@ -45,7 +49,9 @@
   export default {
     name: "ArticleCard",
     props: {
-      article: null
+      article: null,
+      hide_author: false,
+      use_create_time: false
     },
     emits: ["change_category"],
     methods: {
@@ -97,6 +103,11 @@
     line-height: 40px;
     font-size: 14px;
     color: #666666;
+  }
+
+  .time2 {
+    font-size: 16px;
+    color: #999;
   }
 
   .title {

@@ -59,7 +59,9 @@
         </div>
       </div>
     </div>
-    {{user}}
+    <div class="body">
+      <profile-article-list :author_id="this.$route.params.id"/>
+    </div>
 
     <var-popup position="bottom" v-model:show="show">
       <div class="popup">
@@ -73,8 +75,11 @@
 </template>
 
 <script>
+  import ProfileArticleList from "../../components/List/ProfileArticleList";
+
   export default {
     name: "UserInfo",
+    components: {ProfileArticleList},
     data() {
       return {
         user: null,
@@ -199,5 +204,10 @@
 
   .pop-text {
     text-align: center;
+  }
+
+  .body {
+    margin-top: 10px;
+    background-color: #fafafa;
   }
 </style>

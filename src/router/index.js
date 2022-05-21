@@ -1,4 +1,4 @@
-import {createRouter, createWebHistory} from 'vue-router'
+import {createRouter, createWebHistory,createWebHashHistory} from 'vue-router'
 import store from "../store/index.js"
 
 import IndexWrap from "wraps/IndexWrap";
@@ -68,27 +68,40 @@ const routes = [
       title: "我的主页",
       auth: 1,
       depth: 1,
+      keepAlive: true
     },
     children: [
       {
         path: "articles",
         name: "Articles",
         component: () => import("views/user_detail/Articles"),
+        meta: {
+          keepAlive: true
+        }
       },
       {
         path: "comments",
         name: "Comments",
         component: () => import("views/user_detail/Comments"),
+        meta: {
+          keepAlive: true
+        }
       },
       {
         path: "collections",
         name: "Collections",
         component: () => import("views/user_detail/Collections"),
+        meta: {
+          keepAlive: true
+        }
       },
       {
         path: "stars",
         name: "Stars",
         component: () => import("views/user_detail/Stars"),
+        meta: {
+          keepAlive: true
+        }
       }
     ]
   },
@@ -118,7 +131,9 @@ const routes = [
     component: () => import("views/other_user/UserInfo"),
     meta: {
       title: "用户信息",
-      depth: 3
+      depth: 3,
+      keepAlive: true,
+      none: true
     }
   },
   {
@@ -210,7 +225,8 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHashHistory(),
+  // history: createWebHistory(process.env.BASE_URL),
   routes
 })
 

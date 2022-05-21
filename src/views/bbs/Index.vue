@@ -40,6 +40,7 @@
         inactive-color="#777"
         v-model:active="category_id"
         @change="reload"
+        style="height: 30px;"
       >
         <var-tab>全部</var-tab>
         <var-tab>官方公告</var-tab>
@@ -201,7 +202,7 @@
 
   .body {
     min-height: 100vh;
-    padding-top: 98px;
+    padding-top: 84px;
     background-color: #fcfcfc;
   }
 

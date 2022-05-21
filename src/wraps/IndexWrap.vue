@@ -1,6 +1,11 @@
 <template>
   <div class="animation-wrap">
-    <router-view @active="change_active"/>
+    <router-view v-slot="{ Component }">
+      <keep-alive>
+        <component :is="Component" @active="change_active"/>
+      </keep-alive>
+    </router-view>
+
     <var-bottom-navigation class="bottom-fixed var-elevation--12" v-model:active="active">
 
       <var-bottom-navigation-item
@@ -13,6 +18,7 @@
 
       <var-bottom-navigation-item
         label="动态" icon="bell-outline" @click="this.$router.push('/dynamic')"
+        :badge="Boolean(this.$store.state.message?.dynamic)&&{type: 'primary', value: this.$store.state.message?.dynamic}"
       />
 
       <var-bottom-navigation-item

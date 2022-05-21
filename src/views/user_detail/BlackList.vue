@@ -14,7 +14,7 @@
       </template>
     </var-app-bar>
 
-    <div class="back">
+    <div style="margin-top: 54px">
       <div class="search">
         <var-input class="search-input" placeholder="搜索" :hint="false" :line="false" v-model="search" @input="filter">
           <template #prepend-icon>
@@ -121,8 +121,7 @@
 
   .back {
     background-color: white;
-    padding-top: 54px;
-    min-height: calc(100vh - 123px);
+    min-height: calc(100vh - 54px);
   }
 
   .search {

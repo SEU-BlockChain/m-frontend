@@ -28,7 +28,7 @@
           text
           color="transparent"
           text-color="#333"
-          @click="show_option=true"
+          @click="show_article_option=true"
         >
           <var-icon name="dots-vertical" :size="24"/>
         </var-button>
@@ -111,6 +111,7 @@
                 </div>
               </template>
             </common-comment-card>
+            <var-divider margin="0" :inset="60"/>
           </div>
         </var-list>
       </div>
@@ -229,17 +230,19 @@
       </div>
     </var-popup>
 
-    <var-popup style="border-radius: 10px;width: 80vw" position="center" v-if="conversation"
+    <var-popup style="border-radius: 10px;width: 80vw;max-height: 80vh" position="center" v-if="conversation_list"
                v-model:show="show_conversation">
       <common-comment-card
         :article="article"
         :parent="opened_comment"
         :comment="conversation"
         :show_comment_num="false"
+        :hide_conversation="k!==0"
         @onClickOption="open_comment_option"
         @onClickContent="open_comment_editor"
         @onVote="vote_comment"
         @onClickConversationDetail="load_conversation"
+        v-for="(conversation,k) in conversation_list"
       />
     </var-popup>
   </div>
@@ -267,6 +270,19 @@
           this.parent = this.target = null
         }
       },
+      show_conversation(newValue, oldValue) {
+        if (!newValue) {
+          this.conversation_list = []
+        }
+      },
+      show_children_comment(newValue, oldValue) {
+        if (!newValue) {
+          this.opened_comment = null
+        }
+      },
+      is_author() {
+        this.root_comment_clear()
+      }
     },
     data() {
       return {
@@ -315,7 +331,9 @@
         show_comment_option: false,
 
         show_conversation: false,
-        conversation: null
+        conversation_list: [],
+
+        scrollTop: 0
       }
     },
     computed: {
@@ -384,7 +402,10 @@
         })
       },
       vote_article(is_up) {
-        this.$calc.up_down(is_up, this.article)
+        if (!this.$store.state.is_login) {
+          this.$router.push({path: "/login", query: {back: true}})
+          return
+        }
         this.$request.api.post(
           `/bbs/article/${this.$route.params.id}/vote/`,
           {
@@ -396,6 +417,8 @@
               type: "warning",
               duration: 1000
             })
+          } else {
+            this.$calc.up_down(is_up, this.article)
           }
         })
       },
@@ -485,7 +508,7 @@
       },
       children_comment_load() {
         this.$request.api.get(
-          this.next || `/bbs/article/${this.article.id}/comment/${this.opened_comment.id}/children_comment/`,
+          this.children_comment_next || `/bbs/article/${this.article.id}/comment/${this.opened_comment.id}/children_comment/`,
         ).then(res => {
           if (res.data.code === 117) {
             for (let i of res.data.result.results) {
@@ -512,7 +535,10 @@
         this.open_editor(parent, target)
       },
       vote_comment(is_up, comment) {
-        this.$calc.up_down(is_up, comment)
+        if (!this.$store.state.is_login) {
+          this.$router.push({path: "/login", query: {bakc: true}})
+          return
+        }
         this.$request.api.post(
           `/bbs/article/${this.$route.params.id}/comment/${comment.id}/vote/`,
           {
@@ -524,6 +550,8 @@
               type: "warning",
               duration: 1000
             })
+          } else {
+            this.$calc.up_down(is_up, comment)
           }
         })
       },
@@ -532,13 +560,16 @@
         this.opened_comment = parent
         this.show_children_comment = true
       },
-      load_conversation(target_id) {
+      load_conversation(comment) {
         this.show_conversation = true
+        if (!this.conversation_list.length) {
+          this.conversation_list.push(comment)
+        }
         this.$request.api.get(
-          `bbs/article/${this.article.id}/comment/${this.opened_comment.id}/children_comment/${target_id}`
+          `bbs/article/${this.article.id}/comment/${this.opened_comment.id}/children_comment/${comment.target_id}`
         ).then(res => {
           if (res.data.code === 116) {
-            this.conversation = res.data.result
+            this.conversation_list.unshift(res.data.result)
           } else {
             this.$tip({
               content: res.data.msg,
@@ -556,7 +587,6 @@
             url = `bbs/article/${this.article.id}/comment/${this.opened_comment.id}/children_comment/${this.option_comment.id}`
           } else {
             url = `bbs/article/${this.article.id}/comment/${this.option_comment.id}/`
-
           }
           this.$request.api.delete(
             url
@@ -602,13 +632,18 @@
       })
     },
     created() {
-      window.scrollTo(0, 0)
       this.$request.api.get(
         `/bbs/article/${this.$route.params.id}/`,
       ).then(res => {
         if (res.data.code === 111) {
           this.article = res.data.result
           this.article_ready = true
+        } else {
+          this.$tip({
+            content: res.data.msg,
+            type: "warning",
+            duration: 1000
+          })
         }
       })
     },

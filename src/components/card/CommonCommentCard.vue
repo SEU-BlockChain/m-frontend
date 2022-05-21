@@ -1,13 +1,13 @@
 <template>
   <div class="container" :class="{'new':comment.new}">
-    <img
-      class="avatar"
-      :src="this.$settings.cos_url+comment.author.icon"
-      @click="this.$router.push(`/user/${comment.author.id}`)"
+    <img v-if="!hide_head"
+         class="avatar"
+         :src="this.$settings.cos_url+comment.author.icon"
+         @click="this.$router.push(`/user/${comment.author.id}`)"
     />
 
     <div class="content">
-      <div class="head">
+      <div v-if="!hide_head" class="head">
         <div class="name-level" @click="this.$router.push(`/user/${comment.author.id}`)">
           <div class="name">{{comment.author.username}}</div>
 
@@ -38,16 +38,21 @@
           <div class="time">
             {{this.$calc.filters.date(comment.comment_time)}}
           </div>
-          <div v-if="comment.target_id" class="conversation" @click="on_click_conversation_detail">
+          <div v-if="comment.target_id&&!hide_conversation"
+               class="conversation"
+               @click="on_click_conversation_detail">
             对话详情
           </div>
           <div class="interact">
 
-            <img v-if="show_comment_num" @click="on_click_content"
-                 class="interact-icon" src="~assets/img/comment.svg" height="16" alt="">
-            <div v-if="show_comment_num" @click="on_click_content"
-                 class="interact-text">{{comment.comment_num}}
+            <div @click="on_click_content">
+              <img v-if="show_comment_num"
+                   class="interact-icon" src="~assets/img/comment.svg" height="16" alt="">
+              <div v-if="show_comment_num"
+                   class="interact-text">{{comment.comment_num}}
+              </div>
             </div>
+
 
             <div class="flex-center" @click="on_vote(1)">
               <img
@@ -82,7 +87,9 @@
       article: null,
       parent: null,
       comment: null,
+      hide_conversation: false,
       show_comment_num: null,
+      hide_head: false
     },
     emits: [
       "onClickOption",
@@ -106,7 +113,7 @@
         this.$emit('onVote', is_up, this.comment)
       },
       on_click_conversation_detail() {
-        this.$emit('onClickConversationDetail', this.comment.target_id)
+        this.$emit('onClickConversationDetail', this.comment)
       }
     }
   }
