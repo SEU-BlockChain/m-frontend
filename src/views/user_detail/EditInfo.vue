@@ -187,7 +187,7 @@
           if (this.type === "username") {
             if (res.data.code === 108) {
               this.user.username = res.data.result.user.username
-              this.$cookies.set("token", res.data.result.user.token)
+              window.localStorage.setItem("token", res.data.result.user.token)
               this.$tip({
                 content: "用户名更新完成",
                 type: "success",

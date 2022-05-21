@@ -85,7 +85,7 @@
               type: "success",
               duration: 1000,
             })
-            this.$cookies.set("token", res.data.result.user.token)
+            window.localStorage.setItem("token", res.data.result.user.token)
             this.$store.commit("login", res.data.result["user"])
             if (this.$route.query.back) {
               this.$router.return()

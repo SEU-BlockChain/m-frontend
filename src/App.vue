@@ -74,7 +74,7 @@
       }
     },
     beforeCreate() {
-      let token = this.$cookies.get("token")
+      let token = window.localStorage.getItem("token")
       if (token) {
         let login = this.$request.api.get(
           "user/self/info/"
@@ -90,7 +90,7 @@
               resolve()
             })
           } else {
-            this.$cookies.remove("token")
+            window.localStorage.removeItem("token")
             return new Promise((resolve, reject) => {
               reject(res.data.msg)
             })

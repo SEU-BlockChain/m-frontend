@@ -120,7 +120,7 @@
           }
         ).then(res => {
           if (res.data.code === 104) {
-            this.$cookies.remove("token")
+            window.localStorage.removeItem("token")
             this.$store.commit("logout")
             this.active++
           } else {
