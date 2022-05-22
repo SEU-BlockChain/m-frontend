@@ -59,7 +59,8 @@
 
     <div class="category var-elevation--5">
       <var-radio-group v-model="category">
-        <var-radio :disabled="this.update_id!==undefined" :checked-value="1">官方</var-radio>
+        <var-radio v-if="this.$store.state.user.is_staff" :disabled="this.update_id!==undefined" :checked-value="1">官方
+        </var-radio>
         <var-radio :disabled="this.update_id!==undefined" :checked-value="2">杂谈</var-radio>
       </var-radio-group>
     </div>
@@ -109,7 +110,7 @@
     data() {
       return {
         title: "",
-        category: 1,
+        category: 2,
         show: false,
         draft_list: [],
         finished: false,

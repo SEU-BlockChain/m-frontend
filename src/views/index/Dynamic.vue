@@ -109,7 +109,9 @@
           }
         }
       })
-      this.$store.commit("message_clear", "dynamic")
+      this.$store.state.login.then(message => {
+        message.dynamic = 0
+      })
     },
     activated() {
       this.$emit("active", 2)

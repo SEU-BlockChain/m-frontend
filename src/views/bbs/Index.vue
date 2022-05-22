@@ -107,12 +107,12 @@
       return {
         category_id: 0,
         show_order: false,
-        ordering: "-update_time",
+        ordering: "-comment_time",
         order_text: "最新回复",
         order_list: [
           {
             text: "最新回复",
-            ordering: "-update_time",
+            ordering: "-comment_time",
           },
           {
             text: "最新发布",

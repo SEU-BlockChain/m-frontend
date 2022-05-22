@@ -14,7 +14,7 @@
               </div>
             </div>
             <div class="time" v-if="use_create_time">{{this.$calc.filters.date(article.create_time)}}</div>
-            <div class="time" v-else>{{this.$calc.filters.date(article.update_time)}}</div>
+            <div class="time" v-else>{{this.$calc.filters.date(article.comment_time)}}</div>
           </div>
           <div v-else>
             <div class="time2">{{this.$calc.filters.date(article.update_time)}}</div>

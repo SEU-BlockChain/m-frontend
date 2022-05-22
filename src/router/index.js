@@ -86,6 +86,7 @@ const routes = [
       title: "收到的赞",
       auth: 1,
       depth: 1,
+      keepAlive: true
     },
     component: () => import("views/message/Like"),
   },
@@ -209,12 +210,21 @@ const routes = [
     }
   },
   {
-    path: "/settings",
-    name: "Settings",
-    component: () => import("views/settings/Settings"),
+    path: "/setting",
+    name: "Setting",
+    component: () => import("views/setting/Setting"),
     meta: {
       title: "设置",
       depth: 1,
+    }
+  },
+  {
+    path: "/setting/message",
+    name: "MessageSetting",
+    component: () => import("views/setting/MessageSetting"),
+    meta: {
+      title: "消息设置",
+      depth: 2,
     }
   },
   {

@@ -1,6 +1,6 @@
 let cos_url = "https://cos.chain.seutools.com/"
-let api_url = "https://api.chain.seutools.com/"
-// let api_url = "http://127.0.0.1:8000/"
+// let api_url = "https://api.chain.seutools.com/"
+let api_url = "http://127.0.0.1:8000/"
 
 
 let re_pattens = {

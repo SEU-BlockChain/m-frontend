@@ -81,7 +81,7 @@
         <var-icon class="my-icon right" name="chevron-right"/>
       </div>
       <var-divider style="--divider-color:#f0f1f5"/>
-      <div class="my-item clear-fix" @click="this.$router.push('/settings')">
+      <div class="my-item clear-fix" @click="this.$router.push('/setting')">
         <var-icon class="my-icon left" name="cog-outline"/>
         <div class="my-text">设置</div>
         <var-icon class="my-icon right" name="chevron-right"/>

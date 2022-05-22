@@ -30,6 +30,7 @@
               class="comment-card"
               :comment="reply"
               v-if="remove.indexOf(reply.id)===-1"
+              v-ripple="{ color: '#ccc' }"
             />
           </div>
         </div>
@@ -111,8 +112,6 @@
         })
       },
       open_editor(article, parent, target) {
-        console.log(parent);
-        console.log(target);
         this.article = article
         this.parent = parent
         this.target = target
@@ -186,6 +185,7 @@
 
   .container {
     padding-top: 54px;
+    min-height: 120vh;
   }
 
   .comment-card {
