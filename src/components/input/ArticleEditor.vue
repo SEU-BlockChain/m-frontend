@@ -79,7 +79,7 @@
               maxNumberOfFiles: 1,
               allowedFileTypes: ['image/*'],
               headers: {
-                Authorization: this.$cookies.get("token")
+                Authorization: window.localStorage.getItem("token")
               },
               base64LimitKB: 5,
               customInsert(result, insertFn) {

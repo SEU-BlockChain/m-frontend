@@ -119,11 +119,4 @@
     border-radius: 5px;
     padding: 10px;
   }
-
-
-  .all-comment {
-
-  }
-
-
 </style>

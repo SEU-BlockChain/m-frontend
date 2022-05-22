@@ -63,7 +63,7 @@
         <var-sticky z-index="0" :offset-top="54">
           <div class="select">
             <div class="author">
-              <var-tabs v-model:active="is_author" @change="root_comment_load">
+              <var-tabs v-model:active="is_author" @change="change_author">
                 <var-tab>全部评论</var-tab>
                 <var-tab>只看楼主</var-tab>
               </var-tabs>
@@ -267,7 +267,7 @@
       show_editor(newValue, oldValue) {
         this.$store.commit("toggle_hide")
         if (!newValue) {
-          this.parent = this.target = null
+          this.parent = this.target == null
         }
       },
       show_conversation(newValue, oldValue) {
@@ -373,6 +373,10 @@
         this.ordering = order.ordering
         this.order_text = order.text
         this.show_order = false
+        this.root_comment_clear()
+        this.root_comment_reload()
+      },
+      change_author(){
         this.root_comment_reload()
       },
       root_comment_load() {
@@ -464,7 +468,6 @@
               this.show_editor = false
               res.data.result.new = true
               this.root_comment_list.unshift(res.data.result)
-              window.location.href = "#comment"
             } else {
               this.$tip({
                 content: res.data.msg,

@@ -13,7 +13,7 @@
           message: "确认退出登陆？",
         }).then(res => {
           if (res === "confirm") {
-            this.$cookies.remove("token")
+            localStorage.removeItem("token")
             this.$store.commit("logout")
             this.$router.replace("/")
           }

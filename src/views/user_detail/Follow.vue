@@ -34,6 +34,7 @@
         :finished="finished"
         v-model:loading="loading"
         @load="load"
+        :immediate-check="false"
       >
         <div :key="item" v-for="item in list">
           <simple-user-card :user="item"/>
@@ -114,6 +115,7 @@
       if (this.$route.query.type === "as_followed") {
         this.active = 1
       }
+      this.load()
     }
   }
 </script>
@@ -157,7 +159,6 @@
 
   .back {
     background-color: white;
-    min-height: calc(100vh - 98px);
   }
 
 </style>

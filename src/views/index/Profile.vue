@@ -103,6 +103,9 @@
     },
     created() {
       this.$emit("active", 4)
+    },
+    activated() {
+      this.$emit("active", 4)
     }
   }
 </script>

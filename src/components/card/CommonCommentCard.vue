@@ -45,7 +45,7 @@
           </div>
           <div class="interact">
 
-            <div @click="on_click_content">
+            <div class="flex-center stay" @click="on_click_content">
               <img v-if="show_comment_num"
                    class="interact-icon" src="~assets/img/comment.svg" height="16" alt="">
               <div v-if="show_comment_num"
@@ -54,20 +54,32 @@
             </div>
 
 
-            <div class="flex-center" @click="on_vote(1)">
+            <div class="flex-center stay" @click="on_vote(1)">
               <img
+                v-if="comment.is_up===true"
                 class="interact-icon"
-                :class="{active:comment.is_up===true}"
+                src="~assets/img/up-active.svg"
+                height="16"
+                alt="">
+              <img
+                v-else
+                class="interact-icon"
                 src="~assets/img/up.svg"
                 height="16"
                 alt="">
               <div class="interact-text" :class="{active:comment.is_up===true}">{{comment.up_num}}</div>
             </div>
 
-            <div class="flex-center" @click="on_vote(0)">
+            <div class="flex-center stay" @click="on_vote(0)">
               <img
                 class="interact-icon"
-                :class="{active:comment.is_up===false}"
+                v-if="comment.is_up===false"
+                src="~assets/img/down-active.svg"
+                height="16"
+                alt="">
+              <img
+                class="interact-icon"
+                v-else
                 src="~assets/img/down.svg"
                 height="16"
                 alt="">
@@ -176,8 +188,6 @@
   .interact-icon {
     margin: 12px 0;
     position: relative;
-    transform: translateX(500px);
-    filter: drop-shadow(-500px 0 #999);
     border-left: 4px solid transparent;
     border-right: 4px solid transparent;
   }
@@ -185,7 +195,6 @@
   .interact-text {
     line-height: 40px;
     float: right;
-    min-width: 30px;
     color: #999;
   }
 
@@ -195,9 +204,11 @@
     color: #666666;
   }
 
+  .stay {
+    min-width: 60px;
+  }
 
   .active {
-    filter: drop-shadow(-500px 0 #4ebaee);
     color: #4ebaee;
   }
 </style>

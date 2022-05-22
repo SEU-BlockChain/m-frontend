@@ -8,7 +8,6 @@ export default createStore({
     user: null,
     hide_top: false,
     message: null,
-    message_p: null
   },
   mutations: {
     toggle_hide(state) {
@@ -22,9 +21,8 @@ export default createStore({
       state.is_login = true
       state.user = user
     },
-    message(state, message, message_p) {
+    message(state, message) {
       state.message = message
-      state.message_p = message_p
     },
     message_clear(state, type) {
       if( state.message) {

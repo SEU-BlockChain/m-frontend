@@ -16,7 +16,6 @@
             <var-icon @click="filter" name="magnify-plus-outline"/>
           </template>
         </var-input>
-        <var-icon name="cog-outline"/>
       </div>
 
       <div class="author">
@@ -40,6 +39,7 @@
         :finished="finished"
         v-model:loading="loading"
         @load="load"
+        :immediate-check="false"
       >
         <div v-for="dynamic in dynamic_list">
           <div v-if="dynamic.origin===0">
@@ -63,7 +63,7 @@
         dynamic_list: [],
         follower_list: [],
         next: null,
-        loading: false,
+        loading: true,
         finished: false,
         search: ""
       }
@@ -98,6 +98,7 @@
     },
     created() {
       this.$emit("active", 2)
+      this.load()
       this.$request.api.get(
         `/user/follow/${this.$store.state.user.id}/as_follower`
       ).then(res => {
@@ -109,13 +110,15 @@
         }
       })
       this.$store.commit("message_clear", "dynamic")
+    },
+    activated() {
+      this.$emit("active", 2)
     }
   }
 </script>
 
 <style scoped>
   .content {
-    min-height: 120vh;
     padding-bottom: 60px;
   }
 
@@ -142,7 +145,6 @@
   .search-input {
     background-color: #f6f6f6;
     padding: 0 10px;
-    margin-right: 10px;
     border-radius: 15px;
   }
 

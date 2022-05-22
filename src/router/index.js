@@ -1,4 +1,4 @@
-import {createRouter, createWebHistory,createWebHashHistory} from 'vue-router'
+import {createRouter, createWebHistory, createWebHashHistory} from 'vue-router'
 import store from "../store/index.js"
 
 import IndexWrap from "wraps/IndexWrap";
@@ -17,6 +17,8 @@ const routes = [
         meta: {
           title: "首页",
           depth: 0,
+          order: 0,
+          keepAlive: true,
         }
       },
       {
@@ -26,6 +28,8 @@ const routes = [
         meta: {
           title: "社区",
           depth: 0,
+          order: 1,
+          keepAlive: true,
         }
       },
       {
@@ -36,6 +40,8 @@ const routes = [
           auth: 1,
           title: "动态",
           depth: 0,
+          order: 2,
+          keepAlive: true,
         }
       },
       {
@@ -46,6 +52,8 @@ const routes = [
           auth: 1,
           title: "消息",
           depth: 0,
+          order: 3,
+          keepAlive: true,
         }
       },
       {
@@ -55,9 +63,52 @@ const routes = [
         meta: {
           title: "我的",
           depth: 0,
+          order: 4,
+          keepAlive: true,
         }
       },
     ]
+  },
+  {
+    path: "/at",
+    name: "At",
+    meta: {
+      title: "@我",
+      auth: 1,
+      depth: 1,
+    },
+    component: () => import("views/message/At"),
+  },
+  {
+    path: "/like",
+    name: "Like",
+    meta: {
+      title: "收到的赞",
+      auth: 1,
+      depth: 1,
+    },
+    component: () => import("views/message/Like"),
+  },
+  {
+    path: "/reply",
+    name: "Reply",
+    meta: {
+      title: "回复我的",
+      auth: 1,
+      depth: 1,
+      keepAlive: true
+    },
+    component: () => import("views/message/Reply"),
+  },
+  {
+    path: "/system",
+    name: "System",
+    meta: {
+      title: "系统通知",
+      auth: 1,
+      depth: 1,
+    },
+    component: () => import("views/message/System"),
   },
   {
     path: "/user",
@@ -76,7 +127,8 @@ const routes = [
         name: "Articles",
         component: () => import("views/user_detail/Articles"),
         meta: {
-          keepAlive: true
+          keepAlive: true,
+          single: true
         }
       },
       {

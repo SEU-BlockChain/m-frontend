@@ -4,7 +4,7 @@
   <router-view v-if="this.$store.state.is_init" v-slot="{ Component }">
     <Transition @after-enter="to_top" :name="animation">
       <keep-alive :include="include">
-        <component :is="Component"/>
+        <component :is="Component" :key="this.$route.fullPath"/>
       </keep-alive>
     </Transition>
   </router-view>
@@ -64,7 +64,6 @@
     },
     methods: {
       animate(to, from) {
-        if (to.meta.none || from.meta.none) return ""
         if (to.meta.depth === from.meta.depth) return ""
         return to.meta.depth > from.meta.depth ? "steady-left" : "right-steady"
       },
@@ -81,13 +80,13 @@
         ).then(res => {
           if (res.data.code === 107) {
             this.$store.commit("login", res.data.result.user)
-            let message = this.$request.api.get(
-              "user/self/message/"
-            ).then(res => {
-              this.$store.commit("message", res.data.result, message)
-            })
             return new Promise(resolve => {
-              resolve()
+              let message = this.$request.api.get(
+                "user/self/message/"
+              ).then(res => {
+                this.$store.commit("message", res.data.result)
+                resolve(res.data.result)
+              })
             })
           } else {
             window.localStorage.removeItem("token")
@@ -110,6 +109,43 @@
         this.$store.commit("initialize", null)
       }
     },
+    mounted() {
+      let that = this
+      document.addEventListener('plusready', function () {
+        var webview = plus.webview.currentWebview();
+        plus.key.addEventListener('backbutton', function () {
+          webview.canBack(function (e) {
+            if (e.canBack) {
+              webview.back();
+            } else {
+              //webview.close(); //hide,quit
+              //plus.runtime.quit();
+              //首页返回键处理
+              //处理逻辑：1秒内，连续两次按返回键，则退出应用；
+              var first = null;
+              plus.key.addEventListener('backbutton', function () {
+                //首次按键，提示‘再按一次退出应用’
+                if (!first) {
+                  first = new Date().getTime();
+                  that.$tip({
+                    content: "再返回一次退出应用",
+                    type: "info",
+                    duration: 2000,
+                  })
+                  setTimeout(function () {
+                    first = null;
+                  }, 1000);
+                } else {
+                  if (new Date().getTime() - first < 1500) {
+                    plus.runtime.quit();
+                  }
+                }
+              }, false);
+            }
+          })
+        });
+      });
+    }
   }
 </script>
 

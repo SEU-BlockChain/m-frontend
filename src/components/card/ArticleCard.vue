@@ -31,7 +31,9 @@
               <img class="interact-icon" src="~assets/img/view.svg" height="20" alt="">
               <div class="interact-text">{{article.view_num}}</div>
 
-              <img class="interact-icon" :class="{active:article.is_up===true}" src="~assets/img/up.svg" height="20"
+              <img class="interact-icon" v-if="article.is_up===true" src="~assets/img/up-active.svg" height="20"
+                   alt="">
+              <img class="interact-icon" v-else src="~assets/img/up.svg" height="20"
                    alt="">
               <div class="interact-text" :class="{active:article.is_up===true}">{{article.up_num}}</div>
 
@@ -138,8 +140,6 @@
     margin: 15px 0;
     overflow: hidden;
     position: relative;
-    transform: translateX(500px);
-    filter: drop-shadow(-500px 0 #999);
     border-left: 4px solid transparent;
     border-right: 4px solid transparent;
   }
@@ -150,11 +150,4 @@
     min-width: 30px;
     color: #999;
   }
-
-
-  .active {
-    filter: drop-shadow(-500px 0 #4ebaee);
-    color: #4ebaee;
-  }
-
 </style>

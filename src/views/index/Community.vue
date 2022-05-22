@@ -8,17 +8,19 @@
           </template>
         </var-input>
       </div>
-      <div class="option">
-        <img class="option-icon" src="~assets/img/column.svg" alt="">
-        <div class="option-text">专栏</div>
-      </div>
-      <div class="option">
-        <img class="option-icon" src="~assets/img/news.svg" alt="">
-        <div class="option-text">资讯</div>
-      </div>
-      <div class="option">
-        <img class="option-icon" src="~assets/img/ask.svg" alt="">
-        <div class="option-text">问答</div>
+      <div class="options">
+        <div class="option">
+          <img class="option-icon" src="~assets/img/column.svg" alt="">
+          <div class="option-text">专栏</div>
+        </div>
+        <div class="option">
+          <img class="option-icon" src="~assets/img/news.svg" alt="">
+          <div class="option-text">资讯</div>
+        </div>
+        <div class="option">
+          <img class="option-icon" src="~assets/img/ask.svg" alt="">
+          <div class="option-text">问答</div>
+        </div>
       </div>
 
       <div class="bbs">
@@ -64,6 +66,9 @@
     },
     created() {
       this.$emit("active", 1)
+    },
+    activated() {
+      this.$emit("active", 1)
     }
   }
 </script>
@@ -80,22 +85,22 @@
     border-radius: 15px;
   }
 
-  .top {
+  .options {
     display: flex;
-    flex-wrap: wrap;
+    width: 100vw;
+    justify-content: left;
   }
 
   .option {
     width: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   .option-icon {
-    width: 50%;
-    margin: 25% 25% 0;
-  }
-
-  .option-text {
-    text-align: center;
+    width: 40px;
+    height: 40px;
   }
 
   .bbs {
