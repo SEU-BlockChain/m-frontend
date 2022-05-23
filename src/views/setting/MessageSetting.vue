@@ -129,7 +129,7 @@
         this.$request.api.post(
           "/message/message_setting/",
           {
-            type: id,
+            [this.type]: id,
           }
         ).then(res => {
             if (res.data.code === 145) {

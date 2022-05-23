@@ -20,7 +20,7 @@
         <div class="option-text">收到的赞</div>
       </div>
       <div class="option" @click="this.$router.push('/system')">
-        <var-badge type="danger" :hidden="!message?.reply" :value="message?.system" :max-value="99">
+        <var-badge type="danger" :hidden="!message?.system" :value="message?.system" :max-value="99">
           <img class="option-icon" src="~assets/img/system.svg" alt="">
         </var-badge>
         <div class="option-text">系统通知</div>
@@ -47,9 +47,18 @@
     },
     created() {
       this.$emit("active", 3)
-      this.$store.state.login.then(message => {
-        this.message = message
-      })
+      if (this.$store.state.login) {
+        this.$store.state.login.then(message => {
+          this.message = message
+        })
+      } else {
+        this.$request.api.get(
+          "user/self/message/"
+        ).then(res => {
+          this.message = res.data.result
+          this.$store.commit("message", res.data.result)
+        })
+      }
     },
     activated() {
       this.$emit("active", 3)

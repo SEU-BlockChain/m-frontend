@@ -14,23 +14,25 @@ export default createStore({
       state.hide_top = !state.hide_top
     },
     initialize(state, login) {
-      state.is_init = true
       state.login = login
+      state.is_init = true
     },
-    login(state, user) {
+    login(state, user, login) {
       state.is_login = true
       state.user = user
+      state.login = login
     },
     message(state, message) {
       state.message = message
     },
     message_clear(state, type) {
-      if( state.message) {
+      if (state.message) {
         state.message[type] = 0
       }
     },
     logout(state) {
       state.is_login = false
+      state.login = null
       state.user = null
     },
   },

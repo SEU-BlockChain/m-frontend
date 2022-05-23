@@ -11,7 +11,7 @@
       </div>
       <div class="time">{{this.$calc.filters.date(comment.comment_time)}}</div>
     </div>
-    <div class="w-container" v-html="comment.content"/>
+    <div class="w-container" v-html="this.$xss(comment.content)"/>
   </div>
 </template>
 

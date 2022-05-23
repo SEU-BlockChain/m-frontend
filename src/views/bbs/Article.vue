@@ -48,7 +48,7 @@
           <span>最后更新:{{this.$calc.filters.date(article.update_time)}}</span>
         </span>
         </div>
-        <div class="w-container content" v-html="article.content"/>
+        <div class="w-container content" v-html="this.$xss(article.content)"/>
         <div class="foot">
           <div class="chip">
             <var-chip size="small" id="comment">{{article.category.category}}</var-chip>

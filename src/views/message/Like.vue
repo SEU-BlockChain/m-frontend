@@ -22,26 +22,36 @@
         :immediate-check="false"
       >
         <div :key="like" v-for="like in like_list">
-          <div class="cursor" v-if="like.new">最新</div>
+          <div class="cursor" v-if="like.recent">最新</div>
           <div class="cursor" v-if="like.old">累计</div>
-          <div v-if="like.origin===0">
-            <div class="like-wrap" @click="this.$router.push(`/bbs/article/${like.content.id}`)">
-              <img class="avatar" :src="this.$settings.cos_url+like.sender.icon"/>
-              <div class="info">
-                <div class="username">{{like.sender.username}}<span class="tip">等{{like.num}}人赞了我的文章</span></div>
-                <div class="time">{{this.$calc.filters.date(like.time)}}</div>
-              </div>
-              <div class="article">{{this.$calc.filters.max_width(like.content.title,20)}}</div>
+          <div>
+            <div v-if="like.origin===0">
+              <transition :name="animation(like)" appear>
+
+                <div class="like-wrap" @click="this.$router.push(`/bbs/article/${like.content.id}`)">
+                  <img class="avatar" :src="this.$settings.cos_url+like.sender.icon"/>
+                  <div class="info">
+                    <div class="username">{{like.sender.username}}<span
+                      class="tip">等{{like.new||like.total}}人赞了我的文章</span></div>
+                    <div class="time">{{this.$calc.filters.date(like.time)}}</div>
+                  </div>
+
+                  <div class="article">{{this.$calc.filters.max_width(like.content.title,20)}}</div>
+                </div>
+              </transition>
             </div>
-          </div>
-          <div v-if="like.origin===1">
-            <div class="like-wrap" @click="this.$router.push(`/bbs/article/${like.content.article.id}`)">
-              <img class="avatar" :src="this.$settings.cos_url+like.sender.icon"/>
-              <div class="info">
-                <div class="username">{{like.sender.username}}<span class="tip">等{{like.num}}人赞了我的评论</span></div>
-                <div class="time">{{this.$calc.filters.date(like.time)}}</div>
-              </div>
-              <div class="comment" v-html="like.content.content"></div>
+            <div v-if="like.origin===1">
+              <transition :name="animation(like)" appear>
+                <div class="like-wrap" @click="this.$router.push(`/bbs/article/${like.content.article.id}`)">
+                  <img class="avatar" :src="this.$settings.cos_url+like.sender.icon"/>
+                  <div class="info">
+                    <div class="username">{{like.sender.username}}<span
+                      class="tip">等{{like.new||like.total}}人赞了我的评论</span></div>
+                    <div class="time">{{this.$calc.filters.date(like.time)}}</div>
+                  </div>
+                  <div class="comment">{{like.content.description}}</div>
+                </div>
+              </transition>
             </div>
           </div>
         </div>
@@ -59,26 +69,31 @@
         finished: false,
         loading: true,
         next: null,
-        before: null
+        before: null,
+        current: 0
       }
     },
     methods: {
+      animation(like) {
+        if (!like.is_viewed) return "slide-fade"
+        return "bloom"
+      },
       load() {
         this.$request.api.get(
           this.next || `/message/like`
         ).then(res => {
           if (res.data.code === 140) {
             let data = res.data.result.results
-            let before = 0
             for (let i = 0; i < data.length; i++) {
-              if (i === 0 && !data[i].is_viewed) {
-                data[i].new = true
+              if (this.current === 0 && !data[i].is_viewed) {
+                data[i].recent = true
               }
-              if (before !== data[i].is_viewed) {
+              if (this.current !== 0 && this.before !== data[i].is_viewed) {
                 data[i].old = true
               }
               this.like_list.push(data[i])
-              before = data[i].is_viewed
+              this.before = data[i].is_viewed
+              this.current++
             }
             this.next = res.data.result.next
             this.loading = false
@@ -95,10 +110,15 @@
     },
     created() {
       this.load()
-      this.$store.state.login.then(message => {
-        message.like = 0
-      })
+      if (this.$store.state.login) {
+        this.$store.state.login.then(message => {
+          message.like = 0
+        })
+      } else {
+        this.$store.state.message.like = 0
+      }
     }
+
   }
 </script>
 

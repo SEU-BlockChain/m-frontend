@@ -23,15 +23,18 @@
       >
         <div :key="reply" v-for="reply in reply_list">
           <div v-if="reply.origin===0">
-            <reply-comment-card
-              @onVote="vote_comment"
-              @onClickContent="open_editor"
-              @onDelete="delete_reply"
-              class="comment-card"
-              :comment="reply"
-              v-if="remove.indexOf(reply.id)===-1"
-              v-ripple="{ color: '#ccc' }"
-            />
+            <transition :name="animation(reply)" appear>
+              <reply-comment-card
+                :class="{new:!reply.is_viewed}"
+                @onVote="vote_comment"
+                @onClickContent="open_editor"
+                @onDelete="delete_reply"
+                class="comment-card"
+                :comment="reply"
+                v-if="remove.indexOf(reply.id)===-1"
+                v-ripple="{ color: '#ccc' }"
+              />
+            </transition>
           </div>
         </div>
       </var-list>
@@ -74,6 +77,10 @@
       }
     },
     methods: {
+      animation(like) {
+        if (!like.is_viewed) return "slide-fade"
+        return "bloom"
+      },
       load() {
         this.$request.api.get(
           this.next || `/message/reply`
@@ -170,6 +177,13 @@
     },
     created() {
       this.load()
+      if (this.$store.state.login) {
+        this.$store.state.login.then(message => {
+          message.reply = 0
+        })
+      } else {
+        this.$store.state.message.reply = 0
+      }
     }
   }
 </script>
@@ -186,6 +200,7 @@
   .container {
     padding-top: 54px;
     min-height: 120vh;
+    background-color: white;
   }
 
   .comment-card {

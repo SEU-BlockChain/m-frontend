@@ -29,7 +29,6 @@
       <var-bottom-navigation-item
         label="我的" icon="account-circle-outline" @click="this.$router.push('/profile')"
       />
-
     </var-bottom-navigation>
   </div>
 </template>
@@ -78,9 +77,18 @@
       },
     },
     created() {
-      this.$store.state.login.then(message => {
-        this.message = message
-      })
+      if (this.$store.state.login) {
+        this.$store.state.login.then(message => {
+          this.message = message
+        })
+      } else {
+        this.$request.api.get(
+          "user/self/message/"
+        ).then(res => {
+          this.message = res.data.result
+          this.$store.commit("message", res.data.result)
+        })
+      }
     }
   }
 </script>
@@ -88,7 +96,7 @@
 <style scoped>
   .bottom-fixed {
     position: fixed;
-    width: 100%;
+    width: 100vw;
     left: 0;
     bottom: 0;
   }

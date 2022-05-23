@@ -20,7 +20,7 @@
             <div class="time2">{{this.$calc.filters.date(article.update_time)}}</div>
           </div>
           <div class="title break" @click="to_article">{{article.title}}</div>
-          <div class="content w-container limited-xy" v-html="article.description" @click="to_article"/>
+          <div class="content w-container limited-xy" v-html="this.$xss(article.description)" @click="to_article"/>
           <div class="foot">
             <div class="category">
               <var-chip size="small" :round="false" @click="change_category(article.category.id)">
@@ -60,7 +60,7 @@
       change_category(id) {
         this.$emit("change_category", id)
       },
-      to_article() {
+      to_article(ev) {
         this.$router.push(`/bbs/article/${this.article.id}`)
       }
     }
@@ -149,5 +149,9 @@
     float: right;
     min-width: 30px;
     color: #999;
+  }
+
+  .active{
+    color: #4ebaee;
   }
 </style>

@@ -83,7 +83,12 @@
           v-model:loading="loading"
           @load="load_article"
         >
-          <article-card :key="article.id" :article="article" v-for="article in article_list"/>
+          <div v-for="article in article_list">
+            <transition name="bloom" appear>
+
+              <article-card :key="article.id" :article="article"/>
+            </transition>
+          </div>
         </var-list>
       </div>
     </div>

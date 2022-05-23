@@ -31,7 +31,7 @@
           <div class="info" v-for="followed in follower_list">
             <img class="avatar" :src="this.$settings.cos_url+followed.followed.icon"
                  @click="this.$router.push(`/user/${followed.followed.id}`)"/>
-            <div class="username">{{followed.followed.username}}</div>
+            <div class="username break">{{followed.followed.username}}</div>
           </div>
         </div>
       </div>
@@ -43,7 +43,9 @@
       >
         <div v-for="dynamic in dynamic_list">
           <div v-if="dynamic.origin===0">
-            <article-card :article="dynamic.content" :use_create_time="true"/>
+            <transition name="slide-fade2" appear>
+              <article-card style="width: 100%;" :article="dynamic.content" :use_create_time="true"/>
+            </transition>
           </div>
         </div>
       </var-list>
@@ -109,9 +111,14 @@
           }
         }
       })
-      this.$store.state.login.then(message => {
-        message.dynamic = 0
-      })
+
+      if (this.$store.state.login) {
+        this.$store.state.login.then(message => {
+          message.dynamic = 0
+        })
+      } else {
+        this.$store.state.message.dynamic = 0
+      }
     },
     activated() {
       this.$emit("active", 2)
@@ -122,6 +129,7 @@
 <style scoped>
   .content {
     padding-bottom: 60px;
+    width: 100vw;
   }
 
   .author {
@@ -164,11 +172,12 @@
     width: 100%;
     display: flex;
     justify-content: left;
-    align-items: center;
+    align-items: flex-start;
   }
 
   .info {
     margin: 10px 10px 0 0;
+    width: 50px;
   }
 
   .avatar {

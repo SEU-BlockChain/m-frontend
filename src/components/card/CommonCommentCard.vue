@@ -28,7 +28,7 @@
       <div class="body">
         <div
           class="w-container"
-          v-html="comment.content"
+          v-html="this.$xss(comment.content)"
           @click="on_click_content"
         />
 
@@ -118,7 +118,7 @@
       on_click_option() {
         this.$emit('onClickOption', this.comment)
       },
-      on_click_content() {
+      on_click_content(ev) {
         this.$emit('onClickContent', this.parent || this.comment, this.parent && this.comment)
       },
       on_vote(is_up) {

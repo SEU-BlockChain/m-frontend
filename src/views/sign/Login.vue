@@ -72,7 +72,7 @@
     },
     methods: {
       login() {
-        this.$request.api.post(
+        let login = this.$request.api.post(
           "user/sign/login/",
           {
             username: this.active ? this.phone : this.username,
@@ -86,12 +86,20 @@
               duration: 1000,
             })
             window.localStorage.setItem("token", res.data.result.user.token)
-            this.$store.commit("login", res.data.result["user"])
+            this.$store.commit("login", res.data.result["user"], login)
             if (this.$route.query.back) {
               this.$router.return()
             } else {
               this.$router.replace(this.$route.query.next || "/")
             }
+            return new Promise(resolve => {
+              this.$request.api.get(
+                "user/self/message/"
+              ).then(res => {
+                this.$store.commit("message", res.data.result)
+                resolve(res.data.result)
+              })
+            })
           } else {
             this.$tip({
               content: res.data.msg,

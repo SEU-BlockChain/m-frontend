@@ -81,7 +81,7 @@
           if (res.data.code === 107) {
             this.$store.commit("login", res.data.result.user)
             return new Promise(resolve => {
-              let message = this.$request.api.get(
+              this.$request.api.get(
                 "user/self/message/"
               ).then(res => {
                 this.$store.commit("message", res.data.result)
@@ -109,19 +109,15 @@
         this.$store.commit("initialize", null)
       }
     },
-    mounted() {
+    beforeMount() {
       let that = this
       document.addEventListener('plusready', function () {
         var webview = plus.webview.currentWebview();
         plus.key.addEventListener('backbutton', function () {
           webview.canBack(function (e) {
-            if (e.canBack) {
+            if (e.canBack && that.$route.meta.depth === 0) {
               webview.back();
             } else {
-              //webview.close(); //hide,quit
-              //plus.runtime.quit();
-              //首页返回键处理
-              //处理逻辑：1秒内，连续两次按返回键，则退出应用；
               var first = null;
               plus.key.addEventListener('backbutton', function () {
                 //首次按键，提示‘再按一次退出应用’

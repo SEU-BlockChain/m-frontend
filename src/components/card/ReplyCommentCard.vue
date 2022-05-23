@@ -11,11 +11,11 @@
         <div class="tip">回复了你的{{text[type]}}</div>
       </div>
       <div @click="this.$router.push(`/bbs/article/${comment.content.article.id}`)" class="content"
-           v-html="comment.content.content"/>
+           v-html="this.$xss(comment.content.description)"/>
       <div @click="this.$router.push(`/bbs/article/${comment.content.article.id}`)"
            v-if="type" class="extra">
-        <div v-if="type===1" v-html="comment.content.parent.content"/>
-        <div v-else v-html="comment.content.target.content"/>
+        <div v-if="type===1" v-html="this.$xss(comment.content.parent.content)"/>
+        <div v-else v-html="this.$xss(comment.content.target.content)"/>
       </div>
       <div class="other">
         <div class="left">
