@@ -13,15 +13,166 @@
         </var-button>
       </template>
     </var-app-bar>
+
+    <div class="container">
+      <var-list
+        :finished="finished"
+        v-model:loading="loading"
+        @load="load"
+        :immediate-check="false"
+      >
+        <div :key="at" v-for="at in at_list">
+          <div v-if="at.origin===0">
+            <transition :name="animation(at)" appear>
+              <div class="wrap" @click="this.$router.push(`/bbs/article/${at.content.id}`)">
+                <img
+                  class="avatar"
+                  :src="this.$settings.cos_url+at.content.author.icon"
+                  @click.stop="this.$router.push(`/user/${at.content.author.id}`)"
+                />
+                <div class="content">
+                  <span class="username">{{at.content.author.username}}</span>
+                  <span class="tip">在文章中@了你</span>
+                  <div class="time">{{this.$calc.filters.date(at.time)}}</div>
+                  <div class="article">{{at.content.title}}</div>
+                </div>
+              </div>
+            </transition>
+          </div>
+          <div v-if="at.origin===1">
+            <transition :name="animation(at)" appear>
+              <div class="wrap" @click="this.$router.push(`/bbs/article/${at.content.article.id}`)">
+                <img
+                  class="avatar"
+                  :src="this.$settings.cos_url+at.content.author.icon"
+                  @click.stop="this.$router.push(`/user/${at.content.author.id}`)"
+                />
+                <div class="content">
+                  <span class="username">{{at.content.author.username}}</span>
+                  <span class="tip">在评论中@了你</span>
+                  <div class="time">{{this.$calc.filters.date(at.time)}}</div>
+                  <div class="description" v-html="this.$xss(at.content.description)"/>
+                  <div class="article">{{at.content.article.title}}</div>
+                </div>
+              </div>
+            </transition>
+          </div>
+        </div>
+      </var-list>
+    </div>
   </div>
 </template>
 
 <script>
   export default {
-    name: "At"
+    name: "At",
+    data() {
+      return {
+        at_list: [],
+        finished: false,
+        loading: true,
+        next: null,
+      }
+    },
+    methods: {
+      animation(like) {
+        if (!like.is_viewed) return "slide-fade"
+        return "bloom"
+      },
+      load() {
+        this.$request.api.get(
+          this.next || `/message/at`
+        ).then(res => {
+          if (res.data.code === 143) {
+            for (let i of res.data.result.results) {
+              this.at_list.push(i)
+            }
+            this.next = res.data.result.next
+            this.loading = false
+            this.finished = !Boolean(this.next)
+          } else {
+            this.$tip({
+              content: res.data.msg,
+              type: "warning",
+              duration: 1000,
+            })
+          }
+        })
+      }
+    },
+    created() {
+      this.load()
+    }
   }
 </script>
 
 <style scoped>
+  .app-bar {
+    width: 100vw;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 100;
+  }
 
+  .container {
+    padding-top: 54px;
+    min-height: 120vh;
+    background-color: white;
+  }
+
+  .wrap {
+    display: flex;
+    justify-content: space-between;
+    background-color: white;
+    align-items: flex-start;
+    padding: 10px;
+    border-bottom: 1px solid #f0f1f5;
+    flex-grow: 1;
+  }
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+    border-radius: 50%;
+  }
+
+  .username {
+    font-size: 14px;
+    font-weight: bolder;
+    margin-right: 5px;
+  }
+
+
+  .tip {
+    font-size: 14px;
+    color: #666666;
+  }
+
+  .time {
+    line-height: 20px;
+    font-size: 12px;
+    color: #666666;
+  }
+
+  .content {
+    flex-grow: 1;
+  }
+
+  .article {
+    font-size: 12px;
+    margin: 10px 10px 0 0;
+    color: black;
+    padding: 10px;
+    border-radius: 5px;
+    align-self: flex-start;
+    background-color: #f6f6f6;
+  }
+
+  .description {
+    font-size: 14px;
+    padding: 5px;
+    color: #666666;
+  }
 </style>

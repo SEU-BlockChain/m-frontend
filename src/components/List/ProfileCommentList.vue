@@ -4,6 +4,7 @@
       :finished="finished"
       v-model:loading="loading"
       @load="load"
+      :immediate-check="false"
     >
       <div class="container " v-for="comment in comment_list">
         <div class="comment" @click="this.$router.push(`/bbs/article/${comment.article.id}`)">
@@ -32,7 +33,7 @@
       return {
         comment_list: [],
         next: null,
-        loading: false,
+        loading: true,
         finished: false,
       }
     },
@@ -58,6 +59,9 @@
         })
       }
     },
+    created() {
+      this.load()
+    }
   }
 </script>
 
@@ -75,7 +79,7 @@
     display: flex;
     padding: 0 10px;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
   }
 
   .content {
@@ -86,6 +90,7 @@
     width: 20vw;
     font-size: 12px;
     color: #777;
+    margin-top: 10px;
     padding: 10px;
     background-color: #f0f1f5;
     border-radius: 5px;

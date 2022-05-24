@@ -76,6 +76,7 @@ const routes = [
       title: "@我",
       auth: 1,
       depth: 1,
+      keepAlive: true
     },
     component: () => import("views/message/At"),
   },

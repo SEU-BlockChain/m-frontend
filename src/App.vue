@@ -115,7 +115,7 @@
         var webview = plus.webview.currentWebview();
         plus.key.addEventListener('backbutton', function () {
           webview.canBack(function (e) {
-            if (e.canBack && that.$route.meta.depth === 0) {
+            if (e.canBack && that.$route.meta.depth !== 0) {
               webview.back();
             } else {
               var first = null;
@@ -130,7 +130,7 @@
                   })
                   setTimeout(function () {
                     first = null;
-                  }, 1000);
+                  }, 500);
                 } else {
                   if (new Date().getTime() - first < 1500) {
                     plus.runtime.quit();

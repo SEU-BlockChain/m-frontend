@@ -44,6 +44,7 @@
         </div>
       </div>
       <div class="offset2">
+        <div class="description">{{user.description||"还没有个性签名"}}</div>
         <var-divider/>
         <div class="interact">
           <span class="interact-num">{{user.fans_num}}</span>
@@ -99,9 +100,9 @@
     },
     created() {
       this.$request.api.get(
-        `user/${this.$route.params.id}/info/`
+        `user/info/${this.$route.params.id}/`
       ).then(res => {
-        this.user = res.data.result.user
+        this.user = res.data.result
       })
     }
   }
@@ -209,5 +210,9 @@
   .body {
     margin-top: 10px;
     background-color: #fafafa;
+  }
+
+  .description{
+    color: #666;
   }
 </style>

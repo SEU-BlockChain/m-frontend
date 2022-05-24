@@ -137,24 +137,25 @@
   }
 
   .like-wrap {
-    padding: 15px 10px;
+    padding: 12px 5px;
     display: flex;
     justify-content: space-between;
     background-color: white;
     align-items: center;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #eee;
   }
 
   .avatar {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     margin-right: 10px;
     border-radius: 50%;
   }
 
   .username {
     font-weight: bold;
-    line-height: 25px;
+    line-height: 20px;
+    font-size: 14px;
   }
 
   .tip {
@@ -164,7 +165,7 @@
 
   .time {
     font-size: 14px;
-    line-height: 20px;
+    line-height: 15px;
     margin-top: 5px;
     color: #888;
   }

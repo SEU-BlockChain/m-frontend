@@ -31,6 +31,8 @@
       <div class="private-head">
         <div class="private-text">聊天列表</div>
       </div>
+      开发中
+
       <var-divider margin="0"/>
     </div>
   </div>

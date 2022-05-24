@@ -11,18 +11,30 @@
     :mode="mode"
     @onCreated="handleCreated"
   />
+  <mention-modal
+    style="z-index: 1001"
+    v-if="isShowModal"
+    @hideMentionModal="hideMentionModal"
+    @insertMention="insertMention"/>
+  <div class="mask" v-if="isShowModal" @click.stop="isShowModal=false"/>
 </template>
 
 <script>
   import '@wangeditor/editor/dist/css/style.css'
   import Snackbar from "@varlet/ui/es/snackbar";
   import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
+  import {Boot} from '@wangeditor/editor'
+  import mentionModule from '@wangeditor/plugin-mention'
+  import MentionModal from './MentionModal'
+
+  Boot.registerModule(mentionModule)
 
   export default {
     name: "CommentEditor",
     components: {
       Toolbar,
-      Editor
+      Editor,
+      MentionModal
     },
     data() {
       return {
@@ -46,6 +58,15 @@
           ]
         },
         editorConfig: {
+          hoverbarKeys: {
+            text: []
+          },
+          EXTEND_CONF: {
+            mentionConfig: {
+              showModal: this.showMentionModal,
+              hideModal: this.hideMentionModal,
+            },
+          },
           autoFocus: false,
           placeholder: '请输入内容...',
           MENU_CONF: {
@@ -83,11 +104,33 @@
           }
         },
         mode: 'default',
+        isShowModal: false
       }
     },
     methods: {
       handleCreated(editor) {
         this.editor = Object.seal(editor)
+      },
+      showMentionModal() {
+        this.isShowModal = true
+      },
+      hideMentionModal() {
+        this.isShowModal = false
+      },
+      insertMention(id, name) {
+        const mentionNode = {
+          type: 'mention', // 必须是 'mention'
+          value: name,
+          info: id,
+          children: [{text: ''}], // 必须有一个空 text 作为 children
+        }
+        const editor = this.editor
+        if (editor) {
+          editor.restoreSelection() // 恢复选区
+          editor.deleteBackward('character') // 删除 '@'
+          editor.insertNode(mentionNode) // 插入 mention
+          editor.move(1) // 移动光标
+        }
       }
     },
     beforeUnmount() {
@@ -99,10 +142,12 @@
 </script>
 
 <style scoped>
-
-
-</style>
-
-<style>
-
+  .mask {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+  }
 </style>

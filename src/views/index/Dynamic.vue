@@ -17,39 +17,41 @@
           </template>
         </var-input>
       </div>
-
-      <div class="author">
-        <div class="follow-text">
-          <div class="tip">
-            我的关注
+      <var-pull-refresh v-model="refreshing" @refresh="refresh" success-duration="1000">
+        <div class="author">
+          <div class="follow-text">
+            <div class="tip">
+              我的关注
+            </div>
+            <div class="more" @click="this.$router.push({path:'/user/follow',query:{type:'as_follower'}})">
+              查看全部>
+            </div>
           </div>
-          <div class="more" @click="this.$router.push({path:'/user/follow',query:{type:'as_follower'}})">
-            查看全部>
-          </div>
-        </div>
-        <div class="followed">
-          <div class="info" v-for="followed in follower_list">
-            <img class="avatar" :src="this.$settings.cos_url+followed.followed.icon"
-                 @click="this.$router.push(`/user/${followed.followed.id}`)"/>
-            <div class="username break">{{followed.followed.username}}</div>
-          </div>
-        </div>
-      </div>
-      <var-list
-        :finished="finished"
-        v-model:loading="loading"
-        @load="load"
-        :immediate-check="false"
-      >
-        <div v-for="dynamic in dynamic_list">
-          <div v-if="dynamic.origin===0">
-            <transition name="slide-fade2" appear>
-              <article-card style="width: 100%;" :article="dynamic.content" :use_create_time="true"/>
-            </transition>
+          <div class="followed">
+            <div class="info" v-for="followed in follower_list">
+              <img class="avatar" :src="this.$settings.cos_url+followed.followed.icon"
+                   @click="this.$router.push(`/user/${followed.followed.id}`)"/>
+              <div class="username break">{{followed.followed.username}}</div>
+            </div>
           </div>
         </div>
-      </var-list>
+        <var-list
+          :finished="finished"
+          v-model:loading="loading"
+          @load="load"
+          :immediate-check="false"
+        >
+          <div v-for="dynamic in dynamic_list">
+            <div v-if="dynamic.origin===0">
+              <transition name="slide-fade2" appear>
+                <article-card style="width: 100%;" :article="dynamic.content" :use_create_time="true"/>
+              </transition>
+            </div>
+          </div>
+        </var-list>
+      </var-pull-refresh>
     </div>
+
   </div>
 </template>
 
@@ -67,10 +69,18 @@
         next: null,
         loading: true,
         finished: false,
-        search: ""
+        search: "",
+        refreshing: false,
       }
     },
     methods: {
+      refresh() {
+        this.dynamic_list = []
+        this.finished = false
+        this.loading = true
+        this.next = null
+        this.load()
+      },
       filter() {
         this.dynamic_list = []
         this.finished = false
@@ -88,6 +98,7 @@
             this.next = res.data.result.next
             this.loading = false
             this.finished = !Boolean(this.next)
+            this.refreshing = false
           } else {
             this.$tip({
               content: res.data.msg,

@@ -8,6 +8,9 @@
     emits: ["active"],
     created() {
       this.$emit("active", 3)
+    },
+    activated() {
+      this.$emit("active", 3)
     }
   }
 </script>

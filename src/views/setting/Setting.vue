@@ -47,13 +47,6 @@
 </script>
 
 <style scoped>
-  .banner {
-    color: #333333;
-    line-height: 20px;
-    margin: 10px 5px 0;
-    font-size: 12px;
-  }
-
   .option {
     display: flex;
     justify-content: space-between;
@@ -67,11 +60,6 @@
 
   .option-text {
     font-weight: 500;
-  }
-
-  .option-tip {
-    color: #666666;
-    font-size: 14px;
   }
 
   .app-bar {

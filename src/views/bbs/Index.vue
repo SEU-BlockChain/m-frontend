@@ -48,51 +48,52 @@
       </var-tabs>
       <var-divider margin="0"/>
     </div>
-
-    <div class="body">
-      <div class="order">
-        <div>筛选条件</div>
-        <var-menu :offset-y="25" :offset-x="-10" v-model:show="show_order">
-          <div @click="show_order = !show_order">{{order_text}}
-            <var-icon name="menu-down"/>
-          </div>
-          <template #menu>
-            <div class="menu">
-              <var-cell @click="change_order(order)" v-for="order in order_list">{{order.text}}
-              </var-cell>
+    <div style="height: 84px"/>
+    <var-pull-refresh v-model="refreshing" @refresh="refresh" success-duration="1000">
+      <div class="body">
+        <div class="order">
+          <div>筛选条件</div>
+          <var-menu :offset-y="25" :offset-x="-10" v-model:show="show_order">
+            <div @click="show_order = !show_order">{{order_text}}
+              <var-icon name="menu-down"/>
             </div>
-          </template>
-        </var-menu>
-      </div>
-
-      <div class="top" v-if="category_id===0">
-        <div class="top-item">
-          <var-chip class="top-chip" type="info" size="small" :round="false">置顶</var-chip>
-          <div class="top-text">123</div>
+            <template #menu>
+              <div class="menu">
+                <var-cell @click="change_order(order)" v-for="order in order_list">{{order.text}}
+                </var-cell>
+              </div>
+            </template>
+          </var-menu>
         </div>
-        <div class="top-item">
-          <var-chip class="top-chip" type="info" size="small" :round="false">置顶</var-chip>
-          <div class="top-text">456</div>
-        </div>
-      </div>
-      <var-divider margin="0"/>
 
-      <div class="article-container">
-        <var-list
-          :finished="finished"
-          v-model:loading="loading"
-          @load="load_article"
-        >
-          <div v-for="article in article_list">
-            <transition name="bloom" appear>
-
-              <article-card :key="article.id" :article="article"/>
-            </transition>
+        <div class="top" v-if="category_id===0">
+          <div class="top-item">
+            <var-chip class="top-chip" type="info" size="small" :round="false">置顶</var-chip>
+            <div class="top-text">123</div>
           </div>
-        </var-list>
-      </div>
-    </div>
+          <div class="top-item">
+            <var-chip class="top-chip" type="info" size="small" :round="false">置顶</var-chip>
+            <div class="top-text">456</div>
+          </div>
+        </div>
+        <var-divider margin="0"/>
 
+        <div class="article-container">
+          <var-list
+            :finished="finished"
+            v-model:loading="loading"
+            @load="load_article"
+          >
+            <div v-for="article in article_list">
+              <transition name="bloom" appear>
+
+                <article-card :key="article.id" :article="article"/>
+              </transition>
+            </div>
+          </var-list>
+        </div>
+      </div>
+    </var-pull-refresh>
 
     <var-button class="post-article" type="success" round @click="this.$router.push('/bbs/post-article')">
       <var-icon size="28" name="plus"/>
@@ -110,6 +111,7 @@
     },
     data() {
       return {
+        refreshing: false,
         category_id: 0,
         show_order: false,
         ordering: "-comment_time",
@@ -140,6 +142,13 @@
       }
     },
     methods: {
+      refresh() {
+        this.article_list = []
+        this.finished = false
+        this.loading = true
+        this.next = null
+        this.load_article()
+      },
       change_order(order) {
         this.ordering = order.ordering
         this.order_text = order.text
@@ -162,6 +171,7 @@
             this.next = res.data.result.next
             this.loading = false
             this.finished = !Boolean(this.next)
+            this.refreshing = false
           } else {
             this.$tip({
               content: res.data.msg,
@@ -207,7 +217,6 @@
 
   .body {
     min-height: 100vh;
-    padding-top: 84px;
     background-color: #fcfcfc;
   }
 

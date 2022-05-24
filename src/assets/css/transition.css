@@ -104,11 +104,19 @@
 }
 
 /*bloom*/
-.bloom-enter-active,
-.bloom-leave-active {
+.bloom-enter-active {
     transition: all .2s;
+
+}
+
+.bloom-leave-active {
+    transition: all .1s;
 }
 
 .bloom-enter-from {
+    opacity: 0;
+}
+
+.bloom-leave-to {
     opacity: 0;
 }

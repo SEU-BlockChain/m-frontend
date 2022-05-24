@@ -18,6 +18,7 @@
     v-model:loading="loading"
     @load="load"
     :offset="200"
+    :immediate-check="false"
   >
     <div v-for="article in article_list">
       <var-card class="card article-card" elevation="1">
@@ -66,7 +67,7 @@
 
         article_list: [],
         next: null,
-        loading: false,
+        loading: true,
         finished: false,
       }
     },
@@ -105,6 +106,9 @@
         })
       }
     },
+    created() {
+      this.load()
+    }
   }
 </script>
 
