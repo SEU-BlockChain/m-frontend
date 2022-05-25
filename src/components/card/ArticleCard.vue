@@ -44,7 +44,6 @@
         </div>
       </template>
     </var-card>
-    <var-image-preview style="transition-duration: 0.5s" closeable :images="images" v-model:show="img_show"/>
   </div>
 </template>
 
@@ -56,25 +55,22 @@
       hide_author: false,
       use_create_time: false
     },
-    data() {
-      return {
-        img_show: false,
-        images: []
-      }
-    },
-    emits: ["change_category"],
+    emits: [
+      "onClickCategory",
+      "onClickUser",
+      "onClickImg",
+    ],
     methods: {
       change_category(id) {
-        this.$emit("change_category", id)
+        this.$emit("onClickCategory", id)
       },
       to_article(ev) {
         if (ev.target.getAttribute("uid")) {
-          this.$router.push(`/user/${ev.target.getAttribute("uid")}`)
-          return
+          this.$emit("onClickUser", `/user/${ev.target.getAttribute("uid")}`)
+          return;
         }
         if (ev.target.tagName === "IMG") {
-          this.images = [ev.target.getAttribute("src")]
-          this.img_show = true
+          this.$emit("onClickImg", [ev.target.getAttribute("src")])
           return;
         }
         this.$router.push(`/bbs/article/${this.article.id}`)

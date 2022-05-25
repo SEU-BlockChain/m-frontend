@@ -1,6 +1,7 @@
 <template>
   <div id="mention-modal" :style="style">
     <var-input
+      ref="input"
       id="search"
       class="search"
       :hint="false"
@@ -89,7 +90,12 @@
       } else {
         this.style.top = `${rect.top - 15}px`
       }
+      this.$refs.input.focus()
+
+      setTimeout(() => {
+      }, 1000)
     },
+
   }
 </script>
 <style>

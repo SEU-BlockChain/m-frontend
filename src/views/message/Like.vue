@@ -110,12 +110,14 @@
     },
     created() {
       this.load()
-      if (this.$store.state.login) {
-        this.$store.state.login.then(message => {
-          message.like = 0
-        })
-      } else {
+      if (this.$store.state.message) {
         this.$store.state.message.like = 0
+      }else {
+        this.$request.api.get(
+          "user/self/message/"
+        ).then(res => {
+          this.$store.commit("message", res.data.result)
+        })
       }
     }
 

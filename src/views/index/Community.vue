@@ -46,6 +46,7 @@
         <var-icon name="file-document-outline"/>
         官方公告
       </div>
+      <var-divider margin="0"/>
     </div>
   </div>
 </template>
@@ -76,7 +77,7 @@
 <style scoped>
   .find {
     width: 100vw;
-    padding: 20px;
+    padding: 20px 10px;
   }
 
   .search-input {
@@ -89,22 +90,27 @@
     display: flex;
     width: 100vw;
     justify-content: left;
+
   }
 
   .option {
-    width: 20%;
+    width: 16%;
     display: flex;
     flex-direction: column;
     align-items: center;
   }
 
   .option-icon {
-    width: 40px;
-    height: 40px;
+    width: 35px;
+    height: 35px;
+  }
+
+  .option-text {
+    font-size: 13px;
   }
 
   .bbs {
-    padding: 20px 20px 10px;
+    padding: 10px;
     width: 100vw;
   }
 
@@ -115,15 +121,15 @@
   }
 
   .notice {
-    padding: 15px 10px;
-    font-size: 18px;
+    padding: 10px 15px;
+    font-size: 14px;
     font-weight: bold;
-    line-height: 20px;
+    line-height: 18px;
     color: #333;
   }
 
   .card-wrap {
-    padding: 15px 20px;
+    padding: 10px 15px;
     display: flex;
     justify-content: flex-start;
   }

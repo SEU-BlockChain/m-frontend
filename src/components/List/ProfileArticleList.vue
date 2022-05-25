@@ -23,7 +23,12 @@
     <div v-for="article in article_list">
       <var-card class="card article-card" elevation="1">
         <template #extra>
-          <article-card :key="article.id" :article="article" :hide_author="true"/>
+          <article-card
+            :key="article.id"
+            :article="article"
+            :hide_author="true"
+            @onClickImg="click_img"
+          />
         </template>
       </var-card>
     </div>
@@ -41,6 +46,9 @@
     props: {
       author_id: null,
     },
+    emits: [
+      "onClickImg",
+    ],
     data() {
       return {
         show_order: false,
@@ -72,6 +80,9 @@
       }
     },
     methods: {
+      click_img(images) {
+        this.$emit("onClickImg", images)
+      },
       change_order(order) {
         this.ordering = order.ordering
         this.order_text = order.text

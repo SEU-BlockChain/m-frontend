@@ -91,7 +91,6 @@
         </div>
       </div>
     </div>
-    <var-image-preview style="transition-duration: 0.5s" closeable :images="images" v-model:show="show"/>
   </div>
 </template>
 
@@ -106,17 +105,13 @@
       show_comment_num: null,
       hide_head: false
     },
-    data() {
-      return {
-        images: [],
-        show: false
-      }
-    },
     emits: [
       "onClickOption",
       "onClickContent",
       "onVote",
       "onClickConversationDetail",
+      "onClickUser",
+      "onClickImg",
     ],
     computed: {
       is_self() {
@@ -132,12 +127,11 @@
       },
       on_click_content(ev) {
         if (ev.target.getAttribute("uid")) {
-          this.$router.push(`/user/${ev.target.getAttribute("uid")}`)
-          return
+          this.$emit("onClickUser", ev.target.getAttribute("uid"))
+          return;
         }
         if (ev.target.tagName === "IMG") {
-          this.images = [ev.target.getAttribute("src")]
-          this.show = true
+          this.$emit("onClickImg", [ev.target.getAttribute("src")])
           return;
         }
         this.$emit('onClickContent', this.parent || this.comment, this.parent && this.comment)

@@ -1,6 +1,7 @@
 <template>
   <div class="article-container">
-    <profile-article-list :author_id="this.$store.state.user.id"/>
+    <profile-article-list @onClickImg="click_img" :author_id="this.$store.state.user.id"/>
+    <var-image-preview style="transition-duration: 0.5s" closeable :images="images" v-model:show="show_img"/>
   </div>
 </template>
 
@@ -13,6 +14,23 @@
     emits: [
       "active"
     ],
+    watch: {
+      show_img(newValue, oldValue) {
+        this.$calc.mutex(this.$store, newValue, oldValue)
+      },
+    },
+    data() {
+      return {
+        images: [],
+        show_img: false
+      }
+    },
+    methods: {
+      click_img(images) {
+        this.images = images
+        this.show_img = true
+      }
+    },
     created() {
       this.$emit("active", 0)
     },

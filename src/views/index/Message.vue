@@ -35,7 +35,6 @@
         </div>
         <var-divider margin="0"/>
         开发中
-
       </div>
     </var-pull-refresh>
   </div>

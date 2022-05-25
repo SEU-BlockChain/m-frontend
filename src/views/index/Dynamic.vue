@@ -36,6 +36,7 @@
           </div>
         </div>
         <var-list
+          style="min-height: 100vh"
           :finished="finished"
           v-model:loading="loading"
           @load="load"
@@ -44,7 +45,12 @@
           <div v-for="dynamic in dynamic_list">
             <div v-if="dynamic.origin===0">
               <transition name="slide-fade2" appear>
-                <article-card style="width: 100%;" :article="dynamic.content" :use_create_time="true"/>
+                <article-card
+                  style="width: 100%;"
+                  :article="dynamic.content"
+                  :use_create_time="true"
+                  @onClickImg="click_img"
+                />
               </transition>
             </div>
           </div>
@@ -52,6 +58,7 @@
       </var-pull-refresh>
     </div>
 
+    <var-image-preview style="transition-duration: 0.5s" closeable :images="images" v-model:show="show_img"/>
   </div>
 </template>
 
@@ -64,6 +71,8 @@
     emits: ["active"],
     data() {
       return {
+        images: [],
+        show_img: false,
         dynamic_list: [],
         follower_list: [],
         next: null,
@@ -73,7 +82,16 @@
         refreshing: false,
       }
     },
+    watch: {
+      show_img(newValue, oldValue) {
+        this.$calc.mutex(this.$store, newValue, oldValue)
+      },
+    },
     methods: {
+      click_img(images) {
+        this.images = images
+        this.show_img = true
+      },
       refresh() {
         this.dynamic_list = []
         this.finished = false
@@ -124,9 +142,11 @@
       })
       if (this.$store.state.message) {
         this.$store.state.message.dynamic = 0
-      } else if (this.$store.state.login) {
-        this.$store.state.login.then(message => {
-          message.dynamic = 0
+      } else {
+        this.$request.api.get(
+          "user/self/message/"
+        ).then(res => {
+          this.$store.commit("message", res.data.result)
         })
       }
     },

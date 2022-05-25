@@ -101,6 +101,15 @@
     },
     created() {
       this.load()
+      if (this.$store.state.message) {
+        this.$store.state.message.system = 0
+      } else {
+        this.$request.api.get(
+          "user/self/message/"
+        ).then(res => {
+          this.$store.commit("message", res.data.result)
+        })
+      }
     }
   }
 </script>

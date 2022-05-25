@@ -8,8 +8,15 @@ export default createStore({
     user: null,
     hide_top: false,
     message: null,
+    forbid_back: 0,
   },
   mutations: {
+    lock(state) {
+      state.forbid_back += 1
+    },
+    unlock(state) {
+      state.forbid_back -= 1
+    },
     toggle_hide(state) {
       state.hide_top = !state.hide_top
     },
@@ -18,12 +25,12 @@ export default createStore({
       state.is_init = true
     },
     login(state, user, login) {
-      state.is_login = true
       state.user = user
       state.login = login
     },
     message(state, message) {
       state.message = message
+      state.is_login = true
     },
     message_clear(state, type) {
       if (state.message) {

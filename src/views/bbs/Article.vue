@@ -48,7 +48,7 @@
           <span>最后更新:{{this.$calc.filters.date(article.update_time)}}</span>
         </span>
         </div>
-        <div class="w-container content" v-html="this.$xss(article.content)" @click="on_click_article"/>
+        <div class="w-container content" v-html="this.$xss(article.content)" @click="click_article"/>
         <div class="foot">
           <div class="chip">
             <var-chip size="small" id="comment">{{article.category.category}}</var-chip>
@@ -99,6 +99,8 @@
               @onClickOption="open_comment_option"
               @onClickContent="open_comment_editor"
               @onVote="vote_comment"
+              @onClickUser="click_user"
+              @onClickImg="click_img"
             >
               <template v-if="root_comment.comment_num" #children-comment>
                 <div class="children-wrap" @click="open_children_comment(root_comment)">
@@ -116,7 +118,6 @@
         </var-list>
       </div>
     </Transition>
-
 
     <div v-if="article" class="interact var-elevation--5">
       <div class="fake" @click="open_editor(null,null)">
@@ -205,6 +206,8 @@
           @onClickOption="open_comment_option"
           @onClickContent="open_comment_editor"
           @onVote="vote_comment"
+          @onClickUser="click_user"
+          @onClickImg="click_img"
         />
         <var-divider/>
         <var-list
@@ -222,6 +225,8 @@
               @onClickContent="open_comment_editor"
               @onVote="vote_comment"
               @onClickConversationDetail="load_conversation"
+              @onClickUser="click_user"
+              @onClickImg="click_img"
             />
             <var-divider inset="60" margin="0"/>
           </div>
@@ -243,15 +248,16 @@
         @onVote="vote_comment"
         @onClickConversationDetail="load_conversation"
         v-for="(conversation,k) in conversation_list"
+        @onClickUser="click_user"
+        @onClickImg="click_img"
       />
     </var-popup>
 
-    <var-image-preview style="transition-duration: 0.5s"  closeable :images="images" v-model:show="img_show"/>
+    <var-image-preview style="transition-duration: 0.5s" closeable :images="images" v-model:show="show_img"/>
   </div>
 </template>
 
 <script>
-
   import SimpleAuthorCard from "components/card/SimpleAuthorCard";
   import CommentEditor from "components/input/CommentEditor";
   import CommonCommentCard from "components/card/CommonCommentCard";
@@ -266,30 +272,42 @@
       SimpleAuthorCard
     },
     watch: {
+      show_img(newValue, oldValue) {
+        this.$calc.mutex(this.$store, newValue, oldValue)
+      },
+      show_article_option(newValue, oldValue) {
+        this.$calc.mutex(this.$store, newValue, oldValue)
+      },
+      show_comment_option(newValue, oldValue) {
+        this.$calc.mutex(this.$store, newValue, oldValue)
+      },
       show_editor(newValue, oldValue) {
         this.$store.commit("toggle_hide")
         if (!newValue) {
           this.parent = this.target == null
         }
+        this.$calc.mutex(this.$store, newValue, oldValue)
       },
       show_conversation(newValue, oldValue) {
         if (!newValue) {
           this.conversation_list = []
         }
+        this.$calc.mutex(this.$store, newValue, oldValue)
       },
       show_children_comment(newValue, oldValue) {
         if (!newValue) {
           this.opened_comment = null
         }
+        this.$calc.mutex(this.$store, newValue, oldValue)
       },
       is_author() {
         this.root_comment_clear()
-      }
+      },
     },
     data() {
       return {
         images: [],
-        img_show: false,
+        show_img: false,
         article: null,
         article_ready: false,
         show_article_option: false,
@@ -349,15 +367,21 @@
       }
     },
     methods: {
-      on_click_article(ev) {
+      click_user(id) {
+        this.$router.push(`/user/${id}`)
+      },
+      click_img(images) {
+        this.images = images
+        this.show_img = true
+      },
+      click_article(ev) {
         if (ev.target.getAttribute("uid")) {
-          this.$router.push(`/user/${ev.target.getAttribute("uid")}`)
+          this.click_user(ev.target.getAttribute("uid"))
           return
         }
         if (ev.target.tagName === "IMG") {
-          this.images = [ev.target.getAttribute("src")]
-          this.img_show = true
-          return;
+          console.log(1);
+          this.click_img([ev.target.getAttribute("src")])
         }
       },
       open_editor(parent, target) {
@@ -644,9 +668,9 @@
       },
     },
     mounted() {
-      let _this = this
+      let that = this
       document.addEventListener("scroll", () => {
-        _this.show_order = false
+        that.show_order = false
       })
     },
     created() {

@@ -1,5 +1,5 @@
 <template>
-  <div class="animation-wrap">
+  <div class="animation-wrap" v-if="message">
     <router-view v-slot="{ Component }">
       <keep-alive :include="['Home','Community','Dynamic','Message','Profile']">
         <component :is="Component" @active="change_active"/>
@@ -18,12 +18,12 @@
 
       <var-bottom-navigation-item
         label="动态" icon="bell-outline" @click="this.$router.push('/dynamic')"
-        :badge="active!==2&&message&&badge1"
+        :badge="badge1"
       />
 
       <var-bottom-navigation-item
         label="消息" icon="message-processing-outline" @click="this.$router.push('/message')"
-        :badge="active!==3&&message&&badge2"
+        :badge="badge2"
       />
 
       <var-bottom-navigation-item
@@ -40,7 +40,7 @@
       return {
         active: 0,
         animation: "",
-        message: false
+        message: this.$store.state.message
       }
     },
     watch: {
@@ -77,10 +77,8 @@
       },
     },
     created() {
-      if (this.$store.state.login) {
-        this.$store.state.login.then(message => {
-          this.message = message
-        })
+      if (this.$store.state.message) {
+        this.message = this.$store.state.message
       } else {
         this.$request.api.get(
           "user/self/message/"

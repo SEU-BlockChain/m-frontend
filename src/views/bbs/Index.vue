@@ -86,8 +86,11 @@
           >
             <div v-for="article in article_list">
               <transition name="bloom" appear>
-
-                <article-card :key="article.id" :article="article"/>
+                <article-card
+                  :key="article.id"
+                  :article="article"
+                  @onClickImg="click_img"
+                />
               </transition>
             </div>
           </var-list>
@@ -98,6 +101,8 @@
     <var-button class="post-article" type="success" round @click="this.$router.push('/bbs/post-article')">
       <var-icon size="28" name="plus"/>
     </var-button>
+
+    <var-image-preview style="transition-duration: 0.5s" closeable :images="images" v-model:show="show_img"/>
   </div>
 </template>
 
@@ -109,8 +114,15 @@
     components: {
       ArticleCard
     },
+    watch: {
+      show_img(newValue, oldValue) {
+        this.$calc.mutex(this.$store, newValue, oldValue)
+      }
+    },
     data() {
       return {
+        show_img: false,
+        images: [],
         refreshing: false,
         category_id: 0,
         show_order: false,
@@ -142,6 +154,10 @@
       }
     },
     methods: {
+      click_img(images) {
+        this.images = images
+        this.show_img = true
+      },
       refresh() {
         this.article_list = []
         this.finished = false
@@ -189,11 +205,13 @@
       }
     },
     mounted() {
-      let _this = this
-      document.addEventListener("scroll", () => {
-        _this.show_order = false
+      let that = this
+      document.addEventListener('plusready', function () {
+        plus.key.addEventListener('backbutton', function () {
+          that.show_img = false
+        })
       })
-    },
+    }
   }
 </script>
 

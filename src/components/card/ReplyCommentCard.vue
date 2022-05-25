@@ -59,7 +59,6 @@
         {{this.$calc.filters.max_width(comment.content.article.title,20)}}
       </div>
     </div>
-
   </div>
 </template>
 
@@ -69,7 +68,12 @@
     props: {
       comment: null,
     },
-    emits: ["onVote", "onClickContent"],
+    emits: [
+      "onVote",
+      "onClickContent",
+      "onClickUser",
+      "onClickImg",
+    ],
     data() {
       return {
         text: [
@@ -91,10 +95,17 @@
     },
     methods: {
       on_vote(is_up) {
-        console.log(this.comment.content);
         this.$emit('onVote', is_up, this.comment.content.article, this.comment.content)
       },
-      on_click_content() {
+      on_click_content(ev) {
+        if (ev.target.getAttribute("uid")) {
+          this.$emit("onClickUser", `/user/${ev.target.getAttribute("uid")}`)
+          return;
+        }
+        if (ev.target.tagName === "IMG") {
+          this.$emit("onClickImg", [ev.target.getAttribute("src")])
+          return;
+        }
         this.$emit(
           'onClickContent',
           this.comment.content.article,

@@ -80,13 +80,13 @@
         ).then(res => {
           if (res.data.code === 107) {
             this.$store.commit("login", res.data.result.user)
+            this.$request.api.get(
+              "user/self/message/"
+            ).then(res => {
+              this.$store.commit("message", res.data.result)
+            })
             return new Promise(resolve => {
-              this.$request.api.get(
-                "user/self/message/"
-              ).then(res => {
-                this.$store.commit("message", res.data.result)
-                resolve(res.data.result)
-              })
+              resolve()
             })
           } else {
             window.localStorage.removeItem("token")
@@ -115,9 +115,11 @@
         var webview = plus.webview.currentWebview();
         plus.key.addEventListener('backbutton', function () {
           webview.canBack(function (e) {
-            if (e.canBack && that.$route.meta.depth !== 0) {
+            if (that.$store.state.forbid_back) {
+
+            } else if (e.canBack && that.$route.meta.depth !== 0) {
               webview.back();
-            } else {
+            } else if (that.$route.meta.depth === 0) {
               var first = null;
               plus.key.addEventListener('backbutton', function () {
                 //首次按键，提示‘再按一次退出应用’

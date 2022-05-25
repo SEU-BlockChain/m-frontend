@@ -115,9 +115,20 @@ let up_down = function (is_up, obj) {
     }
   }
 }
+
+function mutex(store, newValue, oldValue) {
+  if (newValue) {
+    store.commit("lock")
+  }
+  if (oldValue) {
+    store.commit("unlock")
+  }
+}
+
 export default {
   calc_rank,
   DateParser,
   filters,
-  up_down
+  up_down,
+  mutex
 }
