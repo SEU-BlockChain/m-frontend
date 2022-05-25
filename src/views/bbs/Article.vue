@@ -48,7 +48,7 @@
           <span>最后更新:{{this.$calc.filters.date(article.update_time)}}</span>
         </span>
         </div>
-        <div class="w-container content" v-html="this.$xss(article.content)"/>
+        <div class="w-container content" v-html="this.$xss(article.content)" @click="on_click_article"/>
         <div class="foot">
           <div class="chip">
             <var-chip size="small" id="comment">{{article.category.category}}</var-chip>
@@ -245,6 +245,8 @@
         v-for="(conversation,k) in conversation_list"
       />
     </var-popup>
+
+    <var-image-preview style="transition-duration: 0.5s"  closeable :images="images" v-model:show="img_show"/>
   </div>
 </template>
 
@@ -286,6 +288,8 @@
     },
     data() {
       return {
+        images: [],
+        img_show: false,
         article: null,
         article_ready: false,
         show_article_option: false,
@@ -345,6 +349,17 @@
       }
     },
     methods: {
+      on_click_article(ev) {
+        if (ev.target.getAttribute("uid")) {
+          this.$router.push(`/user/${ev.target.getAttribute("uid")}`)
+          return
+        }
+        if (ev.target.tagName === "IMG") {
+          this.images = [ev.target.getAttribute("src")]
+          this.img_show = true
+          return;
+        }
+      },
       open_editor(parent, target) {
         if (!this.$store.state.is_login) {
           this.$router.push({path: '/login', query: {back: true}})
@@ -376,7 +391,7 @@
         this.root_comment_clear()
         this.root_comment_reload()
       },
-      change_author(){
+      change_author() {
         this.root_comment_reload()
       },
       root_comment_load() {

@@ -19,7 +19,6 @@ app.config.globalProperties.$request = request
 app.config.globalProperties.$tools = tools
 app.config.globalProperties.$tip = Snackbar
 app.config.globalProperties.$dialog = Dialog
-// app.config.globalProperties.$xss = x => x
 
 
 import {whiteList} from "./assets/js/css_white_list";

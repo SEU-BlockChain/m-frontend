@@ -44,6 +44,7 @@
         </div>
       </template>
     </var-card>
+    <var-image-preview style="transition-duration: 0.5s" closeable :images="images" v-model:show="img_show"/>
   </div>
 </template>
 
@@ -55,12 +56,27 @@
       hide_author: false,
       use_create_time: false
     },
+    data() {
+      return {
+        img_show: false,
+        images: []
+      }
+    },
     emits: ["change_category"],
     methods: {
       change_category(id) {
         this.$emit("change_category", id)
       },
       to_article(ev) {
+        if (ev.target.getAttribute("uid")) {
+          this.$router.push(`/user/${ev.target.getAttribute("uid")}`)
+          return
+        }
+        if (ev.target.tagName === "IMG") {
+          this.images = [ev.target.getAttribute("src")]
+          this.img_show = true
+          return;
+        }
         this.$router.push(`/bbs/article/${this.article.id}`)
       }
     }
@@ -151,7 +167,7 @@
     color: #999;
   }
 
-  .active{
+  .active {
     color: #4ebaee;
   }
 </style>

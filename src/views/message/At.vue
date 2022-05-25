@@ -22,40 +22,64 @@
         :immediate-check="false"
       >
         <div :key="at" v-for="at in at_list">
-          <div v-if="at.origin===0">
-            <transition :name="animation(at)" appear>
-              <div class="wrap" @click="this.$router.push(`/bbs/article/${at.content.id}`)">
-                <img
-                  class="avatar"
-                  :src="this.$settings.cos_url+at.content.author.icon"
-                  @click.stop="this.$router.push(`/user/${at.content.author.id}`)"
-                />
-                <div class="content">
-                  <span class="username">{{at.content.author.username}}</span>
-                  <span class="tip">在文章中@了你</span>
-                  <div class="time">{{this.$calc.filters.date(at.time)}}</div>
-                  <div class="article">{{at.content.title}}</div>
+          <div v-if="remove.indexOf(at.id)===-1">
+            <div v-if="at.origin===0">
+              <transition :name="animation(at)" appear>
+                <div v-ripple="{ color: '#ccc' }" class="wrap"
+                     @click="this.$router.push(`/bbs/article/${at.content.id}`)">
+                  <img
+                    class="avatar"
+                    :src="this.$settings.cos_url+at.content.author.icon"
+                    @click.stop="this.$router.push(`/user/${at.content.author.id}`)"
+                  />
+                  <div class="content">
+                    <div class="head">
+                      <div>
+                        <span class="username">{{at.content.author.username}}</span>
+                        <span class="tip">在文章中@了你</span>
+                      </div>
+                      <img
+                        class="delete"
+                        @click.stop="delete_at(at)"
+                        src="~assets/img/delete.svg"
+                        height="16"
+                        alt="">
+                    </div>
+                    <div class="time">{{this.$calc.filters.date(at.time)}}</div>
+                    <div class="article">{{at.content.title}}</div>
+                  </div>
                 </div>
-              </div>
-            </transition>
-          </div>
-          <div v-if="at.origin===1">
-            <transition :name="animation(at)" appear>
-              <div class="wrap" @click="this.$router.push(`/bbs/article/${at.content.article.id}`)">
-                <img
-                  class="avatar"
-                  :src="this.$settings.cos_url+at.content.author.icon"
-                  @click.stop="this.$router.push(`/user/${at.content.author.id}`)"
-                />
-                <div class="content">
-                  <span class="username">{{at.content.author.username}}</span>
-                  <span class="tip">在评论中@了你</span>
-                  <div class="time">{{this.$calc.filters.date(at.time)}}</div>
-                  <div class="description" v-html="this.$xss(at.content.description)"/>
-                  <div class="article">{{at.content.article.title}}</div>
+              </transition>
+            </div>
+            <div v-if="at.origin===1">
+              <transition :name="animation(at)" appear>
+                <div v-ripple="{ color: '#ccc' }" class="wrap"
+                     @click="this.$router.push(`/bbs/article/${at.content.article.id}`)">
+                  <img
+                    class="avatar"
+                    :src="this.$settings.cos_url+at.content.author.icon"
+                    @click.stop="this.$router.push(`/user/${at.content.author.id}`)"
+                  />
+                  <div class="content">
+                    <div class="head">
+                      <div>
+                        <span class="username">{{at.content.author.username}}</span>
+                        <span class="tip">在评论中@了你</span>
+                      </div>
+                      <img
+                        class="delete"
+                        @click.stop="delete_at(at)"
+                        src="~assets/img/delete.svg"
+                        height="16"
+                        alt="">
+                    </div>
+                    <div class="time">{{this.$calc.filters.date(at.time)}}</div>
+                    <div class="description" v-html="this.$xss(at.content.description)"/>
+                    <div class="article">{{at.content.article.title}}</div>
+                  </div>
                 </div>
-              </div>
-            </transition>
+              </transition>
+            </div>
           </div>
         </div>
       </var-list>
@@ -72,12 +96,36 @@
         finished: false,
         loading: true,
         next: null,
+        remove: []
       }
     },
     methods: {
       animation(like) {
         if (!like.is_viewed) return "slide-fade"
         return "bloom"
+      },
+      delete_at(at) {
+        this.$dialog("是否删除记录").then(res => {
+          if (res !== "confirm") return;
+          this.$request.api.delete(
+            `message/at/${at.id}/`,
+          ).then(res => {
+            if (res.data.code === 144) {
+              this.$tip({
+                content: "已删除记录",
+                type: "success",
+                duration: 1000,
+              })
+              this.remove.push(at.id)
+            } else {
+              this.$tip({
+                content: res.data.msg,
+                type: "warning",
+                duration: 1000,
+              })
+            }
+          })
+        })
       },
       load() {
         this.$request.api.get(
@@ -175,4 +223,11 @@
     padding: 5px;
     color: #666666;
   }
+
+  .head {
+    display: flex;
+    justify-content: space-between;
+    padding-right: 10px;
+  }
+
 </style>

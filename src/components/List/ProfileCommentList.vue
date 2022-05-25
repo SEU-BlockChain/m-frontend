@@ -6,13 +6,14 @@
       @load="load"
       :immediate-check="false"
     >
-      <div class="container " v-for="comment in comment_list">
-        <div class="comment" @click="this.$router.push(`/bbs/article/${comment.article.id}`)">
+      <div class="container " v-for="comment in comment_list"
+           @click="this.$router.push(`/bbs/article/${comment.article.id}`)">
+        <div class="comment">
           <div class="content">
             <common-comment-card :comment="comment" :hide_head="true"/>
           </div>
-          <div class="article">{{this.$calc.filters.max_width(comment.article.title,20)}}</div>
         </div>
+        <div class="article">{{this.$calc.filters.max_width(comment.article.title,20)}}</div>
         <var-divider margin="0"/>
       </div>
     </var-list>
@@ -82,15 +83,10 @@
     align-items: flex-start;
   }
 
-  .content {
-    width: 80vw;
-  }
-
   .article {
-    width: 20vw;
     font-size: 12px;
     color: #777;
-    margin-top: 10px;
+    margin: 0 10px 10px;
     padding: 10px;
     background-color: #f0f1f5;
     border-radius: 5px;

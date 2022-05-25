@@ -1,5 +1,5 @@
 let cos_url = "https://cos.chain.seutools.com/"
-let api_url = process.env.NODE_ENV === 'production' ? '"https://api.chain.seutools.com/"' : "http://127.0.0.1:8000/"
+let api_url = process.env.NODE_ENV === 'production' ? "https://api.chain.seutools.com/" : "http://127.0.0.1:8000/"
 
 
 let re_pattens = {

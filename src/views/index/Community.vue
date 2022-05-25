@@ -1,7 +1,7 @@
 <template>
   <div class="animation-wrap">
     <div class="top">
-      <div class="search">
+      <div class="find">
         <var-input class="search-input" placeholder="搜索" :hint="false" :line="false" v-model="search" @input="filter">
           <template #prepend-icon>
             <var-icon @click="filter" name="magnify-plus-outline"/>
@@ -74,7 +74,7 @@
 </script>
 
 <style scoped>
-  .search {
+  .find {
     width: 100vw;
     padding: 20px;
   }

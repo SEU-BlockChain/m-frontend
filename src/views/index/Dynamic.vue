@@ -122,13 +122,12 @@
           }
         }
       })
-
-      if (this.$store.state.login) {
+      if (this.$store.state.message) {
+        this.$store.state.message.dynamic = 0
+      } else if (this.$store.state.login) {
         this.$store.state.login.then(message => {
           message.dynamic = 0
         })
-      } else {
-        this.$store.state.message.dynamic = 0
       }
     },
     activated() {

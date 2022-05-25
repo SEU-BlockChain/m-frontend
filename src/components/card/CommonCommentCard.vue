@@ -45,11 +45,9 @@
           </div>
           <div class="interact">
 
-            <div class="flex-center stay" @click="on_click_content">
-              <img v-if="show_comment_num"
-                   class="interact-icon" src="~assets/img/comment.svg" height="16" alt="">
-              <div v-if="show_comment_num"
-                   class="interact-text">{{comment.comment_num}}
+            <div v-if="show_comment_num" class="flex-center stay" @click="on_click_conversation">
+              <img class="interact-icon" src="~assets/img/comment.svg" height="16" alt="">
+              <div class="interact-text">{{comment.comment_num}}
               </div>
             </div>
 
@@ -85,10 +83,15 @@
                 alt="">
               <div class="interact-text" :class="{active:comment.is_up===false}">{{comment.down_num}}</div>
             </div>
+
+            <div v-if="!show_comment_num" class="flex-cente" @click="on_click_conversation">
+              <img class="interact-icon" src="~assets/img/comment.svg" height="16" alt="">
+            </div>
           </div>
         </div>
       </div>
     </div>
+    <var-image-preview style="transition-duration: 0.5s" closeable :images="images" v-model:show="show"/>
   </div>
 </template>
 
@@ -102,6 +105,12 @@
       hide_conversation: false,
       show_comment_num: null,
       hide_head: false
+    },
+    data() {
+      return {
+        images: [],
+        show: false
+      }
     },
     emits: [
       "onClickOption",
@@ -118,7 +127,19 @@
       on_click_option() {
         this.$emit('onClickOption', this.comment)
       },
+      on_click_conversation() {
+        this.$emit('onClickContent', this.parent || this.comment, this.parent && this.comment)
+      },
       on_click_content(ev) {
+        if (ev.target.getAttribute("uid")) {
+          this.$router.push(`/user/${ev.target.getAttribute("uid")}`)
+          return
+        }
+        if (ev.target.tagName === "IMG") {
+          this.images = [ev.target.getAttribute("src")]
+          this.show = true
+          return;
+        }
         this.$emit('onClickContent', this.parent || this.comment, this.parent && this.comment)
       },
       on_vote(is_up) {
@@ -171,6 +192,7 @@
   .foot {
     display: flex;
     justify-content: space-between;
+    margin-top: 10px;
   }
 
   .interact {
@@ -180,32 +202,32 @@
   }
 
   .time {
-    line-height: 40px;
+    line-height: 20px;
     font-size: 12px;
     color: #666666;
   }
 
   .interact-icon {
-    margin: 12px 0;
+    margin: 2px 0;
     position: relative;
     border-left: 4px solid transparent;
     border-right: 4px solid transparent;
   }
 
   .interact-text {
-    line-height: 40px;
+    line-height: 20px;
     float: right;
     color: #999;
   }
 
   .conversation {
-    line-height: 40px;
+    line-height: 20px;
     font-size: 12px;
     color: #666666;
   }
 
   .stay {
-    min-width: 60px;
+    min-width: 50px;
   }
 
   .active {
