@@ -21,7 +21,7 @@
     :immediate-check="false"
   >
     <div v-for="article in article_list">
-      <var-card class="card article-card" elevation="1">
+      <var-card  v-if="this.$store.state.remove.article.indexOf(article.id)===-1" class="card article-card" elevation="1">
         <template #extra>
           <article-card
             :key="article.id"

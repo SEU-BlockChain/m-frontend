@@ -477,7 +477,12 @@
                 type: "success",
                 duration: 1000
               })
-              this.$router.replace("/bbs")
+              console.log(this.article.id);
+              this.$store.commit("remove", {
+                type: "article",
+                id: this.article.id
+              })
+              this.$router.return("/bbs")
             } else {
               this.$tip({
                 content: res.data.msg,

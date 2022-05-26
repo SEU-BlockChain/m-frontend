@@ -113,6 +113,17 @@ const routes = [
     component: () => import("views/message/System"),
   },
   {
+    path: "/chat/:id",
+    name: "Chat",
+    meta: {
+      title: "对话详情",
+      auth: 1,
+      depth: 2,
+    },
+    component: () => import("views/message/Chat"),
+  },
+
+  {
     path: "/user",
     name: "UserDetailWrap",
     component: () => import("wraps/UserDetailWrap"),

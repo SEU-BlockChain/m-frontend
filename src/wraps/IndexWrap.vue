@@ -59,7 +59,7 @@
       },
       badge2() {
         let message = this.message
-        let num = message["like"] + message["at"] + message["private"] + message["system"] + message["reply"]
+        let num = message["like"] + message["at"] + message["system"] + message["reply"]
         if (num) {
           return {type: 'danger', value: num}
         } else {

@@ -78,12 +78,13 @@
         let login = this.$request.api.get(
           "user/self/info/"
         ).then(res => {
+          let response = res
           if (res.data.code === 107) {
-            this.$store.commit("login", res.data.result.user)
             this.$request.api.get(
               "user/self/message/"
             ).then(res => {
               this.$store.commit("message", res.data.result)
+              this.$store.commit("login", response.data.result.user)
             })
             return new Promise(resolve => {
               resolve()

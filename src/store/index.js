@@ -9,8 +9,15 @@ export default createStore({
     hide_top: false,
     message: null,
     forbid_back: 0,
+    remove: {
+      article: [],
+      comment: [],
+    }
   },
   mutations: {
+    remove(state, payload) {
+      state.remove[payload.type].push(payload.id)
+    },
     lock(state) {
       state.forbid_back += 1
     },
@@ -25,12 +32,12 @@ export default createStore({
       state.is_init = true
     },
     login(state, user, login) {
+      state.is_login = true
       state.user = user
       state.login = login
     },
     message(state, message) {
       state.message = message
-      state.is_login = true
     },
     message_clear(state, type) {
       if (state.message) {

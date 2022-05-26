@@ -11,7 +11,8 @@
     </div>
 
     <div v-if="user" class="head var-elevation--3">
-      <var-button class="right btn" size="small" type="primary" outline text>
+      <var-button @click="this.$router.push(`/chat/${user.id}`)" class="right btn" size="small" type="primary" outline
+                  text>
         <template #default>
           <var-icon name="message-processing-outline" size="14"/>
           私信
@@ -212,7 +213,7 @@
     background-color: #fafafa;
   }
 
-  .description{
+  .description {
     color: #666;
   }
 </style>
