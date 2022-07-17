@@ -15,7 +15,14 @@
     </var-app-bar>
     <div style="height: 64px;"/>
 
-    <div class="option" v-ripple="{ color: '#ccc' }" @click="this.$router.push('/setting/message')">
+    <div v-if="this.$store.state.is_login" class="option" v-ripple="{ color: '#ccc' }">
+      <div class="option-text">版本:Beta1.0.0</div>
+      <div v-if="new_version.length&&new_version>old_version" style="color: red;">有新版本!</div>
+      <div v-else>已是最新版本</div>
+    </div>
+
+    <div v-if="this.$store.state.is_login" class="option" v-ripple="{ color: '#ccc' }"
+         @click="this.$router.push('/setting/message')">
       <div class="option-text">消息设置</div>
       <var-icon name="chevron-right"/>
     </div>
@@ -29,6 +36,17 @@
 <script>
   export default {
     name: "Setting",
+    data() {
+      return {
+        old_version: [0, 1, 0, 0],
+        new_version: []
+      }
+    },
+    computed: {
+      low() {
+
+      }
+    },
     methods: {
       logout() {
         this.$dialog({
@@ -42,7 +60,11 @@
         })
       },
     },
-
+    created() {
+      this.$request.api.get("/other/info/version").then(res => {
+        this.new_version = res.data.result.version
+      })
+    }
   }
 </script>
 

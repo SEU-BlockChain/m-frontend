@@ -25,6 +25,7 @@
           <div class="cursor" v-if="like.recent">最新</div>
           <div class="cursor" v-if="like.old">累计</div>
           <div>
+
             <div v-if="like.origin===0">
               <transition :name="animation(like)" appear>
 
@@ -40,6 +41,7 @@
                 </div>
               </transition>
             </div>
+
             <div v-if="like.origin===1">
               <transition :name="animation(like)" appear>
                 <div class="like-wrap" @click="this.$router.push(`/bbs/article/${like.content.article.id}`)">
@@ -49,7 +51,37 @@
                       class="tip">等{{like.new||like.total}}人赞了我的评论</span></div>
                     <div class="time">{{this.$calc.filters.date(like.time)}}</div>
                   </div>
-                  <div class="comment">{{like.content.description}}</div>
+                  <div class="comment" v-html="like.content.description"/>
+                </div>
+              </transition>
+            </div>
+
+            <div v-if="like.origin===2">
+              <transition :name="animation(like)" appear>
+
+                <div class="like-wrap" @click="this.$router.push(`/special/column/${like.content.id}`)">
+                  <img class="avatar" :src="this.$settings.cos_url+like.sender.icon"/>
+                  <div class="info">
+                    <div class="username">{{like.sender.username}}<span
+                      class="tip">等{{like.new||like.total}}人赞了我的专栏</span></div>
+                    <div class="time">{{this.$calc.filters.date(like.time)}}</div>
+                  </div>
+
+                  <div class="article">{{this.$calc.filters.max_width(like.content.title,20)}}</div>
+                </div>
+              </transition>
+            </div>
+
+            <div v-if="like.origin===3">
+              <transition :name="animation(like)" appear>
+                <div class="like-wrap" @click="this.$router.push(`/special/column/${like.content.column.id}`)">
+                  <img class="avatar" :src="this.$settings.cos_url+like.sender.icon"/>
+                  <div class="info">
+                    <div class="username">{{like.sender.username}}<span
+                      class="tip">等{{like.new||like.total}}人赞了我的评论</span></div>
+                    <div class="time">{{this.$calc.filters.date(like.time)}}</div>
+                  </div>
+                  <div class="comment" v-html="like.content.description"/>
                 </div>
               </transition>
             </div>
@@ -177,7 +209,7 @@
   }
 
   .article {
-    width: 100px;
+    width: 120px;
     padding: 10px;
     font-size: 14px;
     background-color: #f6f6f6;
@@ -185,10 +217,11 @@
   }
 
   .comment {
-    width: 100px;
+    width: 120px;
     padding: 10px;
     font-size: 14px;
     align-self: flex-start;
+    color: #444;
   }
 
   .cursor {

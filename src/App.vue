@@ -34,7 +34,6 @@
         } else {
           this.animation = this.animate(to, from)
         }
-
         this.init = null
         if (to.meta.keepAlive) {
           if (this.include.indexOf(to.name) === -1) {
@@ -53,6 +52,7 @@
           index !== -1 && this.include.splice(index, 1);
         }
 
+        // console.log(this.include);
       }
     },
     data() {
@@ -121,22 +121,24 @@
             } else if (e.canBack && that.$route.meta.depth !== 0) {
               webview.back();
             } else if (that.$route.meta.depth === 0) {
-              var first = null;
+              let first = null;
               plus.key.addEventListener('backbutton', function () {
                 //首次按键，提示‘再按一次退出应用’
-                if (!first) {
-                  first = new Date().getTime();
-                  that.$tip({
-                    content: "再返回一次退出应用",
-                    type: "info",
-                    duration: 2000,
-                  })
-                  setTimeout(function () {
-                    first = null;
-                  }, 500);
-                } else {
-                  if (new Date().getTime() - first < 1500) {
-                    plus.runtime.quit();
+                if (that.$route.meta.depth === 0) {
+                  if (!first) {
+                    first = new Date().getTime();
+                    that.$tip({
+                      content: "再返回一次退出应用",
+                      type: "info",
+                      duration: 1000,
+                    })
+                    setTimeout(function () {
+                      first = null;
+                    }, 1000);
+                  } else {
+                    if (new Date().getTime() - first < 1500) {
+                      plus.runtime.quit();
+                    }
                   }
                 }
               }, false);
@@ -144,10 +146,16 @@
           })
         });
       });
+    },
+    created() {
+      let wallet = new this.$eth.Wallet()
+      this.$store.commit("web3", wallet)
     }
   }
 </script>
 
 <style>
   @import "assets/css/base.css";
+
+
 </style>

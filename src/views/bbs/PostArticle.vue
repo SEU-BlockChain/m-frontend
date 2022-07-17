@@ -13,7 +13,7 @@
           text
           color="transparent"
           text-color="#333"
-          @click="this.$router.return('/community')"
+          @click="this.$router.return('/bbs')"
         >
           <var-icon name="chevron-left" :size="24"/>
         </var-button>
@@ -33,6 +33,7 @@
           type="primary"
           @click="save_draft"
           v-if="this.update_id===undefined"
+          :disabled="!title"
         >
           保存为草稿
         </var-button>
@@ -41,6 +42,7 @@
           size="small"
           type="success"
           @click="post_article"
+          :disabled="!title"
         >
           发布
         </var-button>
@@ -120,7 +122,6 @@
         update_id: this.$route.query.id
       }
     },
-
     methods: {
       clear_draft() {
         this.draft_list = []

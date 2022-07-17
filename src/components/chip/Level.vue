@@ -4,7 +4,7 @@
       <div class="level left">Lv.{{rank.level}}</div>
       <div class="experience right">{{rank.experience}}/{{rank.total}}</div>
     </div>
-    <var-progress :value="100*rank.experience/rank.total" />
+    <var-progress :value="100*rank.experience/rank.total"/>
   </div>
 </template>
 

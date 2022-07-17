@@ -53,6 +53,12 @@
                 />
               </transition>
             </div>
+
+            <div v-if="dynamic.origin===2">
+              <transition name="slide-fade2" appear>
+                <column-card style="margin-bottom: 5px" :column="dynamic.content"/>
+              </transition>
+            </div>
           </div>
         </var-list>
       </var-pull-refresh>
@@ -64,10 +70,11 @@
 
 <script>
   import ArticleCard from "../../components/card/ArticleCard";
+  import ColumnCard from "../../components/card/ColumnCard";
 
   export default {
     name: "Dynamic",
-    components: {ArticleCard},
+    components: {ColumnCard, ArticleCard},
     emits: ["active"],
     data() {
       return {

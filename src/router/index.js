@@ -171,6 +171,16 @@ const routes = [
     ]
   },
   {
+    path: "/user/level",
+    name: "Level",
+    meta: {
+      title: "等级",
+      auth: 1,
+      depth: 4,
+    },
+    component: () => import("views/user_detail/Level"),
+  },
+  {
     path: "/user/follow",
     name: "Follow",
     meta: {
@@ -241,7 +251,7 @@ const routes = [
   },
   {
     path: "/bbs",
-    name: "Index",
+    name: "Index-bbs",
     component: () => import("views/bbs/Index"),
     meta: {
       title: "讨论区",
@@ -265,6 +275,66 @@ const routes = [
     component: () => import("views/bbs/Article"),
     meta: {
       title: "文章详情",
+      depth: 2,
+      keepAlive: true
+    }
+  },
+  {
+    path: "/special",
+    name: "Index-special",
+    component: () => import("views/special/Index"),
+    meta: {
+      title: "专栏",
+      depth: 1,
+      keepAlive: true
+    }
+  },
+  {
+    path: "/special/post-column",
+    name: "PostColumn",
+    component: () => import("views/special/PostColumn"),
+    meta: {
+      title: "发布专栏",
+      auth: 1,
+      depth: 2
+    }
+  },
+  {
+    path: "/special/column/:id",
+    name: "Column",
+    component: () => import("views/special/Column"),
+    meta: {
+      title: "专栏详情",
+      depth: 2,
+      keepAlive: true
+    }
+  },
+  {
+    path: "/information",
+    name: "Index-information",
+    component: () => import("views/information/Index"),
+    meta: {
+      title: "资讯",
+      depth: 1,
+      keepAlive: true
+    }
+  },
+  {
+    path: "/information/post-news",
+    name: "PostNews",
+    component: () => import("views/information/PostNews"),
+    meta: {
+      title: "发布资讯",
+      auth: 1,
+      depth: 2
+    }
+  },
+  {
+    path: "/information/news/:id",
+    name: "News",
+    component: () => import("views/information/News"),
+    meta: {
+      title: "资讯详情",
       depth: 2,
       keepAlive: true
     }

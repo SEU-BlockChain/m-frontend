@@ -1,5 +1,6 @@
 @import "./normalize.css";
 @import "./transition.css";
+@import "./font.css";
 
 :root {
     --mask: rgba(200, 200, 200, 0.5);
@@ -65,20 +66,15 @@ a {
     float: right;
 }
 
-.background {
-    background-color: #f0f1f5;
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -99;
-}
 
 .card {
     --card-footer-margin: 0;
     --card-padding: 0;
     --card-footer-padding: 0
+}
+
+.card .var-card__footer{
+    display: block;
 }
 
 .center {
@@ -105,6 +101,7 @@ a {
 }
 
 .w-container table {
+    width: 100%;
     border-collapse: collapse;
 }
 
@@ -118,7 +115,7 @@ a {
     line-height: 1.5;
 }
 
-.w-container table th, .container table td {
+.w-container table th, .w-container table td {
     border: 1px solid #ccc;
     min-width: 50px;
     height: 20px;
@@ -148,6 +145,7 @@ a {
 
 .flex-center {
     display: flex;
+    justify-content: center;
     align-content: center
 }
 

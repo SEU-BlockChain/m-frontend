@@ -1,54 +1,53 @@
 <template>
   <div class="animation-wrap">
-    <div class="head">
-      <var-app-bar
-        class="app-bar"
-        color="#f0f1f5"
-        :elevation="false"
-        text-color="#333"
-        title-position="center"
-      >
-        <template #left>
-          <var-button
-            round
-            text
-            color="transparent"
-            text-color="#333"
-            @click="this.$router.return('/community')"
-          >
-            <var-icon name="chevron-left" :size="24"/>
-          </var-button>
-        </template>
-        <template #default>
-          <div class="title">讨论区</div>
-        </template>
-        <template #right>
-          <var-button
-            round
-            text
-            color="transparent"
-            text-color="#333"
-            @click="this.$router.return('/community')"
-          >
-            <var-icon name="magnify-plus-outline" :size="24"/>
-          </var-button>
-        </template>
-      </var-app-bar>
+    <var-app-bar
+      class="app-bar"
+      color="#f0f1f5"
+      :elevation="false"
+      text-color="#333"
+      title-position="center"
+    >
+      <template #left>
+        <var-button
+          round
+          text
+          color="transparent"
+          text-color="#333"
+          @click="this.$router.return('/community')"
+        >
+          <var-icon name="chevron-left" :size="24"/>
+        </var-button>
+      </template>
+      <template #default>
+        <div class="title">讨论区</div>
+      </template>
+      <template #right>
+        <var-button
+          round
+          text
+          color="transparent"
+          text-color="#333"
+          @click="this.$router.return('/community')"
+        >
+          <var-icon name="magnify-plus-outline" :size="24"/>
+        </var-button>
+      </template>
+    </var-app-bar>
+    <var-sticky :offset-top="0">
       <var-tabs
         color="#f0f1f5"
         active-color="#4ebaee"
         inactive-color="#777"
         v-model:active="category_id"
         @change="reload"
-        style="height: 30px;"
       >
         <var-tab>全部</var-tab>
         <var-tab>官方公告</var-tab>
         <var-tab>杂谈</var-tab>
       </var-tabs>
       <var-divider margin="0"/>
-    </div>
-    <div style="height: 84px"/>
+    </var-sticky>
+
     <var-pull-refresh v-model="refreshing" @refresh="refresh" success-duration="1000">
       <div class="body">
         <div class="order">
@@ -191,6 +190,7 @@
             this.finished = !Boolean(this.next)
             this.refreshing = false
           } else {
+            this.refreshing = false
             this.$tip({
               content: res.data.msg,
               type: "warning",
@@ -227,13 +227,6 @@
     font-weight: bolder;
   }
 
-  .head {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100vw;
-    z-index: 100;
-  }
 
   .body {
     min-height: 100vh;

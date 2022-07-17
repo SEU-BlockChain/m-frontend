@@ -2,6 +2,7 @@ import {createStore} from 'vuex'
 
 export default createStore({
   state: {
+    wallet: null,
     is_init: false,
     is_login: false,
     login: null,
@@ -15,6 +16,9 @@ export default createStore({
     }
   },
   mutations: {
+    web3(state, wallet) {
+      state.wallet = wallet
+    },
     remove(state, payload) {
       state.remove[payload.type].push(payload.id)
     },

@@ -14,7 +14,14 @@ api.interceptors.request.use(
     token && (config.headers.Authorization = token);
     return config;
   },
-  error => Promise.error(error)
+  error => {
+    if(error.response.status !== 404){
+      console.log(1);
+    }else {
+      Promise.error(error)
+
+    }
+  }
 )
 
 export default {

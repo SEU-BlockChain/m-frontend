@@ -50,8 +50,8 @@
           }
         ).then(res => {
           if (res.data.code === 102) {
-            window.localStorage.setItem("token", res.data.result.token)
-            this.$store.commit("login", res.data.result["user"])
+            window.localStorage.setItem("token", res.data.result.user.token)
+            this.$store.commit("login", res.data.result.user)
             this.$router.replace(this.$route.query.next || "/")
           } else {
             this.$tip({

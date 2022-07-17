@@ -8,12 +8,13 @@
           </template>
         </var-input>
       </div>
+
       <div class="options">
-        <div class="option">
+        <div class="option"  @click="this.$router.push('/special')">
           <img class="option-icon" src="~assets/img/column.svg" alt="">
           <div class="option-text">专栏</div>
         </div>
-        <div class="option">
+        <div class="option" @click="this.$router.push('/information')">
           <img class="option-icon" src="~assets/img/news.svg" alt="">
           <div class="option-text">资讯</div>
         </div>

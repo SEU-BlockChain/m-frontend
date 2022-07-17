@@ -7,7 +7,7 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
-    "@varlet/ui": "^1.27.3",
+    "@varlet/ui": "^1.27.16",
     "@wangeditor/editor": "^5.0.1",
     "@wangeditor/editor-for-vue": "^5.1.11",
     "@wangeditor/plugin-mention": "^1.0.0",
@@ -19,9 +19,11 @@
     "vue-router": "^4.0.0-0",
     "vue-xss": "^1.0.4",
     "vuex": "^4.0.0-0",
+    "web3": "^1.7.3",
     "xss": "^1.0.11"
   },
   "devDependencies": {
+    "@arco-design/web-vue": "^2.32.1",
     "@vue/cli-plugin-babel": "~4.5.15",
     "@vue/cli-plugin-router": "~4.5.15",
     "@vue/cli-plugin-vuex": "~4.5.15",

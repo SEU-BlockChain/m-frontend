@@ -3,7 +3,7 @@
 </template>
 
 <script>
-  import ProfileCommentList from "components/List/ProfileCommentList";
+  import ProfileCommentList from "components/list/ProfileCommentList";
 
   export default {
     name: "Comments",

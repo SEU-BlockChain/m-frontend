@@ -51,6 +51,7 @@
                 </div>
               </transition>
             </div>
+
             <div v-if="at.origin===1">
               <transition :name="animation(at)" appear>
                 <div v-ripple="{ color: '#ccc' }" class="wrap"
@@ -76,6 +77,36 @@
                     <div class="time">{{this.$calc.filters.date(at.time)}}</div>
                     <div class="description" v-html="this.$xss(at.content.description)"/>
                     <div class="article">{{at.content.article.title}}</div>
+                  </div>
+                </div>
+              </transition>
+            </div>
+
+            <div v-if="at.origin===3">
+              <transition :name="animation(at)" appear>
+                <div v-ripple="{ color: '#ccc' }" class="wrap"
+                     @click="this.$router.push(`/special/column/${at.content.column.id}`)">
+                  <img
+                    class="avatar"
+                    :src="this.$settings.cos_url+at.content.author.icon"
+                    @click.stop="this.$router.push(`/user/${at.content.author.id}`)"
+                  />
+                  <div class="content">
+                    <div class="head">
+                      <div>
+                        <span class="username">{{at.content.author.username}}</span>
+                        <span class="tip">在评论中@了你</span>
+                      </div>
+                      <img
+                        class="delete"
+                        @click.stop="delete_at(at)"
+                        src="~assets/img/delete.svg"
+                        height="16"
+                        alt="">
+                    </div>
+                    <div class="time">{{this.$calc.filters.date(at.time)}}</div>
+                    <div class="description" v-html="this.$xss(at.content.description)"/>
+                    <div class="article">{{at.content.column.title}}</div>
                   </div>
                 </div>
               </transition>
@@ -133,6 +164,7 @@
         ).then(res => {
           if (res.data.code === 143) {
             for (let i of res.data.result.results) {
+              console.log(i);
               this.at_list.push(i)
             }
             this.next = res.data.result.next

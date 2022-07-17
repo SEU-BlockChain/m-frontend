@@ -380,7 +380,6 @@
           return
         }
         if (ev.target.tagName === "IMG") {
-          console.log(1);
           this.click_img([ev.target.getAttribute("src")])
         }
       },
@@ -620,6 +619,14 @@
           } else {
             this.$tip({
               content: res.data.msg,
+              type: "warning",
+              duration: 1000
+            })
+          }
+        }).catch(err => {
+          if (err.response.status === 404) {
+            this.$tip({
+              content: "评论不存在",
               type: "warning",
               duration: 1000
             })

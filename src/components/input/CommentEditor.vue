@@ -11,11 +11,13 @@
     :mode="mode"
     @onCreated="handleCreated"
   />
-  <mention-modal
-    style="z-index: 1001"
-    v-if="isShowModal"
-    @hideMentionModal="hideMentionModal"
-    @insertMention="insertMention"/>
+  <transition name="bloom">
+    <mention-modal
+      style="z-index: 1001"
+      v-if="isShowModal"
+      @hideMentionModal="hideMentionModal"
+      @insertMention="insertMention"/>
+  </transition>
   <div class="mask" v-if="isShowModal" @click.stop="isShowModal=false"/>
 </template>
 

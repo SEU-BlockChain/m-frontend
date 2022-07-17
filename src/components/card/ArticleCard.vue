@@ -8,9 +8,8 @@
               <img class="avatar" :src="this.$settings.cos_url+article.author.icon">
               <div class="username">{{article.author.username}}</div>
               <div class="level">
-                <var-chip size="mini" type="info" :round="false">
-                  Lv.{{this.$calc.calc_rank(article.author.experience).level}}
-                </var-chip>
+                <level-chip :round="false" :experience="article.author.experience"/>
+
               </div>
             </div>
             <div class="time" v-if="use_create_time">{{this.$calc.filters.date(article.create_time)}}</div>
@@ -48,8 +47,11 @@
 </template>
 
 <script>
+  import LevelChip from "../chip/LevelChip";
+
   export default {
     name: "ArticleCard",
+    components: {LevelChip},
     props: {
       article: null,
       hide_author: false,
@@ -69,7 +71,7 @@
           this.$emit("onClickUser", `/user/${ev.target.getAttribute("uid")}`)
           return;
         }
-        if (ev.target.tagName === "IMG") {
+        if (ev.target.tagName === "IMG" && !ev.target.getAttribute("src").endsWith("svg")) {
           this.$emit("onClickImg", [ev.target.getAttribute("src")])
           return;
         }

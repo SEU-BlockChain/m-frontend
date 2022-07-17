@@ -1,12 +1,12 @@
+let experience_list = [120, 600, 3600, 12000, 24000, 48000, 96000, 180000, 360000]
+
+
 function calc_rank(experience) {
   experience = Number(experience)
-  if (experience < 50) return {level: 0, experience, total: 50}
-  if (experience < 120) return {level: 1, experience, total: 120}
-  if (experience < 300) return {level: 2, experience, total: 300}
-  if (experience < 800) return {level: 3, experience, total: 800}
-  if (experience < 2000) return {level: 4, experience, total: 2000}
-  if (experience < 5000) return {level: 5, experience, total: 5000}
-  return {level: 6, experience, total: "--"}
+  for (let i = 0; i < experience_list.length; i++) {
+    if (experience < experience_list[i]) return {level: i + 1, experience, total: experience_list[i]}
+  }
+  return {level: experience_list.length + 1, experience, total: "--"}
 }
 
 class DateParser {
@@ -81,6 +81,9 @@ let filters = {
     } else {
       return str.substring(0, width) + "..."
     }
+  },
+  simple_address(address) {
+    return address.substr(0, 5) + "..." + address.substr(38);
   }
 }
 
@@ -126,6 +129,7 @@ function mutex(store, newValue, oldValue) {
 }
 
 export default {
+  experience_list,
   calc_rank,
   DateParser,
   filters,

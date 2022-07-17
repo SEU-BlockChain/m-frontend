@@ -22,12 +22,12 @@
         :immediate-check="false"
       >
         <div :key="reply" v-for="reply in reply_list">
-          <div v-if="reply.origin===0">
+          <div v-if="reply.origin===0||reply.origin===1">
             <transition :name="animation(reply)" appear>
-              <reply-comment-card
+              <reply-b-b-s-comment-card
                 :class="{new:!reply.is_viewed}"
                 @onVote="vote_comment"
-                @onClickContent="open_editor"
+                @onClickComment="open_editor"
                 @onDelete="delete_reply"
                 class="comment-card"
                 :comment="reply"
@@ -36,6 +36,22 @@
               />
             </transition>
           </div>
+
+          <div v-if="reply.origin===2||reply.origin===3">
+            <transition :name="animation(reply)" appear>
+              <reply-special-comment-card
+                :class="{new:!reply.is_viewed}"
+                @onVote="vote_comment"
+                @onClickComment="open_editor"
+                @onDelete="delete_reply"
+                class="comment-card"
+                :comment="reply"
+                v-if="remove.indexOf(reply.id)===-1"
+                v-ripple="{ color: '#ccc' }"
+              />
+            </transition>
+          </div>
+
         </div>
       </var-list>
     </div>
@@ -57,19 +73,26 @@
 </template>
 
 <script>
-  import ReplyCommentCard from "../../components/card/ReplyCommentCard";
-  import CommentEditor from "../../components/input/CommentEditor";
+  import ReplyBBSCommentCard from "components/card/ReplyBBSCommentCard";
+  import CommentEditor from "components/input/CommentEditor";
+  import ReplySpecialCommentCard from "components/card/ReplySpecialCommentCard";
 
   export default {
     name: "Reply",
-    components: {CommentEditor, ReplyCommentCard},
+    components: {
+      ReplySpecialCommentCard,
+      CommentEditor,
+      ReplyBBSCommentCard
+    },
     data() {
       return {
+        type: null,
         reply_list: [],
+        path_prefix: ["/bbs/article", "/special/column"],
         finished: false,
         loading: true,
         next: null,
-        article: null,
+        post: null,
         parent: null,
         target: null,
         show_editor: false,
@@ -101,9 +124,9 @@
           }
         })
       },
-      vote_comment(is_up, article, comment) {
+      vote_comment(is_up, type, post, comment) {
         this.$request.api.post(
-          `/bbs/article/${article.id}/comment/${comment.id}/vote/`,
+          `${this.path_prefix[type]}/${post.id}/comment/${comment.id}/vote/`,
           {
             is_up
           }).then(res => {
@@ -118,20 +141,25 @@
           }
         })
       },
-      open_editor(article, parent, target) {
-        this.article = article
+      open_editor(type, post, parent, target) {
+        this.type = type
+        this.post = post
         this.parent = parent
         this.target = target
         this.show_editor = true
       },
       submit_comment() {
         if (this.$refs.editor.editor.isEmpty()) return;
+        let data = {
+          content: this.$refs.editor.editor.getHtml(),
+        }
 
+        if (this.target) {
+          data.target_id = this.target.id
+        }
         this.$request.api.post(
-          `bbs/article/${this.article.id}/comment/${this.parent.id}/children_comment/`,
-          {
-            content: this.$refs.editor.editor.getHtml()
-          }
+          `${this.path_prefix[this.type]}/${this.post.id}/comment/${this.parent.id}/children_comment/`,
+          data
         ).then(res => {
           if (res.data.code === 118) {
             this.$tip({
@@ -140,8 +168,6 @@
               duration: 1000,
             })
             this.show_editor = false
-            res.data.result.new = true
-            this.root_comment_list.unshift(res.data.result)
           } else {
             this.$tip({
               content: res.data.msg,
@@ -179,7 +205,7 @@
       this.load()
       if (this.$store.state.message) {
         this.$store.state.message.reply = 0
-      }else {
+      } else {
         this.$request.api.get(
           "user/self/message/"
         ).then(res => {

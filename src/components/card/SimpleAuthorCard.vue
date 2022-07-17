@@ -3,14 +3,10 @@
     <div class="author-info">
       <img class="avatar" :src="this.$settings.cos_url+author.icon" @click="this.$router.push(`/user/${author.id}`)"/>
       <div @click="this.$router.push(`/user/${author.id}`)">
-        <div class="name-level">
+        <var-space size="2">
           <div class="name">{{author.username}}</div>
-          <div class="level">
-            <var-chip size="mini" type="info" :round="false">
-              Lv.{{this.$calc.calc_rank(author.experience).level}}
-            </var-chip>
-          </div>
-        </div>
+          <level-chip :round="false" :experience="author.experience"/>
+        </var-space>
         <div class="desc">{{this.$calc.filters.max_width(author.description,20)||"还没有签名"}}</div>
       </div>
     </div>
@@ -33,8 +29,11 @@
 </template>
 
 <script>
+  import LevelChip from "../chip/LevelChip";
+
   export default {
     name: "SimpleAuthorCard",
+    components: {LevelChip},
     props: {
       author: null
     },

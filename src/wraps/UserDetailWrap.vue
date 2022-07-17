@@ -28,7 +28,7 @@
       </div>
       <img class="avatar offset" :src="this.$settings.cos_url+user.icon">
       <div class="name offset">{{user.username}}</div>
-      <Level class="offset" :experience="user.experience"/>
+      <Level @click="this.$router.push('/user/level')" class="offset" :experience="user.experience"/>
     </div>
 
     <var-card class="card button" elevation="1">
@@ -162,7 +162,6 @@
 
   .button {
     margin: 10px 0;
-    padding: 10px 0;
   }
 
   .button-container {

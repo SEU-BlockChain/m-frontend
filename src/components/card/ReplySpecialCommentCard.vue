@@ -1,62 +1,37 @@
 <template>
   <div class="wrap">
-    <img
-      class="avatar"
-      :src="this.$settings.cos_url+comment.content.author.icon"
-      @click="this.$router.push(`/user/${comment.content.author.id}`)"
+    <img class="avatar"
+         :src="this.$settings.cos_url+comment.content.author.icon"
+         @click="this.$router.push(`/user/${comment.content.author.id}`)"
     />
     <div class="body">
       <div class="author" @click="this.$router.push(`/user/${comment.content.author.id}`)">
         <div class="username">{{comment.content.author.username}}</div>
         <div class="tip">回复了你的{{text[type]}}</div>
       </div>
-      <div @click="this.$router.push(`/bbs/article/${comment.content.article.id}`)" class="content"
+
+      <div @click="on_click_content" class="content w-container"
            v-html="this.$xss(comment.content.description)"/>
-      <div @click="this.$router.push(`/bbs/article/${comment.content.article.id}`)"
-           v-if="type" class="extra">
-        <div v-if="type===1" v-html="this.$xss(comment.content.parent.content)"/>
-        <div v-else v-html="this.$xss(comment.content.target.content)"/>
+      <div @click="on_click_content" v-if="type" class="extra">
+        <div v-if="type===1" class="w-container" v-html="this.$xss(comment.content.parent.description)"/>
+        <div v-else class="w-container" v-html="this.$xss(comment.content.target.description)"/>
       </div>
+
       <div class="other">
         <div class="left">
           <div class="time">
             {{this.$calc.filters.date(comment.content.comment_time)}}
           </div>
-          <div @click="on_vote(1)">
-            <img
-              v-if="comment.content.is_up"
-              class="interact-icon"
-              src="~assets/img/up-active.svg"
-              height="16"
-              alt="">
-            <img
-              v-else
-              class="interact-icon"
-              src="~assets/img/up.svg"
-              height="16"
-              alt="">
-          </div>
 
-          <div>
-            <img
-              @click="on_click_content"
-              class="interact-icon"
-              src="~assets/img/comment.svg"
-              height="16"
-              alt="">
-          </div>
+          <icon-thumb-up size="20" :strokeWidth="3" @click="on_vote(1)"
+                         :style="{color:comment.content.is_up?'4ebaee':'#888'}"/>
+
+          <icon-message size="20" :strokeWidth="3" @click="on_click_comment" style="color: #888;margin-left: 12px"/>
         </div>
-        <div>
-          <img
-            @click="on_delete"
-            class="interact-icon"
-            src="~assets/img/delete.svg"
-            height="16"
-            alt="">
-        </div>
+        <icon-delete @click="on_delete"/>
       </div>
-      <div v-if="!type" class="article" @click="this.$router.push(`/bbs/article/${comment.content.article.id}`)">
-        {{this.$calc.filters.max_width(comment.content.article.title,20)}}
+      <div v-if="!type" class="article" @click="this.$router.push(`/special/column/${comment.content.column.id}`)">
+        {{this.$calc.filters.max_width(comment.content.column.title,20)}}
       </div>
     </div>
   </div>
@@ -64,20 +39,20 @@
 
 <script>
   export default {
-    name: "ReplyCommentCard",
+    name: "ReplySpecialCommentCard",
     props: {
       comment: null,
     },
     emits: [
       "onVote",
-      "onClickContent",
+      "onClickComment",
       "onClickUser",
       "onClickImg",
     ],
     data() {
       return {
         text: [
-          "文章",
+          "专栏",
           "评论",
           "评论",
         ]
@@ -95,20 +70,30 @@
     },
     methods: {
       on_vote(is_up) {
-        this.$emit('onVote', is_up, this.comment.content.article, this.comment.content)
+        this.$emit(
+          'onVote',
+          is_up,
+          1,
+          this.comment.content.column,
+          this.comment.content
+        )
       },
       on_click_content(ev) {
         if (ev.target.getAttribute("uid")) {
-          this.$emit("onClickUser", `/user/${ev.target.getAttribute("uid")}`)
+          this.$router.push(`/user/${ev.target.getAttribute("uid")}`)
           return;
         }
-        if (ev.target.tagName === "IMG") {
+        if (ev.target.tagName === "IMG" && !ev.target.getAttribute("src").endsWith("svg")) {
           this.$emit("onClickImg", [ev.target.getAttribute("src")])
           return;
         }
+        this.$router.push(`/special/column/${this.comment.content.column.id}`)
+      },
+      on_click_comment() {
         this.$emit(
-          'onClickContent',
-          this.comment.content.article,
+          'onClickComment',
+          1,
+          this.comment.content.column,
           this.comment.content.parent || this.comment.content,
           this.comment.content.parent && this.comment.content
         )
@@ -198,13 +183,8 @@
 
   .time {
     font-size: 12px;
+    margin-right: 12px;
     color: #999;
   }
 
-  .interact-icon {
-    position: relative;
-    margin-left: 12px;
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-  }
 </style>

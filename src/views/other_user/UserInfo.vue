@@ -39,10 +39,10 @@
 
       <div class="offset">
         <img class="avatar" :src="this.$settings.cos_url+user.icon">
-        <div>
+        <var-space align="baseline" size="mini">
           <span class="name">{{user.username}}</span>
-          <var-chip size="mini">LV{{this.$calc.calc_rank(user.experience).level}}</var-chip>
-        </div>
+          <level-chip style="margin-bottom: 3px" :round="false" :experience="user.experience"/>
+        </var-space>
       </div>
       <div class="offset2">
         <div class="description">{{user.description||"还没有个性签名"}}</div>
@@ -77,11 +77,12 @@
 </template>
 
 <script>
-  import ProfileArticleList from "../../components/List/ProfileArticleList";
+  import ProfileArticleList from "../../components/list/ProfileArticleList";
+  import LevelChip from "../../components/chip/LevelChip";
 
   export default {
     name: "UserInfo",
-    components: {ProfileArticleList},
+    components: {LevelChip, ProfileArticleList},
     data() {
       return {
         user: null,
@@ -165,7 +166,6 @@
   .name {
     font-size: 24px;
     color: #4ebaee;
-    margin-bottom: 5px;
   }
 
   .interact {

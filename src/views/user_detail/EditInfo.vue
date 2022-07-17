@@ -1,6 +1,6 @@
 <template>
   <div class="animation-wrap">
-    <var-app-bar class="app-bar" color="white" :elevation="false" text-color="#333" title="账号资料">
+    <var-app-bar class="app-bar" color="white"  text-color="#333" title="账号资料">
       <template #left>
         <var-button
           round

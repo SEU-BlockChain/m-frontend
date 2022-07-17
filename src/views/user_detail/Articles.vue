@@ -6,7 +6,7 @@
 </template>
 
 <script>
-  import ProfileArticleList from "../../components/List/ProfileArticleList";
+  import ProfileArticleList from "../../components/list/ProfileArticleList";
 
   export default {
     name: "Articles",

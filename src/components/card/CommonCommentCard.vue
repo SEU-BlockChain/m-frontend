@@ -10,11 +10,8 @@
       <div v-if="!hide_head" class="head">
         <div class="name-level" @click="this.$router.push(`/user/${comment.author.id}`)">
           <div class="name">{{comment.author.username}}</div>
-
           <div>
-            <var-chip size="mini" type="info" :round="false">
-              Lv.{{this.$calc.calc_rank(comment.author.experience).level}}
-            </var-chip>
+            <level-chip :experience="comment.author.experience"/>
           </div>
 
           <div v-if="comment.author.id===article.author.id">
@@ -95,8 +92,11 @@
 </template>
 
 <script>
+  import LevelChip from "../chip/LevelChip";
+
   export default {
     name: "CommonCommentCard",
+    components: {LevelChip},
     props: {
       article: null,
       parent: null,
@@ -174,6 +174,7 @@
   .name-level {
     display: flex;
     justify-content: left;
+    align-items: baseline;
     line-height: 30px;
   }
 

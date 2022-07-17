@@ -1,5 +1,5 @@
 const Components = require('unplugin-vue-components/webpack')
-const {VarletUIResolver} = require('unplugin-vue-components/resolvers')
+const {VarletUIResolver, ArcoResolver} = require('unplugin-vue-components/resolvers')
 
 module.exports = {
   publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
@@ -14,7 +14,7 @@ module.exports = {
     },
     plugins: [
       Components({
-        resolvers: [VarletUIResolver()]
+        resolvers: [VarletUIResolver(), ArcoResolver()]
       })
     ]
   }

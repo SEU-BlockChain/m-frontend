@@ -49,14 +49,7 @@
     </div>
 
     <div class="foot">
-      <var-input
-        class="input"
-        style="--input-textarea-padding-top:0"
-        placeholder="请输入文本"
-        :line="false"
-        :hint="false"
-        rows="1" textarea v-model="text"
-      />
+      <a-textarea v-model="text" placeholder="请输入文本" :auto-size="{minRows:1,maxRows:3}"/>
 
       <var-button
         class="submit"
@@ -135,9 +128,9 @@
       this.load()
     },
     mounted() {
-      window.onscroll = () => {
-        console.log(document.documentElement.scrollTop);
-      }
+      // window.onscroll = () => {
+      // console.log(document.documentElement.scrollTop);
+      // }
     }
   }
 </script>
@@ -180,14 +173,12 @@
 
   .flex-left {
     display: flex;
-    justify-content: left;
-    align-items: flex-start;
+    justify-content: flex-start;
   }
 
   .flex-right {
     display: flex;
-    justify-content: right;
-    align-items: flex-start;
+    justify-content: flex-end;
   }
 
   .avatar {
