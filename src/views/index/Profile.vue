@@ -37,28 +37,34 @@
       </div>
     </div>
 
-    <div class="token clear-fix" v-if="wallet.init">
-      <div class="clear-fix">
-        <div class="account">我的钱包
-          <span class="address">{{this.$calc.filters.simple_address(wallet.address)}}</span>
+    <Transition name="bloom" appear>
+      <div class="token clear-fix" @click="eth_login">
+        <div class="clear-fix">
+          <div class="account">我的钱包
+            <span class="address" v-if="wallet.init&&wallet.mode===1">
+              {{this.$calc.filters.simple_address(wallet.address)}}
+            </span>
+          </div>
+          <div class="balance" v-if="wallet.init&&wallet.mode===1">余额：{{wallet.PMB}}</div>
+          <div class="balance" v-else>尚未登陆以太坊账号</div>
         </div>
-        <div class="balance">余额：{{wallet.PMB}}</div>
+        <var-row>
+          <var-col :span="11">
+            <div class="token-item clear-fix" @click="to_faucet">
+              <img class="token-img" src="~assets/img/get-token.png" alt="">
+              <div class="token-text">获取PMB</div>
+            </div>
+          </var-col>
+          <var-col :span="11" :offset="2">
+            <div class="token-item clear-fix" @click="to_account">
+              <img class="token-img" src="~assets/img/my-account.png" alt="">
+              <div class="token-text">账户详情</div>
+            </div>
+          </var-col>
+        </var-row>
       </div>
-      <var-row>
-        <var-col :span="11">
-          <div class="token-item clear-fix">
-            <img class="token-img" src="~assets/img/get-token.png" alt="">
-            <div class="token-text">获取PMB</div>
-          </div>
-        </var-col>
-        <var-col :span="11" :offset="2">
-          <div class="token-item clear-fix">
-            <img class="token-img" src="~assets/img/my-account.png" alt="">
-            <div class="token-text">账户详情</div>
-          </div>
-        </var-col>
-      </var-row>
-    </div>
+    </Transition>
+
 
     <div class="my">
       <div v-ripple="{ color: '#ccc' }" class="my-item clear-fix">
@@ -100,6 +106,7 @@
 <script>
   import Level from "../../components/chip/Level";
   import LevelChip from "../../components/chip/LevelChip";
+
   export default {
     name: "Profile",
     components: {LevelChip, Level},
@@ -113,7 +120,20 @@
       icon() {
         return this.$settings.cos_url + (this.$store.state.user?.icon || "icon/login.jpg")
       },
-
+    },
+    methods: {
+      to_faucet() {
+        if (!this.wallet.address) return
+        this.$router.push("/eth/faucet")
+      },
+      to_account() {
+        if (!this.wallet.address) return
+        this.$router.push("/eth/account")
+      },
+      eth_login() {
+        if (this.wallet.address) return
+        this.$store.commit("eth_login", true)
+      }
     },
     created() {
       this.$emit("active", 4)

@@ -12,6 +12,7 @@ import calc from "./assets/js/calc";
 import settings from "./assets/js/settings";
 import tools from "./assets/js/tools";
 import eth from "./assets/js/eth";
+import abi from "./assets/js/abi";
 
 const app = createApp(App)
 app.config.globalProperties.$settings = settings
@@ -19,6 +20,7 @@ app.config.globalProperties.$calc = calc
 app.config.globalProperties.$request = request
 app.config.globalProperties.$tools = tools
 app.config.globalProperties.$eth = eth
+app.config.globalProperties.$abi = abi
 app.config.globalProperties.$tip = Snackbar
 app.config.globalProperties.$dialog = Dialog
 

@@ -8,16 +8,30 @@
       </keep-alive>
     </Transition>
   </router-view>
-
   <var-loading class="center" v-else/>
 
   <var-back-top v-if="!this.$store.state.hide_top" bottom="70px" right="15px" :duration="300"/>
+
+  <div>
+    <var-popup style="border-radius: 5px;" @click-overlay="read_only" v-model:show="show_eth_login">
+      <eth-login @onLogin="eth_login" @readOnly="read_only"/>
+    </var-popup>
+  </div>
 </template>
 
 <script>
+  import EthLogin from "./components/eth/EthLogin";
+
   export default {
     name: "app",
+    components: {EthLogin},
     watch: {
+      "$store.state.show_eth_login"(newValue, oldValue) {
+        this.show_eth_login = newValue
+      },
+      show_eth_login(newValue, oldValue) {
+        this.$store.commit("eth_login", newValue)
+      },
       $route(to, from) {
         if (to.path === "/login") {
           if (from.path !== "/sign-up") {
@@ -59,10 +73,19 @@
       return {
         include: ["UserDetailWrap", "IndexWrap"],
         animation: "",
-        init: null
+        init: null,
+        wallet: null,
+        show_eth_login: false
       }
     },
     methods: {
+      read_only() {
+        this.show_eth_login = false
+        this.$tip({
+          content: "正在以只读模式浏览",
+          type: "success"
+        })
+      },
       animate(to, from) {
         if (to.meta.depth === from.meta.depth) return ""
         return to.meta.depth > from.meta.depth ? "steady-left" : "right-steady"
@@ -70,6 +93,10 @@
       to_top() {
         if (this.$route.meta.keepAlive && this.$route.name !== this.init) return
         window.scrollTo(0, 0)
+      },
+      eth_login(address) {
+        this.show_eth_login = false
+        this.wallet.getAccount(address)
       }
     },
     beforeCreate() {
@@ -148,8 +175,14 @@
       });
     },
     created() {
-      let wallet = new this.$eth.Wallet()
-      this.$store.commit("web3", wallet)
+      this.wallet = new this.$eth.Wallet()
+      this.wallet.init_wallet().then(address => {
+        console.log(address);
+        if (!address) {
+          this.show_eth_login = true
+        }
+      })
+      this.$store.commit("web3", this.wallet)
     }
   }
 </script>

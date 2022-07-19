@@ -13,18 +13,21 @@
       </var-swipe-item>
     </var-swipe>
 
-    <div class="random">
-      <div>随机话题</div>
-      <div class="random-body"></div>
-    </div>
+    <!--    <div class="random">-->
+    <!--      <div>随机话题</div>-->
+    <!--      <div class="random-body"></div>-->
+    <!--    </div>-->
 
     <div class="all-topic">
-      <div class="find">
-        <var-input class="search-input" placeholder="搜索" :hint="false" :line="false" v-model="search" @input="filter">
-          <template #prepend-icon>
-            <var-icon @click="filter" name="magnify-plus-outline"/>
-          </template>
-        </var-input>
+      <!--      <div class="find">-->
+      <!--        <var-input class="search-input" placeholder="搜索" :hint="false" :line="false" v-model="search" @input="filter">-->
+      <!--          <template #prepend-icon>-->
+      <!--            <var-icon @click="filter" name="magnify-plus-outline"/>-->
+      <!--          </template>-->
+      <!--        </var-input>-->
+      <!--      </div>-->
+      <div v-for="issue in issue_list">
+        <issue-detail-card :info="issue"></issue-detail-card>
       </div>
     </div>
 
@@ -32,12 +35,17 @@
 </template>
 
 <script>
+  import IssueDetailCard from "../../components/card/IssueDetailCard";
+
   export default {
     name: "Home",
+    components: {IssueDetailCard},
     emits: ["active"],
     data() {
       return {
-        search: ""
+        search: "",
+        issue_list: [],
+        wallet: this.$store.state.wallet,
       }
     },
     methods: {
@@ -47,6 +55,17 @@
     },
     created() {
       this.$emit("active", 0)
+      this.wallet.market.methods.getIssueRange(
+        this.wallet.constant.address1,
+        0,
+        0,
+        0,
+        0,
+        this.wallet.constant.address0,
+        this.wallet.constant.address0
+      ).call().then(res => {
+        this.issue_list.push(...res.filter(x => x[0] !== "0x0000000000000000000000000000000000000000"))
+      })
     },
     activated() {
       this.$emit("active", 0)
@@ -86,8 +105,7 @@
   }
 
   .all-topic {
-    padding: 5px;
-    background-color: white;
+    padding: 3px;
   }
 
   .find {

@@ -366,6 +366,33 @@ const routes = [
       title: "重置密码"
     }
   },
+  {
+    path: "/eth/register",
+    name: "EthRegister",
+    component: () => import("views/eth/Register"),
+    meta: {
+      depth: 2,
+      title: "注册以太坊账号"
+    }
+  },
+  {
+    path: "/eth/account",
+    name: "EthAccount",
+    component: () => import("views/eth/Account"),
+    meta: {
+      depth: 3,
+      title: "账户详情"
+    }
+  },
+  {
+    path: "/eth/faucet",
+    name: "EthFaucet",
+    component: () => import("views/eth/Faucet"),
+    meta: {
+      depth: 3,
+      title: "获取PMB"
+    }
+  },
 ]
 
 const router = createRouter({

@@ -10,12 +10,16 @@ export default createStore({
     hide_top: false,
     message: null,
     forbid_back: 0,
+    show_eth_login: false,
     remove: {
       article: [],
       comment: [],
     }
   },
   mutations: {
+    eth_login(state, show) {
+      state.show_eth_login = show
+    },
     web3(state, wallet) {
       state.wallet = wallet
     },
