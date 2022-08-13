@@ -29,50 +29,48 @@
       </template>
     </var-app-bar>
 
-    <div style="height: 60px"/>
+    <div class="wrap">
+      <div class="space">
+        <a-input
+          class="title"
+          placeholder="标题"
+          v-model="title"
+          :max-length="20"
+          allow-clear
+          show-word-limit
+        />
+      </div>
 
-    <div class="space">
-      <a-input
-        class="title"
-        placeholder="标题"
-        v-model="title"
-        :max-length="20"
+      <div class="space">
+        <a-textarea
+          class="description"
+          placeholder="请输入简介"
+          :auto-size="{minRows:2,maxRows:5}"
+          :max-length="100"
+          allow-clear
+          show-word-limit
+          v-model="description"
+        />
+      </div>
+
+      <a-auto-complete
         allow-clear
-        show-word-limit
+        class="tags"
+        style="background-color: white"
+        :data="all_tag.map(x => x.name)"
+        @search="search_tag"
+        @select="select_tag"
+        placeholder="选择标签"
       />
+
+      <div class="space">
+        <var-chip style="margin: 3px" size="small" v-for="i in tags" closable :round="false" @close="remove_tag(i)">
+          {{i.name}}
+        </var-chip>
+      </div>
+
+      <column-editor ref="editor" @onChange="update_menu"/>
     </div>
-
-    <div class="space">
-      <a-textarea
-        class="description"
-        placeholder="请输入简介"
-        :auto-size="{minRows:2,maxRows:5}"
-        :max-length="100"
-        allow-clear
-        show-word-limit
-        v-model="description"
-      />
-    </div>
-
-    <a-auto-complete
-      allow-clear
-      class="tags"
-      style="background-color: white"
-      :data="all_tag.map(x => x.name)"
-      @search="search_tag"
-      @select="select_tag"
-      placeholder="选择标签"
-    />
-
-    <div class="space">
-      <var-chip style="margin: 3px" size="small" v-for="i in tags" closable :round="false" @close="remove_tag(i)">
-        {{i.name}}
-      </var-chip>
-    </div>
-
-    <column-editor ref="editor" @onChange="update_menu"/>
-
-    <div style="height: 60px"/>
 
     <a-popover position="lb">
       <var-button class="menu" type="success" round>
@@ -323,7 +321,7 @@
                 type: "success",
                 duration: 1000,
               })
-              this.id=res.data.result.id
+              this.id = res.data.result.id
             } else {
               this.$tip({
                 content: res.data.msg,
@@ -381,7 +379,7 @@
                 type: "success",
                 duration: 1000,
               })
-              this.id=res.data.result.id
+              this.id = res.data.result.id
             } else {
               this.$tip({
                 content: res.data.msg,
@@ -424,6 +422,12 @@
 </script>
 
 <style scoped>
+  .wrap {
+    padding-top: 54px;
+    min-height: 100vh;
+    z-index: 100;
+  }
+
   .app-bar {
     width: 100vw;
     position: fixed;
@@ -456,6 +460,7 @@
 
   .space {
     padding: 3px;
+    background-color: #f0f1f5;
   }
 
   .foot {

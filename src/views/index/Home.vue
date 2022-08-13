@@ -13,24 +13,75 @@
       </var-swipe-item>
     </var-swipe>
 
-    <!--    <div class="random">-->
-    <!--      <div>随机话题</div>-->
-    <!--      <div class="random-body"></div>-->
-    <!--    </div>-->
-
-    <div class="all-topic">
-      <!--      <div class="find">-->
-      <!--        <var-input class="search-input" placeholder="搜索" :hint="false" :line="false" v-model="search" @input="filter">-->
-      <!--          <template #prepend-icon>-->
-      <!--            <var-icon @click="filter" name="magnify-plus-outline"/>-->
-      <!--          </template>-->
-      <!--        </var-input>-->
-      <!--      </div>-->
-      <div v-for="issue in issue_list">
-        <issue-detail-card :info="issue"></issue-detail-card>
-      </div>
+    <div class="all-topic" v-if="total!==null">
+      <var-list
+        :finished="finished"
+        v-model:loading="loading"
+        @load="load_address"
+      >
+        <div v-for="address in address_list">
+          <issue-detail-card :address="address"></issue-detail-card>
+        </div>
+      </var-list>
     </div>
 
+    <var-button v-if="this.$store.state.user?.is_staff" class="add-issue" type="success" round @click="add_issue">
+      <var-icon size="28" name="plus"/>
+    </var-button>
+
+    <var-popup v-model:show="add_issue_show" style="border-radius: 5px">
+      <var-card class="card">
+        <template #extra>
+          <div class="add-wrap">
+            <var-space direction="column" align="center" justify="center">
+              <div class="add-title">创建话题</div>
+
+              <var-uploader
+                style="width: 100px;margin: 0 calc(50% - 50px)"
+                v-model="_"
+                :maxlength="1"
+                :maxsize="1024*1024"
+                accept="image/jpeg,image/gif,image/png,image/bmp"
+                @after-read="upload"
+                @oversize="oversize"/>
+
+              <var-input
+                style="padding: 10px"
+                :hint="false"
+                placeholder="描述"
+                v-model="desc"
+              />
+              <var-input
+                style="padding: 10px"
+                :hint="false"
+                placeholder="开始日期"
+                v-model="start"
+              />
+              <var-input
+                style="padding: 10px"
+                :hint="false"
+                placeholder="结束日期"
+                v-model="end"
+              />
+              <var-input
+                style="padding: 10px"
+                :hint="false"
+                placeholder="初始金额"
+                v-model="init_amount"
+              />
+              <var-input
+                style="padding: 10px"
+                :hint="false"
+                placeholder="选项"
+                v-model="options"
+              />
+
+              <var-button style="padding:0 20px" size="small" block type="success" @click="create_topic">创建</var-button>
+            </var-space>
+          </div>
+        </template>
+      </var-card>
+    </var-popup>
   </div>
 </template>
 
@@ -44,27 +95,132 @@
     data() {
       return {
         search: "",
-        issue_list: [],
+        address_list: [],
         wallet: this.$store.state.wallet,
+        add_issue_show: false,
+        title: "",
+        icon: "",
+        _: [],
+        desc: "",
+        start: "",
+        end: "",
+        init_amount: null,
+        options: "",
+        total: null,
+        finished: false,
+        loading: false,
+        next: null,
+        article_list: [],
+        current_page: null
       }
     },
     methods: {
-      filter() {
-
-      }
+      add_issue() {
+        this.add_issue_show = true
+      },
+      upload(file) {
+        let forms = new FormData()
+        forms.append('file', file.file)
+        this.$request.api.post(
+          "common/image/issue/",
+          forms,
+          {headers: {'Content-Type': 'multipart/form-data'}}
+        ).then(res => {
+          if (res.data.code === 167) {
+            this.icon = res.data.result.data
+          } else {
+            this.$tip({
+              content: res.data.msg,
+              type: "warning",
+              duration: 2000,
+            })
+          }
+        })
+      },
+      create_topic() {
+        console.log([
+          Number(this.init_amount),
+          [
+            (new Date(this.start)).getTime() / 1000,
+            (new Date(this.end)).getTime() / 1000,
+            this.desc,
+            this.icon,
+          ],
+          this.options.split(" ")
+        ])
+        this.wallet.market.methods.createBinaryPrediction(
+          this.init_amount,
+          [
+            (new Date(this.start)).getTime() / 1000,
+            (new Date(this.end)).getTime() / 1000,
+            this.desc,
+            this.icon,
+          ],
+          this.options.split(" ")
+        ).send({
+          from: this.wallet.address
+        }).then(res => {
+          console.log(res);
+        })
+      },
+      oversize() {
+        this.$tip({
+          content: "图片不超过1MB",
+          type: "warning",
+          duration: 2000,
+        })
+      },
+      load_address() {
+        console.log(this.total);
+        if (this.current_page === null) {
+          this.current_page = Math.floor((this.total - 1) / 10 + 1)
+        }
+        console.log(this.current_page);
+        this.wallet.market.methods.getRange(this.current_page).call().then(res => {
+          let data = res.filter(x => x !== "0x0000000000000000000000000000000000000000").reverse()
+          for (let i of data) {
+            this.address_list.push(i)
+          }
+          this.loading = false
+          this.current_page--
+          if (this.current_page === 0) {
+            this.finished = true
+          }
+          if (this.current_page === Math.floor((this.total - 1) / 10) && this.current_page) {
+            this.wallet.market.methods.getRange(this.current_page).call().then(res => {
+              let data = res.filter(x => x !== "0x0000000000000000000000000000000000000000").reverse()
+              for (let i of data) {
+                this.address_list.push(i)
+              }
+              this.loading = false
+              this.current_page--
+              if (this.current_page === 0) {
+                this.finished = true
+              }
+            })
+          }
+        })
+      },
+      // reload_topics() {
+      //   this.contract.methods.topicNum().call().then(res => {
+      //     this.topic_num = res
+      //     return new Promise(resolve => resolve(res))
+      //   }).then(res => {
+      //     for (let i = 0; i < res; i++) {
+      //       this.contract.methods.topicInfo(i).call().then(res => {
+      //         this.topics.push({
+      //           id: i,
+      //           data: res
+      //         })
+      //       })
+      //     }
+      //   })
+      // }
     },
     created() {
       this.$emit("active", 0)
-      this.wallet.market.methods.getIssueRange(
-        this.wallet.constant.address1,
-        0,
-        0,
-        0,
-        0,
-        this.wallet.constant.address0,
-        this.wallet.constant.address0
-      ).call().then(res => {
-        this.issue_list.push(...res.filter(x => x[0] !== "0x0000000000000000000000000000000000000000"))
+      this.wallet.market.methods.total().call().then(res => {
+        this.total = res
       })
     },
     activated() {
@@ -86,6 +242,7 @@
 
   .swipe {
     border-radius: 5px;
+    height: 25vh;
   }
 
   .swipe img {
@@ -95,27 +252,28 @@
     pointer-events: none;
   }
 
-  .random {
-    padding: 5px;
-    background-color: white;
-  }
-
-  .random-body {
-    height: 30px;
-  }
 
   .all-topic {
-    padding: 3px;
+    padding: 3px 3px 30vh;
+    min-height: 100vh;
   }
 
-  .find {
-    width: 100%;
+  .add-issue {
+    position: fixed;
+    right: 15px;
+    bottom: 120px;
   }
 
-  .search-input {
-    background-color: #f6f6f6;
-    padding: 0 10px;
-    border-radius: 15px;
+  .add-wrap {
+    width: 80vw;
+    padding: 20px 20px 40px;
   }
 
+  .add-title {
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    color: #666666;
+    margin: 10px;
+  }
 </style>

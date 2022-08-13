@@ -59,6 +59,7 @@
             "divider",
             "undo",
             "redo",
+            "fullScreen"
           ]
         },
         editorConfig: {
@@ -67,6 +68,9 @@
           },
           autoFocus: false,
           placeholder: '请输入内容...',
+          EXTEND_CONF: {
+            mentionConfig: {},
+          },
           MENU_CONF: {
             insertImage: {
               checkImage(src) {
@@ -102,7 +106,6 @@
           }
         },
         mode: 'default',
-        isShowModal: false
       }
     },
     methods: {

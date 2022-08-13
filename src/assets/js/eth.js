@@ -12,11 +12,6 @@ class Wallet {
   mode = 0//read-only
   SEUB_FAUCET = "0x1c78eDe9AC8F1A86B9C3B26e960C740141B64F09"
   PMB_FAUCET = "0xc4a7e8ca8Da422005A7ab2cb2991a9f449a85FBf"
-  BPV1 = "0xEdFc82c7eD92D13E86aBcEF046BA986bD06A80df"
-  constant={
-    address0:"0000000000000000000000000000000000000000",
-    address1:"0000000000000000000000000000000000000001"
-  }
   constructor() {
   }
 
@@ -25,7 +20,7 @@ class Wallet {
       this.web3 = web3
       return new Promise(resolve => resolve(web3))
     }).then(web3 => {
-      this.market = new web3.eth.Contract(abi.predictionMarket, "0xDe03874f98D6b893080f1A4159E6D8f13c8EB44a")
+      this.market = new web3.eth.Contract(abi.predictionMarket, "0x529A93A81c88A97bF1d722d45A6E6aB121116601")
       return new Promise(resolve => resolve())
     }).then(() => {
       if (this.address) {
@@ -50,8 +45,10 @@ class Wallet {
   }
 
   getAccount(address) {
+    console.log(address);
     this.address = address
     this.market.methods.balanceOf(address).call().then(res => {
+      console.log(res);
       this.PMB = res
       this.mode = 1
     })

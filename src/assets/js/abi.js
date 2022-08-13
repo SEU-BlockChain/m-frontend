@@ -3,12 +3,119 @@ let predictionMarket = [
     "inputs": [
       {
         "internalType": "address",
-        "name": "_account",
+        "name": "_address",
         "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
     "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_address",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_value",
+        "type": "uint256"
+      }
+    ],
+    "name": "BurnEvent",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "p",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "string",
+        "name": "desc",
+        "type": "string"
+      }
+    ],
+    "name": "CreateBinaryPredictionEvent",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "string",
+        "name": "title",
+        "type": "string"
+      }
+    ],
+    "name": "CreateTopicEvent",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_address",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_timestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "FrozeEvent",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_from",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_to",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_value",
+        "type": "uint256"
+      }
+    ],
+    "name": "TransferEvent",
+    "type": "event"
   },
   {
     "inputs": [],
@@ -18,19 +125,6 @@ let predictionMarket = [
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "account",
-    "outputs": [
-      {
-        "internalType": "contract PublicAccountManager",
-        "name": "",
-        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -84,81 +178,44 @@ let predictionMarket = [
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_market",
-        "type": "address"
-      }
-    ],
-    "name": "closeMarket",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_issue",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256[3]",
-        "name": "_time_pool_volume",
-        "type": "uint256[3]"
-      },
-      {
         "internalType": "uint256",
-        "name": "_state",
+        "name": "_init_amount",
         "type": "uint256"
       },
       {
-        "internalType": "uint256",
-        "name": "_topic",
-        "type": "uint256"
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "start",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "end",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "desc",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "icon",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct PredictionInfo",
+        "name": "_info",
+        "type": "tuple"
       },
       {
-        "internalType": "address",
-        "name": "_market",
-        "type": "address"
+        "internalType": "string[]",
+        "name": "_options",
+        "type": "string[]"
       }
     ],
-    "name": "createIssue",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_market",
-        "type": "address"
-      },
-      {
-        "internalType": "string",
-        "name": "_name",
-        "type": "string"
-      }
-    ],
-    "name": "createMarket",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "_topic",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "_icon",
-        "type": "string"
-      }
-    ],
-    "name": "createTopic",
+    "name": "createBinaryPrediction",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -172,24 +229,11 @@ let predictionMarket = [
       },
       {
         "internalType": "uint256",
-        "name": "_timestamp",
+        "name": "timestamp",
         "type": "uint256"
       }
     ],
-    "name": "freezeAccount",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_market",
-        "type": "address"
-      }
-    ],
-    "name": "freezeMarket",
+    "name": "frozeAccount",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -198,138 +242,19 @@ let predictionMarket = [
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_index",
+        "name": "page",
         "type": "uint256"
       }
     ],
-    "name": "freezeTopic",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_cursor",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_type",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bool",
-        "name": "_reverse",
-        "type": "bool"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_state",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_topic",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "_market",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_follower",
-        "type": "address"
-      }
-    ],
-    "name": "getIssueRange",
+    "name": "getRange",
     "outputs": [
       {
-        "components": [
-          {
-            "internalType": "address",
-            "name": "issue",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256[3]",
-            "name": "time_pool_volume",
-            "type": "uint256[3]"
-          },
-          {
-            "internalType": "uint256",
-            "name": "state",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "topic",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address",
-            "name": "market",
-            "type": "address"
-          }
-        ],
-        "internalType": "struct IssueLib.template[10]",
-        "name": "",
-        "type": "tuple[10]"
+        "internalType": "address[10]",
+        "name": "_predictions",
+        "type": "address[10]"
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_start",
-        "type": "uint256"
-      }
-    ],
-    "name": "getTopicRange",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "string",
-            "name": "topic",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "icon",
-            "type": "string"
-          },
-          {
-            "internalType": "bool",
-            "name": "is_active",
-            "type": "bool"
-          }
-        ],
-        "internalType": "struct TopicLib.T[10]",
-        "name": "",
-        "type": "tuple[10]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_issue",
-        "type": "address"
-      }
-    ],
-    "name": "initIssue",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -353,72 +278,6 @@ let predictionMarket = [
   },
   {
     "inputs": [],
-    "name": "issue",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "length",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "market",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "name",
-        "type": "string"
-      },
-      {
-        "internalType": "uint256",
-        "name": "timestamp",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bool",
-        "name": "is_open",
-        "type": "bool"
-      },
-      {
-        "internalType": "bool",
-        "name": "is_active",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_market",
-        "type": "address"
-      }
-    ],
-    "name": "marketOpen",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "name",
     "outputs": [
       {
@@ -433,14 +292,33 @@ let predictionMarket = [
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "predictions",
+    "outputs": [
+      {
         "internalType": "address",
-        "name": "_market",
+        "name": "",
         "type": "address"
       }
     ],
-    "name": "openMarket",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "publicAccounts",
+    "outputs": [
+      {
+        "internalType": "contract PublicAccounts",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -457,55 +335,13 @@ let predictionMarket = [
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_market",
-        "type": "address"
-      }
-    ],
-    "name": "thawMarket",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_index",
-        "type": "uint256"
-      }
-    ],
-    "name": "thawTopic",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
+    "inputs": [],
+    "name": "total",
+    "outputs": [
       {
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
-      }
-    ],
-    "name": "topic",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "topic",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "icon",
-        "type": "string"
-      },
-      {
-        "internalType": "bool",
-        "name": "is_active",
-        "type": "bool"
       }
     ],
     "stateMutability": "view",
@@ -553,27 +389,17 @@ let binaryPrediction = [
         "type": "address"
       },
       {
-        "internalType": "contract PrivateAccountManager",
-        "name": "_account",
-        "type": "address"
+        "internalType": "uint256",
+        "name": "_init_amount",
+        "type": "uint256"
       },
       {
-        "internalType": "contract PredictionMarket",
-        "name": "_market",
+        "internalType": "contract PrivateAccounts",
+        "name": "_accounts",
         "type": "address"
       },
       {
         "components": [
-          {
-            "internalType": "uint256",
-            "name": "init_amount",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "topic",
-            "type": "uint256"
-          },
           {
             "internalType": "uint256",
             "name": "start",
@@ -593,16 +419,16 @@ let binaryPrediction = [
             "internalType": "string",
             "name": "icon",
             "type": "string"
-          },
-          {
-            "internalType": "string[]",
-            "name": "options",
-            "type": "string[]"
           }
         ],
-        "internalType": "struct BasePredictionInfo",
+        "internalType": "struct PredictionInfo",
         "name": "_info",
         "type": "tuple"
+      },
+      {
+        "internalType": "string[]",
+        "name": "_options",
+        "type": "string[]"
       }
     ],
     "stateMutability": "nonpayable",
@@ -715,16 +541,16 @@ let binaryPrediction = [
     "type": "event"
   },
   {
-    "inputs": [
+    "inputs": [],
+    "name": "correct",
+    "outputs": [
       {
         "internalType": "uint256",
-        "name": "_optionId",
+        "name": "",
         "type": "uint256"
       }
     ],
-    "name": "_settle",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -744,16 +570,6 @@ let binaryPrediction = [
     "inputs": [],
     "name": "info",
     "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "init_amount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "topic",
-        "type": "uint256"
-      },
       {
         "internalType": "uint256",
         "name": "start",
@@ -849,19 +665,6 @@ let binaryPrediction = [
     "name": "longPool",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "market",
-    "outputs": [
-      {
-        "internalType": "contract PredictionMarket",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -969,6 +772,106 @@ let binaryPrediction = [
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "predictionInfo",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "share",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "desc",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct BinaryPrediction.BinaryOption[]",
+        "name": "_options",
+        "type": "tuple[]"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "start",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "end",
+            "type": "uint256"
+          },
+          {
+            "internalType": "string",
+            "name": "desc",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "icon",
+            "type": "string"
+          }
+        ],
+        "internalType": "struct PredictionInfo",
+        "name": "_info",
+        "type": "tuple"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_init_amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_totalShare",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_totalPool",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_equity",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_owner",
+        "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "_settled",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_correct",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_optionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "settle",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -1146,7 +1049,7 @@ let SEUB_FAUCET = [
   }
 ]
 
-let PMB_FAUCET=[
+let PMB_FAUCET = [
   {
     "inputs": [],
     "name": "get",
@@ -1166,6 +1069,7 @@ let PMB_FAUCET=[
     "type": "constructor"
   }
 ]
+
 export default {
   predictionMarket,
   binaryPrediction,

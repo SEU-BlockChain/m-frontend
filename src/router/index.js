@@ -393,6 +393,15 @@ const routes = [
       title: "获取PMB"
     }
   },
+  {
+    path: "/issue/:address",
+    name: "Issue",
+    component: () => import("views/eth/Issue"),
+    meta: {
+      depth: 1,
+      title: "预测详情"
+    }
+  },
 ]
 
 const router = createRouter({

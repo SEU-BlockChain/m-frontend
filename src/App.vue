@@ -177,12 +177,20 @@
     created() {
       this.wallet = new this.$eth.Wallet()
       this.wallet.init_wallet().then(address => {
-        console.log(address);
         if (!address) {
           this.show_eth_login = true
         }
       })
       this.$store.commit("web3", this.wallet)
+      document.addEventListener("click", e => {
+        if(e.target.tagName==="A"){
+          try {
+            plus.runtime.openURL(e.target.href);
+            e.preventDefault();
+          }catch (e) {
+          }
+        }
+      })
     }
   }
 </script>
