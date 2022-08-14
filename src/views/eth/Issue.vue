@@ -197,8 +197,9 @@
             </div>
 
             <a-divider/>
+
             <div class="input" v-if="this.wallet.address">
-              <a-input-number v-model="pool_num" :hide-button="true" placeholder="购买流动池份额" size="large" allow-clear>
+              <a-input-number @input="change_pool" :hide-button="true" placeholder="购买流动池份额" size="large" allow-clear>
                 <template #append>
                   PMB
                 </template>
@@ -270,6 +271,10 @@
       }
     },
     methods: {
+      change_pool(value) {
+        console.log(value);
+        this.pool_num = value
+      },
       buy_estimate(value) {
         if (value) {
           this.prediction.methods.longOptionEstimate(this.buy_selected, value).call({
@@ -339,6 +344,11 @@
                 duration: 1000
               })
             }).catch(err => {
+                if (err.message === "Returned error: authentication needed: password or unlock") {
+                  this.$store.commit("eth_login", true)
+                  return
+                }
+
                 this.$tip({
                   content: `购买失败${err.message}`,
                   type: "warning",
@@ -364,6 +374,11 @@
                 duration: 1000
               })
             }).catch(err => {
+                if (err.message === "Returned error: authentication needed: password or unlock") {
+                  this.$store.commit("eth_login", true)
+                  return
+                }
+
                 this.$tip({
                   content: `卖出失败${err.message}`,
                   type: "warning",
@@ -389,6 +404,11 @@
                 duration: 1000
               })
             }).catch(err => {
+                if (err.message === "Returned error: authentication needed: password or unlock") {
+                  this.$store.commit("eth_login", true)
+                  return
+                }
+
                 this.$tip({
                   content: `买入失败${err.message}`,
                   type: "warning",

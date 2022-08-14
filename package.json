@@ -15,6 +15,7 @@
     "core-js": "^3.6.5",
     "default-passive-events": "^2.0.0",
     "echarts": "^5.3.3",
+    "lodash": "^4.17.21",
     "vue": "^3.0.0",
     "vue-cookies": "^1.8.0",
     "vue-router": "^4.0.0-0",

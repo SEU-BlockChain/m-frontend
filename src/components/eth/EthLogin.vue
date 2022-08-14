@@ -62,7 +62,7 @@
           })
           return
         }
-        this.wallet.web3.eth.personal.unlockAccount(this.address, this.password, err => {
+        this.wallet.web3.eth.personal.unlockAccount(this.address, this.password, 600, err => {
           if (err) {
             this.$tip({
               content: `登陆失败:${err.message}`,

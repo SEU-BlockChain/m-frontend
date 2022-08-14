@@ -1,29 +1,32 @@
 <template>
   <div class="animation-wrap">
-    <div class="head">WeChain</div>
-    <var-swipe class="swipe" :autoplay="3000">
-      <var-swipe-item>
-        <img src="https://varlet-varletjs.vercel.app/cat.jpg">
-      </var-swipe-item>
-      <var-swipe-item>
-        <img src="https://varlet-varletjs.vercel.app/cat2.jpg">
-      </var-swipe-item>
-      <var-swipe-item>
-        <img src="https://varlet-varletjs.vercel.app/cat3.jpg">
-      </var-swipe-item>
-    </var-swipe>
+    <var-pull-refresh v-model="is_refresh" @refresh="refresh">
 
-    <div class="all-topic" v-if="total!==null">
-      <var-list
-        :finished="finished"
-        v-model:loading="loading"
-        @load="load_address"
-      >
-        <div v-for="address in address_list">
-          <issue-detail-card :address="address"></issue-detail-card>
-        </div>
-      </var-list>
-    </div>
+      <div class="head">OurChain</div>
+      <var-swipe class="swipe" :autoplay="3000">
+        <var-swipe-item>
+          <img src="https://varlet-varletjs.vercel.app/cat.jpg">
+        </var-swipe-item>
+        <var-swipe-item>
+          <img src="https://varlet-varletjs.vercel.app/cat2.jpg">
+        </var-swipe-item>
+        <var-swipe-item>
+          <img src="https://varlet-varletjs.vercel.app/cat3.jpg">
+        </var-swipe-item>
+      </var-swipe>
+
+      <div class="all-topic" v-if="total!==null">
+        <var-list
+          :finished="finished"
+          v-model:loading="loading"
+          @load="load_address"
+        >
+          <div v-for="address in address_list">
+            <issue-detail-card :address="address"></issue-detail-card>
+          </div>
+        </var-list>
+      </div>
+    </var-pull-refresh>
 
     <var-button v-if="this.$store.state.user?.is_staff" class="add-issue" type="success" round @click="add_issue">
       <var-icon size="28" name="plus"/>
@@ -110,8 +113,8 @@
         finished: false,
         loading: false,
         next: null,
-        article_list: [],
-        current_page: null
+        current_page: null,
+        is_refresh: false
       }
     },
     methods: {
@@ -171,11 +174,9 @@
         })
       },
       load_address() {
-        console.log(this.total);
         if (this.current_page === null) {
           this.current_page = Math.floor((this.total - 1) / 10 + 1)
         }
-        console.log(this.current_page);
         this.wallet.market.methods.getRange(this.current_page).call().then(res => {
           let data = res.filter(x => x !== "0x0000000000000000000000000000000000000000").reverse()
           for (let i of data) {
@@ -201,21 +202,18 @@
           }
         })
       },
-      // reload_topics() {
-      //   this.contract.methods.topicNum().call().then(res => {
-      //     this.topic_num = res
-      //     return new Promise(resolve => resolve(res))
-      //   }).then(res => {
-      //     for (let i = 0; i < res; i++) {
-      //       this.contract.methods.topicInfo(i).call().then(res => {
-      //         this.topics.push({
-      //           id: i,
-      //           data: res
-      //         })
-      //       })
-      //     }
-      //   })
-      // }
+      refresh() {
+        this.wallet.market.methods.total().call().then(res => {
+          this.total = res
+          this.finished = false
+          this.loading = false
+          this.next = null
+          this.current_page = null
+          this.address_list = []
+          this.load_address()
+          this.is_refresh = false
+        })
+      }
     },
     created() {
       this.$emit("active", 0)

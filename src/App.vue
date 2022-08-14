@@ -183,11 +183,15 @@
       })
       this.$store.commit("web3", this.wallet)
       document.addEventListener("click", e => {
-        if(e.target.tagName==="A"){
-          try {
-            plus.runtime.openURL(e.target.href);
-            e.preventDefault();
-          }catch (e) {
+        if (e.target.tagName === "A") {
+          if (e.target.href.startsWith("/")){
+            this.$router.push(e.target.href)
+          } else {
+            try {
+              plus.runtime.openURL(e.target.href);
+              e.preventDefault();
+            } catch (e) {
+            }
           }
         }
       })
