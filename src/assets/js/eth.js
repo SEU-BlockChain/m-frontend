@@ -11,20 +11,21 @@ class Wallet {
   SEUB = null
   mode = 0//read-only
   SEUB_FAUCET = "0x1c78eDe9AC8F1A86B9C3B26e960C740141B64F09"
-  PMB_FAUCET = "0xc4a7e8ca8Da422005A7ab2cb2991a9f449a85FBf"
+  PMB_FAUCET = "0x608C628B656bA2f31064EabC30d9db92B57661C5"
+  MARKET = "0x3340D735d2B38e6Df75fF13547Ca24C167959a7E"
 
   constructor() {
   }
 
   init_wallet() {
     this.web3 = new Web3("https://poa.eth.seutools.com")
-    this.market = new this.web3.eth.Contract(abi.predictionMarket, "0x529A93A81c88A97bF1d722d45A6E6aB121116601")
+    this.market = new this.web3.eth.Contract(abi.predictionMarket, this.MARKET)
 
     return this.getWeb3().then(web3 => {
       this.web3 = web3
       return new Promise(resolve => resolve(web3))
     }).then(web3 => {
-      this.market = new web3.eth.Contract(abi.predictionMarket, "0x529A93A81c88A97bF1d722d45A6E6aB121116601")
+      this.market = new web3.eth.Contract(abi.predictionMarket, this.MARKET)
       return new Promise(resolve => resolve())
     }).then(() => {
       if (this.address) {

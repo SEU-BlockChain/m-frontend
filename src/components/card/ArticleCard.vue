@@ -26,19 +26,16 @@
                 {{article.category.category}}
               </var-chip>
             </div>
-            <div class="interact" @click="to_article">
-              <img class="interact-icon" src="~assets/img/view.svg" height="20" alt="">
-              <div class="interact-text">{{article.view_num}}</div>
-
-              <img class="interact-icon" v-if="article.is_up===true" src="~assets/img/up-active.svg" height="20"
-                   alt="">
-              <img class="interact-icon" v-else src="~assets/img/up.svg" height="20"
-                   alt="">
-              <div class="interact-text" :class="{active:article.is_up===true}">{{article.up_num}}</div>
-
-              <img class="interact-icon" src="~assets/img/comment.svg" height="20" alt="">
-              <div class="interact-text">{{article.comment_num}}</div>
-            </div>
+            <var-space justify="end" size="mini" align="center" @click="to_article">
+              <div class="interact">
+                <icon-eye class="icon"/>
+                <div class="number">{{article.view_num}}</div>
+                <icon-message class="icon"/>
+                <div class="number">{{article.comment_num}}</div>
+                <icon-thumb-up class="icon"/>
+                <div class="number">{{article.up_num}}</div>
+              </div>
+            </var-space>
           </div>
         </div>
       </template>
@@ -82,12 +79,28 @@
 </script>
 
 <style scoped>
+  .interact {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  .number {
+    margin: 0 12px 0 3px;
+    color: #888;
+  }
+
+  .icon {
+    font-size: 20px;
+    color: #888;
+  }
+
   .wrap {
     margin-bottom: 5px;
   }
 
   .article-container {
-    padding: 10px;
+    padding: 3px 5px;
   }
 
   .head {
@@ -122,13 +135,13 @@
   }
 
   .time2 {
-    font-size: 16px;
+    font-size: 14px;
     color: #999;
   }
 
   .title {
-    margin: 6px 0;
-    font-size: 17px;
+    margin: 3px 0;
+    font-size: 16px;
     font-weight: 600;
     line-height: 24px;
 
@@ -145,23 +158,14 @@
     justify-content: space-between;
   }
 
-  .interact {
-    display: flex;
-    justify-content: right;
-  }
 
   .interact-icon {
-    margin: 15px 0;
     overflow: hidden;
     position: relative;
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
   }
 
   .interact-text {
-    line-height: 50px;
     float: right;
-    min-width: 30px;
     color: #999;
   }
 

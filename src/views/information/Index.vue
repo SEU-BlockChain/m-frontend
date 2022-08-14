@@ -132,6 +132,7 @@
   .card {
     --card-border-radius: 0;
     --card-description-margin: 10px 0 0 0;
+    --card-title-font-size: 17px;
     border-bottom: 1px solid #ccc;
   }
 

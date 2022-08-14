@@ -23,13 +23,13 @@
     </var-app-bar>
 
     <div style="height: 54px;"/>
-    <div  v-if="wallet.address" class="wrap">
+    <div v-if="wallet.address" class="wrap">
       <var-card class=" card">
         <template #extra>
           <var-space direction="column" size="large" style="padding: 15px;">
             测试版功能，每天限获取一次。新账户需要联系管理员激活账户。
-            <var-button  class="button" type="success" block @click="get_SEUB">获取SEUB</var-button>
-            <var-button class="button" type="success" block @click="get_PMB">获取PMB</var-button>
+            <var-button class="button" type="success" block @click="get_SEUB">获取 1 SEUB</var-button>
+            <var-button class="button" type="success" block @click="get_PMB">获取 1000 PMB</var-button>
           </var-space>
         </template>
       </var-card>
@@ -48,26 +48,11 @@
     },
     methods: {
       get_SEUB() {
-        let contract = new this.wallet.web3.eth.Contract(this.$abi.SEUB_FAUCET, this.wallet.SEUB_FAUCET)
-        contract.methods.get().send({
-          from: this.wallet.address,
-        }).on('receipt', res => {
+        this.$request.api.get(`/common/eth/withdraw?address=${this.wallet.address}`).then(res => {
           this.$tip({
-            content: "已获取1SEUB",
-            type: "success"
+            content: res.data.msg,
+            type: res.data.msg === "成功" ? "success" : "warning"
           })
-        }).on('error', err => {
-          if (err.message === "Returned error: execution reverted: -1") {
-            this.$tip({
-              content: "您今天已经获取了",
-              type: "warning"
-            })
-          } else if (err.message === "Returned error: insufficient funds for transfer") {
-            this.$tip({
-              content: "请先联系管理员激活账户",
-              type: "info"
-            })
-          }
         })
       },
       get_PMB() {
@@ -80,6 +65,7 @@
             type: "success"
           })
         }).on('error', err => {
+          console.log(err);
           if (err.message === "Returned error: execution reverted: -1") {
             this.$tip({
               content: "您今天已经获取了",

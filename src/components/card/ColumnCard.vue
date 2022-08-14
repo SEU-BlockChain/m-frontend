@@ -13,8 +13,9 @@
           <a-tag class="tag" checkable color="arcoblue" size="small" v-for="tag in column.tag">{{tag.name}}</a-tag>
         </div>
         <div class="foot">
-          <div class="author" @click.stop="this.$router.push(`/user/${column.author.id}`)">{{column.author.username}}</div>
-          <div class="interact" >
+          <div class="author" @click.stop="this.$router.push(`/user/${column.author.id}`)">{{column.author.username}}
+          </div>
+          <div class="interact">
             <icon-eye class="icon"/>
             <div class="number">{{column.view_num}}</div>
             <icon-message class="icon"/>
@@ -42,7 +43,8 @@
   .card {
     --card-subtitle-font-size: 12px;
     --card-subtitle-margin: 0;
-    --card-description-margin: 5px 0 0 0
+    --card-description-margin: 5px 0 0 0;
+    --card-title-font-size: 17px
   }
 
   .tags {
