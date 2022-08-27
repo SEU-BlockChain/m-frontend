@@ -287,7 +287,7 @@
   }
 
   .vertical {
-    width: 60%;
+    width: 50%;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;

@@ -64,6 +64,25 @@ class DateParser {
 }
 
 let filters = {
+  date_delta(value) {
+    let nowDate = new DateParser()
+    let valueDate = new DateParser(value)
+    let str = ""
+    if (nowDate.date > valueDate.date) {
+      if (nowDate.year() > valueDate.year()) str += nowDate.year() - valueDate.year() + "年"
+      if (nowDate.month() > valueDate.month()) str += nowDate.month() - valueDate.month() + "月"
+      if (nowDate.day() > valueDate.day()) str += nowDate.day() - valueDate.day() + "天"
+      if (nowDate.hours() > valueDate.hours()) str += nowDate.hours() - valueDate.hours() + "时"
+      if (nowDate.minutes() > valueDate.minutes()) str += nowDate.minutes() - valueDate.minutes() + "分"
+    } else {
+      if (nowDate.year() < valueDate.year()) str += valueDate.year() - nowDate.year() + "年"
+      if (nowDate.month() < valueDate.month()) str += valueDate.month() - nowDate.month() + "月"
+      if (nowDate.day() < valueDate.day()) str += valueDate.day() - nowDate.day() + "天"
+      if (nowDate.hours() < valueDate.hours()) str += valueDate.hours() - nowDate.hours() + "时"
+      if (nowDate.minutes() < valueDate.minutes()) str += valueDate.minutes() - nowDate.minutes() + "分"
+    }
+    return str
+  },
   date(value) {
     let nowDate = new DateParser()
     let valueDate = new DateParser(value)

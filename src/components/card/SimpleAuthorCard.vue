@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" >
     <div class="author-info">
       <img class="avatar" :src="this.$settings.cos_url+author.icon" @click="this.$router.push(`/user/${author.id}`)"/>
       <div @click="this.$router.push(`/user/${author.id}`)">

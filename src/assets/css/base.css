@@ -73,7 +73,7 @@ a {
     --card-footer-padding: 0
 }
 
-.card .var-card__footer{
+.card .var-card__footer {
     display: block;
 }
 
@@ -152,6 +152,44 @@ a {
 .new {
     animation: bg-color 2s;
     animation-iteration-count: 1
+}
+
+.w-container div[data-w-e-type="link-card"] {
+    width: 90%;
+    margin: 0 auto;
+    background-color: #f1f1f1;
+    border-radius: 10px;
+    display: flex;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.w-container div[data-w-e-type="link-card"] .info-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding-right: 20px;
+}
+
+.w-container div[data-w-e-type="link-card"] .info-container p {
+    margin-top: 5px;
+    font-weight: bold;
+}
+
+.w-container div[data-w-e-type="link-card"] .info-container span {
+    opacity: .5;
+}
+
+.w-container div[data-w-e-type="link-card"] .icon-container {
+    width: 64px;
+    overflow: hidden;
+}
+
+.w-container div[data-w-e-type="link-card"] .icon-container img {
+    width: 64px;
+    object-fit: contain;
 }
 
 @keyframes bg-color {

@@ -23,6 +23,11 @@
             <img class="option-icon" src="~assets/img/ask.svg" alt="">
             <div class="option-text">问答</div>
           </div>
+          <div class="option" @click="this.$router.push('/vote')">
+            <img class="option-icon" src="~assets/img/vote.svg" alt="">
+            <div class="option-text">投票</div>
+          </div>
+
         </div>
 
         <div class="bbs">

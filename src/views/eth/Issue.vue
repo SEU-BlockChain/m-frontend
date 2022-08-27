@@ -104,35 +104,39 @@
             </div>
 
             <a-divider/>
-            <div class="input" v-if="this.wallet.address">
-              <a-input-number v-model="buy_num" :hide-button="true" placeholder="请输入购买份数" size="large" allow-clear
-                              @input="buy_estimate">
-                <template #append>
-                  份
-                </template>
-              </a-input-number>
-            </div>
 
-            <transition name="bloom" appear>
-              <div class="estimate" v-if="long_estimate.show">
-                <var-space justify="space-between">
-                  <div class="estimate-text">消耗PMB</div>
-                  <div class="estimate-value">{{long_estimate.amount}}</div>
-                </var-space>
-                <div class="equity">(含手续费{{long_estimate.equity}})</div>
-
-                <var-space justify="space-between">
-                  <div class="estimate-text">均价</div>
-                  <div class="estimate-value">{{(Number(long_estimate.amount)/Number(long_estimate.share)).toFixed(3)}}
-                  </div>
-                </var-space>
-
-                <var-button :disabled="buy_disable" block type="success" style="padding: 15px;margin-top: 10px;"
-                            @click="buy_share">购买
-                </var-button>
+            <div v-if="state===1">
+              <div class="input" v-if="this.wallet.address">
+                <a-input-number v-model="buy_num" :hide-button="true" placeholder="请输入购买份数" size="large" allow-clear
+                                @input="buy_estimate">
+                  <template #append>
+                    份
+                  </template>
+                </a-input-number>
               </div>
 
-            </transition>
+              <transition name="bloom" appear>
+                <div class="estimate" v-if="long_estimate.show">
+                  <var-space justify="space-between">
+                    <div class="estimate-text">消耗PMB</div>
+                    <div class="estimate-value">{{long_estimate.amount}}</div>
+                  </var-space>
+                  <div class="equity">(含手续费{{long_estimate.equity}})</div>
+
+                  <var-space justify="space-between">
+                    <div class="estimate-text">均价</div>
+                    <div class="estimate-value">
+                      {{(Number(long_estimate.amount)/Number(long_estimate.share)).toFixed(3)}}
+                    </div>
+                  </var-space>
+
+                  <var-button :disabled="buy_disable" block type="success" style="padding: 15px;margin-top: 10px;"
+                              @click="buy_share">购买
+                  </var-button>
+                </div>
+
+              </transition>
+            </div>
           </var-tab-item>
 
           <var-tab-item>
@@ -153,13 +157,16 @@
             </div>
 
             <a-divider/>
-            <div class="input" v-if="this.wallet.address">
-              <a-input-number v-model="sell_num" :hide-button="true" placeholder="请输入卖出份数" size="large" allow-clear
-                              @input="sell_estimate">
-                <template #append>
-                  份
-                </template>
-              </a-input-number>
+
+            <div v-if="state===1">
+              <div class="input" v-if="this.wallet.address">
+                <a-input-number v-model="sell_num" :hide-button="true" placeholder="请输入卖出份数" size="large" allow-clear
+                                @input="sell_estimate">
+                  <template #append>
+                    份
+                  </template>
+                </a-input-number>
+              </div>
             </div>
 
             <transition name="bloom" appear>
@@ -197,24 +204,55 @@
             </div>
 
             <a-divider/>
+            <div v-if="state===1">
 
-            <div class="input" v-if="this.wallet.address">
-              <a-input-number @input="change_pool" :hide-button="true" placeholder="购买流动池份额" size="large" allow-clear>
-                <template #append>
-                  PMB
-                </template>
-              </a-input-number>
-              <var-button block type="info" :disabled="!pool_num" style="padding: 15px;margin-top: 10px;"
-                          @click="buy_pool">购买流动池
-              </var-button>
+              <div class="input" v-if="this.wallet.address">
+                <a-input-number @input="change_pool" :hide-button="true" placeholder="购买流动池份额" size="large" allow-clear>
+                  <template #append>
+                    PMB
+                  </template>
+                </a-input-number>
+                <var-button block type="info" :disabled="!pool_num" style="padding: 15px;margin-top: 10px;"
+                            @click="buy_pool">购买流动池
+                </var-button>
+              </div>
             </div>
-
           </var-tab-item>
         </var-tabs-items>
       </div>
 
-      <div style="height: 30vh"></div>
+      <div v-if="prediction_info&&state===2&&prediction_info._owner===wallet.address" class="settle">
+        <var-space justify="space-between" size="mini">
+          <div style="width: 65%">
+            <a-input-number v-model="settle_id" placeholder="输入选项ID进行结算" allow-clear>
+              <template #prepend>
+                选项
+              </template>
+            </a-input-number>
+          </div>
+          <div style="width: 30%">
+            <a-button type="primary" :disabled="settle_id===undefined" status="warning"
+                      @click="settle">结算
+            </a-button>
+          </div>
+        </var-space>
+      </div>
+
     </var-pull-refresh>
+
+    <div class="comment var-elevation--3">
+      <var-sticky offset-top="10">
+        <div class="comment-text">评论区</div>
+        <var-divider margin="0"/>
+      </var-sticky>
+
+      <div class="comment-wrap"></div>
+    </div>
+
+    <div class="comment-input var-elevation--5">
+      <a-textarea style="margin: 3px" placeholder="说点什么" v-model="content" :auto-size="{minRows:1,maxRows:3}"/>
+      <a-button style="margin: 3px" :disabled="!content" status="success">确定</a-button>
+    </div>
   </div>
 </template>
 
@@ -268,9 +306,19 @@
 
         buy_disable: true,
         sell_disable: true,
+        content: "",
+        settle_id: undefined
       }
     },
     methods: {
+      settle() {
+        console.log(this.settle_id);
+        this.prediction.methods.settle(this.settle_id).call({
+          from: this.wallet.address
+        }).then(res => {
+          console.log(res);
+        })
+      },
       change_pool(value) {
         console.log(value);
         this.pool_num = value
@@ -561,6 +609,42 @@
 </script>
 
 <style scoped>
+  .settle {
+    margin: 10px 10px 0;
+    border-radius: 5px;
+    border: 1px solid #f0f1f5;
+    background-color: white;
+    padding: 10px;
+  }
+
+  .comment-wrap {
+    min-height: 100px;
+  }
+
+  .comment-text {
+    padding: 10px 20px;
+    font-weight: bold;
+    color: #4ebaee;
+  }
+
+  .comment {
+    background-color: white;
+    margin-top: 20px;
+    border-radius: 10px 10px 0 0;
+  }
+
+  .comment-input {
+    position: fixed;
+    bottom: 0;
+    width: 100vw;
+    padding: 0 5px;
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+  }
+
   .pool-wrap {
     padding: 20px 20px 0;
   }

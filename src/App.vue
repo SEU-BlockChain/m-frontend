@@ -183,8 +183,35 @@
       })
       this.$store.commit("web3", this.wallet)
       document.addEventListener("click", e => {
+        let is_w_container = false
+        for (let i of e.path) {
+          if (i.getAttribute("id") === "app") break;
+          if (i.classList.contains("w-container")) {
+            is_w_container = true
+            break
+          }
+        }
+
+        if (is_w_container) {
+          for (let i of e.path) {
+            if (i.getAttribute("id") === "app") break;
+            if (i.getAttribute("data-w-e-type") === "link-card") {
+              let url = i.getAttribute("data-link")
+              if (url.startsWith("/")) {
+                this.$router.push(url)
+              } else {
+                try {
+                  plus.runtime.openURL(url);
+                  e.preventDefault();
+                } catch (e) {
+                }
+              }
+            }
+          }
+        }
+
         if (e.target.tagName === "A") {
-          if (e.target.href.startsWith("/")){
+          if (e.target.href.startsWith("/")) {
             this.$router.push(e.target.href)
           } else {
             try {

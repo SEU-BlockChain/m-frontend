@@ -18,7 +18,10 @@
   import '@wangeditor/editor/dist/css/style.css'
   import Snackbar from "@varlet/ui/es/snackbar";
   import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
+  import {Boot} from '@wangeditor/editor'
+  import linkCardModule from '@wangeditor/plugin-link-card'
 
+  Boot.registerModule(linkCardModule)
 
   export default {
     name: "ColumnEditor",
@@ -64,7 +67,13 @@
         },
         editorConfig: {
           hoverbarKeys: {
-            text: []
+            text: [],
+            link: {
+              menuKeys: [
+                'editLink', 'unLink', // 默认的配置可以通过 `editor.getConfig().hoverbarKeys.link` 获取
+                'convertToLinkCard' // 增加 '转为链接卡片'菜单
+              ],
+            }
           },
           autoFocus: false,
           placeholder: '请输入内容...',
@@ -72,6 +81,14 @@
             mentionConfig: {},
           },
           MENU_CONF: {
+            convertToLinkCard: {
+              async getLinkCardInfo(linkText, linkUrl) {
+                return {
+                  title: linkText,
+                  iconImgSrc: "https://tools.ly522.com/ico/favicon.php?url=" + linkUrl
+                }
+              }
+            },
             insertImage: {
               checkImage(src) {
                 if (src.indexOf('http') !== 0) {
@@ -129,5 +146,9 @@
     left: 0;
     top: 0;
     z-index: 1000;
+  }
+
+  .w-e-textarea-link-card-container {
+    width: 90vw;
   }
 </style>

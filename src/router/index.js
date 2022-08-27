@@ -340,6 +340,27 @@ const routes = [
     }
   },
   {
+    path: "/vote",
+    name: "Index-vote",
+    component: () => import("views/vote/Index"),
+    meta: {
+      title: "全部投票",
+      depth: 1,
+      keepAlive: true
+    }
+  },
+  {
+    path: "/vote/:id",
+    name: "Vote",
+    component: () => import("views/vote/Vote"),
+    meta: {
+      title: "投票详情",
+      depth: 2,
+      keepAlive: true,
+      auth: 1,
+    }
+  },
+  {
     path: "/login",
     name: "Login",
     component: () => import("views/sign/Login"),
@@ -391,6 +412,15 @@ const routes = [
     meta: {
       depth: 3,
       title: "获取PMB"
+    }
+  },
+  {
+    path: "/issue/:address",
+    name: "Issue",
+    component: () => import("views/eth/Issue"),
+    meta: {
+      depth: 1,
+      title: "预测详情"
     }
   },
   {

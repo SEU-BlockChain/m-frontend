@@ -379,7 +379,8 @@
           this.click_user(ev.target.getAttribute("uid"))
           return
         }
-        if (ev.target.tagName === "IMG") {
+
+        if (ev.target.tagName === "IMG" && !ev.path[1].classList.contains("icon-container")) {
           this.click_img([ev.target.getAttribute("src")])
         }
       },
