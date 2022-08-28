@@ -52,19 +52,32 @@
       <div class="create">
         <a-input placeholder="题目" allow-clear v-model="new_vote.title"/>
         <div style="height: 10px"></div>
+        <a-date-picker
+          style="width: 100%;"
+          placeholder="开始时间"
+          show-time
+          format="YYYY-MM-DD HH:mm"
+          v-model="new_vote.start_time"
+        />
+        <div style="height: 10px"></div>
+        <a-date-picker
+          style="width: 100%;"
+          placeholder="截止时间"
+          show-time
+          format="YYYY-MM-DD HH:mm"
+          v-model="new_vote.end_time"
+        />
+        <div style="height: 10px"></div>
         <a-input-tag v-model="new_vote.choice_list" placeholder="输入选项按回车确定" size="large"/>
+
         <div style="height: 10px"></div>
-        <a-input placeholder="开始时间" v-model="new_vote.start_time"/>
+        <a-input-number placeholder="最多选择" v-model="new_vote.max_num"/>
         <div style="height: 10px"></div>
-        <a-input placeholder="截止时间" v-model="new_vote.end_time"/>
-        <div style="height: 10px"></div>
-        <a-input placeholder="最多选择" v-model="new_vote.max_num"/>
-        <div style="height: 10px"></div>
-        <a-input placeholder="最少选择" v-model="new_vote.min_num"/>
+        <a-input-number placeholder="最少选择" v-model="new_vote.min_num"/>
         <div style="height: 10px"></div>
         <a-checkbox v-model="new_vote.need_vote">投票后才能查看投票情况</a-checkbox>
         <div style="height: 20px"></div>
-        <var-button block text outline type="primary" size="small" @click="create">创建投票</var-button>
+        <var-button block text outline type="primary" size="small" @click="create" :disabled="!valid">创建投票</var-button>
       </div>
     </var-popup>
   </div>
@@ -91,13 +104,26 @@
           anonymous: false,
           start_time: null,
           end_time: null,
-          max_num:null,
-          min_num:null,
+          max_num: null,
+          min_num: null,
         }
+      }
+    },
+    computed: {
+      valid() {
+        if (!this.new_vote.title) return false
+        if (!this.new_vote.choice_list.length) return false
+        if (!this.new_vote.start_time) return false
+        if (!this.new_vote.end_time) return false
+        if (!this.new_vote.max_num) return false
+        if (!this.new_vote.min_num) return false
+        return this.new_vote.max_num >= this.new_vote.min_num;
+
       }
     },
     methods: {
       create() {
+        if (!this.valid) return
         this.$request.api.post(
           `/vote/`,
           this.new_vote
@@ -149,6 +175,8 @@
   .create {
     width: 80vw;
     padding: 20px 10px;
+    max-height: 70vh;
+    overflow-y: scroll;
   }
 
   .app-bar {

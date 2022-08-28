@@ -185,10 +185,14 @@
       document.addEventListener("click", e => {
         let is_w_container = false
         for (let i of e.path) {
-          if (i.getAttribute("id") === "app") break;
-          if (i.classList.contains("w-container")) {
-            is_w_container = true
-            break
+          try{
+            if (i.getAttribute("id") === "app") break;
+            if (i.classList.contains("w-container")) {
+              is_w_container = true
+              break
+            }
+          }catch (e) {
+
           }
         }
 

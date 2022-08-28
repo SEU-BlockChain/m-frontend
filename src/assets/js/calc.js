@@ -72,14 +72,14 @@ let filters = {
       if (nowDate.year() > valueDate.year()) str += nowDate.year() - valueDate.year() + "年"
       if (nowDate.month() > valueDate.month()) str += nowDate.month() - valueDate.month() + "月"
       if (nowDate.day() > valueDate.day()) str += nowDate.day() - valueDate.day() + "天"
-      if (nowDate.hours() > valueDate.hours()) str += nowDate.hours() - valueDate.hours() + "时"
-      if (nowDate.minutes() > valueDate.minutes()) str += nowDate.minutes() - valueDate.minutes() + "分"
+      if (nowDate.hours() > valueDate.hours()) str += nowDate.hours() - valueDate.hours() + "小时"
+      if (nowDate.minutes() > valueDate.minutes()) str += nowDate.minutes() - valueDate.minutes() + "分钟"
     } else {
       if (nowDate.year() < valueDate.year()) str += valueDate.year() - nowDate.year() + "年"
       if (nowDate.month() < valueDate.month()) str += valueDate.month() - nowDate.month() + "月"
       if (nowDate.day() < valueDate.day()) str += valueDate.day() - nowDate.day() + "天"
-      if (nowDate.hours() < valueDate.hours()) str += valueDate.hours() - nowDate.hours() + "时"
-      if (nowDate.minutes() < valueDate.minutes()) str += valueDate.minutes() - nowDate.minutes() + "分"
+      if (nowDate.hours() < valueDate.hours()) str += valueDate.hours() - nowDate.hours() + "小时"
+      if (nowDate.minutes() < valueDate.minutes()) str += valueDate.minutes() - nowDate.minutes() + "分钟"
     }
     return str
   },

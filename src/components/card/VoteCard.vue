@@ -77,8 +77,8 @@
   }
 
   .title {
-    font-size: 20px;
-    line-height: 24px;
+    font-size: 18px;
+    line-height: 20px;
     padding-top: 10px;
   }
 </style>

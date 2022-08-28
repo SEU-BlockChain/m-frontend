@@ -355,7 +355,7 @@ const routes = [
     component: () => import("views/vote/Vote"),
     meta: {
       title: "投票详情",
-      depth: 2,
+      depth: 3,
       keepAlive: true,
       auth: 1,
     }

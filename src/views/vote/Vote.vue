@@ -20,6 +20,18 @@
       <template #default>
         <div class="head-text">投票详情</div>
       </template>
+      <template #right>
+        <var-button
+          v-if="vote&& vote.creator.id===this.$store.state.user.id"
+          round
+          text
+          color="transparent"
+          text-color="#333"
+          @click="delete_vote"
+        >
+          <var-icon name="trash-can-outline"/>
+        </var-button>
+      </template>
     </var-app-bar>
 
     <div style="height: 54px;"/>
@@ -27,6 +39,10 @@
       <var-card class="card" style="border-radius: 10px">
         <template #extra>
           <div class="content">
+            <span class="text" :state="state">{{["未开始","进行中","已结束"][state]}}</span>
+            <span class="delta-time" v-if="state===0">{{this.$calc.filters.date_delta(this.vote.start_time)}}后开始</span>
+            <span class="delta-time" v-if="state===1">剩余{{this.$calc.filters.date_delta(this.vote.end_time)}}</span>
+
             <div class="title">{{vote.title}}</div>
             <var-space justify="space-between">
               <div class="time">开始:{{(new this.$calc.DateParser(vote.start_time)).all()}}</div>
@@ -112,12 +128,62 @@
                 </var-button>
               </div>
 
-              <div v-else-if="!vote.show"></div>
+              <div v-else-if="!vote.show">
+                <a-checkbox-group @change="select" v-model="selected" disabled>
+                  <template v-for="choice in vote.choice" :key="choice">
+                    <a-checkbox :value="choice.id">
+                      <template #checkbox="{ checked }">
+                        <var-space
+                          align="center"
+                          justify="space-between"
+                          class="custom-checkbox-card"
+                          :class="{ 'custom-checkbox-card-checked': checked }"
+                        >
+                          <var-space align="center">
+                            <div class="custom-checkbox-card-mask">
+                              <div class="custom-checkbox-card-mask-dot"/>
+                            </div>
+                            <div class="custom-checkbox-card-title">
+                              {{ choice.content }}
+                            </div>
+                          </var-space>
+                        </var-space>
+                      </template>
+                    </a-checkbox>
+                  </template>
+                </a-checkbox-group>
+              </div>
 
-              <div v-else></div>
+              <div v-else>
+                <a-checkbox-group @change="select" v-model="selected" disabled>
+                  <template v-for="choice in vote.choice" :key="choice">
+                    <a-checkbox :value="choice.id">
+                      <template #checkbox="{ checked }">
+                        <var-space
+                          :style="`background: linear-gradient(to right, #9fd4ee 0%,#9fd4ee ${(100*choice.num/vote.num).toFixed()}%,white ${(100*choice.num/vote.num+1).toFixed()}%,white 100%)`"
+                          align="center"
+                          justify="space-between"
+                          class="custom-checkbox-card"
+                          :class="{ 'custom-checkbox-card-checked': checked }"
+                        >
+                          <var-space align="center">
+                            <div class="custom-checkbox-card-mask">
+                              <div class="custom-checkbox-card-mask-dot"/>
+                            </div>
+                            <div class="custom-checkbox-card-title">
+                              {{ choice.content }}
+                            </div>
+                          </var-space>
+
+                          <div class="portion">{{choice.num}}/{{vote.num}}</div>
+                        </var-space>
+                      </template>
+                    </a-checkbox>
+                  </template>
+                </a-checkbox-group>
+              </div>
 
             </div>
-            {{vote.opened}}{{vote.show}}
             <br>
             <simple-author-card :author="vote.creator"></simple-author-card>
           </div>
@@ -143,7 +209,40 @@
         disabled: true,
       }
     },
+    computed: {
+      state() {
+        let now = new Date()
+        let start = new Date(this.vote.start_time)
+        let end = new Date(this.vote.end_time)
+        if (now < start) {
+          return 0
+        } else if (start < now && now < end) {
+          return 1
+        } else {
+          return 2
+        }
+      },
+    },
     methods: {
+      delete_vote() {
+        this.$dialog("是否删除投票?").then(res => {
+          if (res === "confirm") {
+            this.$request.api.delete(
+              `/vote/${this.$route.params.id}`,
+            ).then(res => {
+              if (res.data.code === 176) {
+                this.$router.replace('/vote/')
+              } else {
+                this.$tip({
+                  content: res.data.msg,
+                  type: "warning",
+                  duration: 1000,
+                })
+              }
+            })
+          }
+        })
+      },
       select(options) {
         if (options.length > this.vote.max_num) {
           this.$tip({
@@ -203,6 +302,34 @@
 </script>
 
 <style scoped>
+
+  .delta-time {
+    margin-left: 10px;
+    font-size: 12px;
+    color: #888888;
+  }
+
+  .text[state="0"] {
+    color: #4ebaee;
+    border: 1px solid #4ebaee;
+    border-radius: 5px;
+    padding: 2px 4px;
+  }
+
+  .text[state="1"] {
+    color: #05b16a;
+    border: 1px solid #05b16a;
+    border-radius: 5px;
+    padding: 2px 4px;
+  }
+
+  .text[state="2"] {
+    color: red;
+    border: 1px solid red;
+    border-radius: 5px;
+    padding: 2px 4px;
+  }
+
   .tip {
     font-size: 12px;
     color: #888888;
