@@ -12,7 +12,9 @@ whiteList.div.push(
   "data-link",
   "data-iconimgsrc"
 )
-
+whiteList.p.push(
+  "style"
+)
 
 export {
   whiteList

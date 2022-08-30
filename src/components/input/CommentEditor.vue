@@ -25,11 +25,8 @@
   import '@wangeditor/editor/dist/css/style.css'
   import Snackbar from "@varlet/ui/es/snackbar";
   import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
-  import {Boot} from '@wangeditor/editor'
-  import mentionModule from '@wangeditor/plugin-mention'
   import MentionModal from './MentionModal'
 
-  Boot.registerModule(mentionModule)
 
   export default {
     name: "CommentEditor",

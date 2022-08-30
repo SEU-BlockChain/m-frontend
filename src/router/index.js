@@ -247,6 +247,7 @@ const routes = [
     meta: {
       title: "消息设置",
       depth: 2,
+      auth: 1
     }
   },
   {

@@ -5,7 +5,7 @@
     :mode="mode"
   />
   <Editor
-    style="height: 70vh; overflow-y: scroll;width: 100vw"
+    style="height: 100%;min-height: 500px; overflow-y: hidden;"
     v-model="valueHtml"
     :defaultConfig="editorConfig"
     :mode="mode"
@@ -18,10 +18,6 @@
   import '@wangeditor/editor/dist/css/style.css'
   import Snackbar from "@varlet/ui/es/snackbar";
   import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
-  import {Boot} from '@wangeditor/editor'
-  import linkCardModule from '@wangeditor/plugin-link-card'
-
-  Boot.registerModule(linkCardModule)
 
   export default {
     name: "ColumnEditor",

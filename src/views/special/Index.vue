@@ -29,15 +29,9 @@
 
     <div style="height: 54px"/>
     <var-pull-refresh v-model="refreshing" @refresh="refresh" success-duration="1000">
-      <var-swipe class="swipe" :autoplay="3000">
-        <var-swipe-item>
-          <img src="https://varlet-varletjs.vercel.app/cat.jpg">
-        </var-swipe-item>
-        <var-swipe-item>
-          <img src="https://varlet-varletjs.vercel.app/cat2.jpg">
-        </var-swipe-item>
-        <var-swipe-item>
-          <img src="https://varlet-varletjs.vercel.app/cat3.jpg">
+      <var-swipe class="swipe" :autoplay="3000" v-if="banner_list.length">
+        <var-swipe-item v-for="banner in banner_list" @click="this.$router.push(banner.url)">
+          <img :src="this.$settings.cos_url+`static/${banner.img}`">
         </var-swipe-item>
       </var-swipe>
 
@@ -78,7 +72,8 @@
         finished: false,
         loading: false,
         column_list: [],
-        refreshing: false
+        refreshing: false,
+        banner_list: []
       }
     },
     methods: {
@@ -110,6 +105,19 @@
         this.next = null
         this.load_column()
       }
+    },
+    created() {
+      this.$request.api.get('/common/sticky/banner?category=1').then(res => {
+        if (res.data.code === 177) {
+          this.banner_list = res.data.result.banner
+        } else {
+          this.$tip({
+            content: res.data.msg,
+            type: "warning",
+            duration: 1000,
+          })
+        }
+      })
     }
   }
 </script>

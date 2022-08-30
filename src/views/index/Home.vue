@@ -3,15 +3,9 @@
     <var-pull-refresh v-model="is_refresh" @refresh="refresh">
 
       <div class="head">OurChain</div>
-      <var-swipe class="swipe" :autoplay="3000">
-        <var-swipe-item>
-          <img src="https://varlet-varletjs.vercel.app/cat.jpg">
-        </var-swipe-item>
-        <var-swipe-item>
-          <img src="https://varlet-varletjs.vercel.app/cat2.jpg">
-        </var-swipe-item>
-        <var-swipe-item>
-          <img src="https://varlet-varletjs.vercel.app/cat3.jpg">
+      <var-swipe class="swipe" :autoplay="3000" v-if="banner_list.length">
+        <var-swipe-item v-for="banner in banner_list" @click="this.$router.push(banner.url)">
+          <img :src="this.$settings.cos_url+`static/${banner.img}`">
         </var-swipe-item>
       </var-swipe>
 
@@ -114,7 +108,8 @@
         loading: false,
         next: null,
         current_page: null,
-        is_refresh: false
+        is_refresh: false,
+        banner_list: []
       }
     },
     methods: {
@@ -220,6 +215,17 @@
       this.wallet.market.methods.total().call().then(res => {
         this.total = res
       })
+      this.$request.api.get('/common/sticky/banner?category=0').then(res => {
+        if (res.data.code === 177) {
+          this.banner_list = res.data.result.banner
+        } else {
+          this.$tip({
+            content: res.data.msg,
+            type: "warning",
+            duration: 1000,
+          })
+        }
+      })
     },
     activated() {
       this.$emit("active", 0)
@@ -238,15 +244,28 @@
   }
 
 
-  .swipe {
-    border-radius: 5px;
-    height: 25vh;
+  @media screen and (min-width: 840px) {
+    .swipe {
+      border-radius: 5px;
+      height: 232px;
+    }
+  }
+
+  @media screen and (max-width: 840px) {
+    .swipe {
+      border-radius: 5px;
+      height: 50vw;
+    }
+
+    .swipe img {
+      height: 50vw;
+      width: 100%;
+      object-fit: fill;
+    }
   }
 
   .swipe img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
+    height: 232px;
     pointer-events: none;
   }
 

@@ -14,7 +14,6 @@
       </template>
     </var-app-bar>
 
-    <div class="background"/>
     <div class="frame">
       <img class="img" v-if="!is_change" :src="icon" alt="修改头像">
       <VuePictureCropper
@@ -136,9 +135,6 @@
 
 <style scoped>
   .animation-wrap{
-    background-color: transparent;
-  }
-  .background {
     background-color: rgba(0, 0, 0, .9);
   }
 

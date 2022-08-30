@@ -7,7 +7,7 @@
       :mode="mode"
     />
     <Editor
-      style="height: 500px; overflow-y: hidden;"
+      style="height: 80vh; overflow-y: scroll;"
       v-model="valueHtml"
       :defaultConfig="editorConfig"
       :mode="mode"
@@ -28,13 +28,9 @@
   import '@wangeditor/editor/dist/css/style.css'
   import Snackbar from "@varlet/ui/es/snackbar";
   import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
-  import {Boot} from '@wangeditor/editor'
-  import mentionModule from '@wangeditor/plugin-mention'
-  import linkCardModule from '@wangeditor/plugin-link-card'
   import MentionModal from './MentionModal'
 
-  Boot.registerModule(mentionModule)
-  Boot.registerModule(linkCardModule)
+
 
   export default {
     name: "ArticleEditor",
@@ -49,6 +45,7 @@
         valueHtml: "",
         toolbarConfig: {
           toolbarKeys: [
+            "headerSelect",
             "color",
             {
               "key": "group-justify",
@@ -194,5 +191,9 @@
 
   .w-e-textarea-link-card-container {
     width: 90vw;
+    margin: 0 auto;
+  }
+  .w-e-textarea-link-card-text-container{
+    padding-left: 10px;
   }
 </style>

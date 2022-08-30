@@ -54,7 +54,7 @@
         class="title"
         placeholder="标题"
         v-model="title"
-        :max-length="20"
+        :max-length="50"
         allow-clear
         show-word-limit
       />

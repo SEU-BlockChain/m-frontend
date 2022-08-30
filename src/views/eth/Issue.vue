@@ -80,15 +80,16 @@
 
       <div class="panel" v-if="prediction_info">
         <var-tabs v-model:active="active">
-          <var-tab>买入</var-tab>
-          <var-tab>卖出</var-tab>
+          <var-tab>{{prediction_info._settled?"我的":"买入"}}</var-tab>
+          <var-tab v-if="!prediction_info._settled">卖出</var-tab>
           <var-tab>流动池</var-tab>
         </var-tabs>
 
         <var-tabs-items v-model:active="active">
           <var-tab-item>
             <div @click="buy_selected=k" v-for="(option,k) in prediction_info._options">
-              <div class="price" :class="{buy_active:buy_selected===k}">
+              <div class="price"
+                   :class="{buy_active:buy_selected===k&&!prediction_info._settled||(Number(prediction_info._correct)===k&&prediction_info._settled)}">
                 <var-space justify="space-between">
                   <div>{{option.desc}}</div>
                   <div>{{(Number(option.share)/Number(prediction_info._totalShare)).toFixed(3)}}</div>
@@ -139,7 +140,7 @@
             </div>
           </var-tab-item>
 
-          <var-tab-item>
+          <var-tab-item v-if="!prediction_info._settled">
             <div @click="sell_selected=k" v-for="(option,k) in prediction_info._options">
               <div class="price" :class="{sell_active:sell_selected===k}">
                 <var-space justify="space-between">
@@ -221,23 +222,6 @@
         </var-tabs-items>
       </div>
 
-      <div v-if="prediction_info&&state===2&&prediction_info._owner===wallet.address" class="settle">
-        <var-space justify="space-between" size="mini">
-          <div style="width: 65%">
-            <a-input-number v-model="settle_id" placeholder="输入选项ID进行结算" allow-clear>
-              <template #prepend>
-                选项
-              </template>
-            </a-input-number>
-          </div>
-          <div style="width: 30%">
-            <a-button type="primary" :disabled="settle_id===undefined" status="warning"
-                      @click="settle">结算
-            </a-button>
-          </div>
-        </var-space>
-      </div>
-
     </var-pull-refresh>
 
     <div class="comment var-elevation--3">
@@ -307,20 +291,10 @@
         buy_disable: true,
         sell_disable: true,
         content: "",
-        settle_id: undefined
       }
     },
     methods: {
-      settle() {
-        console.log(this.settle_id);
-        this.prediction.methods.settle(this.settle_id).call({
-          from: this.wallet.address
-        }).then(res => {
-          console.log(res);
-        })
-      },
       change_pool(value) {
-        console.log(value);
         this.pool_num = value
       },
       buy_estimate(value) {
@@ -568,7 +542,6 @@
             yAxis: {
               type: 'value',
               min: 0,
-              max: 1,
             },
 
             series: lines.map(x => {

@@ -61,7 +61,7 @@
 
     <div class="category var-elevation--5">
       <var-radio-group v-model="category">
-        <var-radio v-if="this.$store.state.user.is_staff" :disabled="this.update_id!==undefined" :checked-value="1">官方
+        <var-radio v-if="this.$store.state.user?.is_staff" :disabled="this.update_id!==undefined" :checked-value="1">官方
         </var-radio>
         <var-radio :disabled="this.update_id!==undefined" :checked-value="2">杂谈</var-radio>
       </var-radio-group>
@@ -343,8 +343,8 @@
   }
 
   .wrap {
-    padding-top: 54px;
-    min-height: 100vh;
+    padding: 80px 0 0;
+    margin-bottom:  56px;
     background-color: white;
   }
 

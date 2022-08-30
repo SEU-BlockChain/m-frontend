@@ -34,7 +34,14 @@ app.use(VueXss, {
   whiteList,
   css: false
 }).use(ArcoVueIcon)
+
 app.mount('#app')
+import {Boot} from '@wangeditor/editor'
+import mentionModule from '@wangeditor/plugin-mention'
+import linkCardModule from '@wangeditor/plugin-link-card'
+
+Boot.registerModule(mentionModule)
+Boot.registerModule(linkCardModule)
 
 import '@varlet/ui/es/dialog/style/index.js'
 import '@varlet/ui/es/snackbar/style/index.js'

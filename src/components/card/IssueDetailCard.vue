@@ -21,8 +21,8 @@
         </var-space>
 
         <var-space align="center" justify="space-between" style="margin: 3px">
-          <div class="date">开始日期:{{date(prediction_info._info.start)}}</div>
-          <div class="date">截止日期:{{date(prediction_info._info.end)}}</div>
+          <div class="date">开始:{{date(prediction_info._info.start)}}</div>
+          <div class="date">截止:{{date(prediction_info._info.end)}}</div>
         </var-space>
 
         <var-divider dashed/>
@@ -80,7 +80,7 @@
     methods: {
       date(timestamp) {
         let date = new this.$calc.DateParser(timestamp * 1000)
-        return date.year_month_day()
+        return date.all()
       }
     },
     computed: {
