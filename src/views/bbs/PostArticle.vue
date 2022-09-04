@@ -54,11 +54,10 @@
         placeholder="标题（必填）"
         v-model="title"
         blur-color="#ccc"
-        :maxlength="30"
+        :maxlength="50"
         clearable/>
       <article-editor ref="editor"/>
     </div>
-
     <div class="category var-elevation--5">
       <var-radio-group v-model="category">
         <var-radio v-if="this.$store.state.user?.is_staff" :disabled="this.update_id!==undefined" :checked-value="1">官方
@@ -112,7 +111,7 @@
     data() {
       return {
         title: "",
-        category: 2,
+        category: null,
         show: false,
         draft_list: [],
         finished: false,
@@ -316,7 +315,7 @@
         ).then(res => {
           if (res.data.code === 111) {
             this.title = res.data.result.title
-            this.category_id = res.data.result.category.id
+            this.category = res.data.result.category.id
             let editor = this.$refs.editor.editor
             SlateTransforms.insertNodes(editor, JSON.parse(res.data.result.raw_content))
             SlateTransforms.removeNodes(editor, {at: [0]})
@@ -328,6 +327,8 @@
             })
           }
         })
+      } else {
+        this.category = Number(this.$route.query.category_id)
       }
     }
   }
@@ -344,7 +345,7 @@
 
   .wrap {
     padding: 80px 0 0;
-    margin-bottom:  56px;
+    margin-bottom: 56px;
     background-color: white;
   }
 

@@ -2,7 +2,10 @@
   <div class="animation-wrap">
     <var-pull-refresh v-model="is_refresh" @refresh="refresh">
 
-      <div class="head">OurChain</div>
+      <div class="head var-elevation--5">
+        <img src="~assets/img/logo.png" alt="" height="32">
+      </div>
+      <div style="height: 44px;"/>
       <var-swipe class="swipe" :autoplay="3000" v-if="banner_list.length">
         <var-swipe-item v-for="banner in banner_list" @click="this.$router.push(banner.url)">
           <img :src="this.$settings.cos_url+`static/${banner.img}`">
@@ -236,11 +239,15 @@
 <style scoped>
   .head {
     height: 44px;
-    line-height: 44px;
-    font-weight: bold;
     padding-left: 10px;
-    font-size: 18px;
     background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100vw;
   }
 
 

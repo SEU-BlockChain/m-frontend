@@ -65,8 +65,6 @@
           let index = this.include.indexOf(from.name);
           index !== -1 && this.include.splice(index, 1);
         }
-
-        // console.log(this.include);
       }
     },
     data() {
@@ -185,13 +183,13 @@
       document.addEventListener("click", e => {
         let is_w_container = false
         for (let i of e.path) {
-          try{
+          try {
             if (i.getAttribute("id") === "app") break;
             if (i.classList.contains("w-container")) {
               is_w_container = true
               break
             }
-          }catch (e) {
+          } catch (e) {
 
           }
         }
@@ -206,8 +204,9 @@
               } else {
                 try {
                   plus.runtime.openURL(url);
-                  e.preventDefault();
+                  e.preventDefault()
                 } catch (e) {
+                  window.open(url)
                 }
               }
             }
@@ -220,8 +219,9 @@
           } else {
             try {
               plus.runtime.openURL(e.target.href);
-              e.preventDefault();
+              e.preventDefault()
             } catch (e) {
+              window.open(url)
             }
           }
         }

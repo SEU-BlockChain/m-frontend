@@ -51,7 +51,9 @@
         <div class="w-container content" v-html="this.$xss(article.content)" @click="click_article"/>
         <div class="foot">
           <div class="chip">
-            <var-chip size="small" id="comment">{{article.category.category}}</var-chip>
+            <var-chip size="small" id="comment" @click="this.$router.push(`/bbs/category/${article.category.id}`)">
+              {{article.category.category}}
+            </var-chip>
           </div>
           <div class="view">浏览数：{{article.view_num}}</div>
         </div>

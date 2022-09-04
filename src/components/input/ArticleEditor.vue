@@ -47,6 +47,7 @@
           toolbarKeys: [
             "headerSelect",
             "color",
+            "bold",
             {
               "key": "group-justify",
               "title": "对齐",
@@ -70,7 +71,8 @@
             "divider",
             "undo",
             "redo",
-            "fullScreen"
+            "fullScreen",
+            "clearStyle"
           ]
         },
         editorConfig: {

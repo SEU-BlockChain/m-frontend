@@ -1,7 +1,6 @@
 <template>
   <div class="animation-wrap">
     <var-pull-refresh v-model="refreshing" @refresh="reload">
-
       <div class="top">
         <div class="find">
           <var-input class="search-input" placeholder="搜索" :hint="false" :line="false" v-model="search">
@@ -156,7 +155,7 @@
                 ...i
               })
             }
-            for (let i of _.sortBy(temp, x => -(new Date(x.update_time).getTime()))) {
+            for (let i of _.sortBy(temp, x => -(new Date(x.comment_time||x.update_time||x.create_time).getTime()))) {
               this.post_list.push(i)
             }
             this.current += 10

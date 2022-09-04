@@ -87,7 +87,7 @@
   import VoteCard from "../../components/card/VoteCard";
 
   export default {
-    name: "Index",
+    name: "IndexVote",
     components: {VoteCard},
     data() {
       return {

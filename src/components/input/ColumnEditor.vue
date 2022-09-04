@@ -34,6 +34,7 @@
           toolbarKeys: [
             "headerSelect",
             "color",
+            "bold",
             {
               "key": "group-justify",
               "title": "对齐",
@@ -58,7 +59,8 @@
             "divider",
             "undo",
             "redo",
-            "fullScreen"
+            "fullScreen",
+            "clearStyle"
           ]
         },
         editorConfig: {
@@ -144,7 +146,18 @@
     z-index: 1000;
   }
 
+</style>
+<style>
+
+  .w-e-image-container {
+    margin: 0;
+  }
+
   .w-e-textarea-link-card-container {
     width: 90vw;
+    margin: 0 auto;
+  }
+  .w-e-textarea-link-card-text-container{
+    padding-left: 10px;
   }
 </style>

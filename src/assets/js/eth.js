@@ -50,10 +50,8 @@ class Wallet {
   }
 
   getAccount(address) {
-    console.log(address);
     this.address = address
     this.market.methods.balanceOf(address).call().then(res => {
-      console.log(res);
       this.PMB = res
       this.mode = 1
     })

@@ -59,7 +59,7 @@
 
 <script>
   export default {
-    name: "Index",
+    name: "IndexInformation",
     data() {
       return {
         refreshing: false,

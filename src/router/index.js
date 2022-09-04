@@ -252,11 +252,21 @@ const routes = [
   },
   {
     path: "/bbs",
-    name: "Index-bbs",
+    name: "IndexBBS",
     component: () => import("views/bbs/Index"),
     meta: {
       title: "讨论区",
       depth: 1,
+      keepAlive: true
+    }
+  },
+  {
+    path: "/bbs/category/:category_id",
+    name: "Category",
+    component: () => import("views/bbs/Category"),
+    meta: {
+      title: "社区",
+      depth: 2,
       keepAlive: true
     }
   },
@@ -267,7 +277,7 @@ const routes = [
     meta: {
       title: "发表文章",
       auth: 1,
-      depth: 2
+      depth: 3
     }
   },
   {
@@ -276,13 +286,13 @@ const routes = [
     component: () => import("views/bbs/Article"),
     meta: {
       title: "文章详情",
-      depth: 2,
+      depth: 4,
       keepAlive: true
     }
   },
   {
     path: "/special",
-    name: "Index-special",
+    name: "IndexSpecial",
     component: () => import("views/special/Index"),
     meta: {
       title: "专栏",
@@ -312,7 +322,7 @@ const routes = [
   },
   {
     path: "/information",
-    name: "Index-information",
+    name: "IndexInformation",
     component: () => import("views/information/Index"),
     meta: {
       title: "资讯",
@@ -342,7 +352,7 @@ const routes = [
   },
   {
     path: "/vote",
-    name: "Index-vote",
+    name: "IndexVote",
     component: () => import("views/vote/Index"),
     meta: {
       title: "全部投票",

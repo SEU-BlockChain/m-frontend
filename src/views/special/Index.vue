@@ -62,7 +62,7 @@
   import ColumnCard from "components/card/ColumnCard";
 
   export default {
-    name: "Index",
+    name: "IndexSpecial",
     components: {
       ColumnCard,
     },

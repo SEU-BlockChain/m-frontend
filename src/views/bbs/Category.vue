@@ -1,8 +1,8 @@
 <template>
   <div class="animation-wrap">
-    <div class="background"/>
     <var-app-bar
       class="app-bar"
+      text-color="#333"
       :class="{
       'var-elevation--1':0.5<=scroll_percent&&scroll_percent<0.6,
       'var-elevation--2':0.6<=scroll_percent&&scroll_percent<0.7,
@@ -20,27 +20,21 @@
           round
           text
           color="transparent"
-          text-color="#fff"
-          :style="{color: `rgb(${255*(1-scroll_percent)},${255*(1-scroll_percent)},${255*(1-scroll_percent)})`}"
+          text-color="#333"
           @click="this.$router.return('/community')"
         >
           <var-icon name="chevron-left" :size="24"/>
         </var-button>
       </template>
       <template #default>
-        <div
-          class="title"
-          :style="{color: `rgb(${255*(1-scroll_percent)},${255*(1-scroll_percent)},${255*(1-scroll_percent)})`}"
-        >讨论区
-        </div>
+        <div class="title">讨论区</div>
       </template>
       <template #right>
         <var-button
           round
           text
           color="transparent"
-          text-color="#fff"
-          :style="{color: `rgb(${255*(1-scroll_percent)},${255*(1-scroll_percent)},${255*(1-scroll_percent)})`}"
+          text-color="#333"
           @click="this.$router.return('/community')"
         >
           <var-icon name="magnify-plus-outline" :size="24"/>
@@ -48,15 +42,20 @@
       </template>
     </var-app-bar>
     <div style="height: 54px;"/>
-    <div class="category-wrap">
-      <div class="category" @click="this.$router.push('/bbs/category/1')">
-        <img class="category-icon" src="~assets/img/bbs_category/official.svg" alt="">
-        <div class="category-text">官方</div>
-      </div>
-      <div class="category" @click="this.$router.push('/bbs/category/2')">
-        <img class="category-icon" src="~assets/img/bbs_category/talk.svg" alt="">
-        <div class="category-text">杂谈</div>
-      </div>
+
+    <div class="head" v-if="category">
+      <var-card class="card">
+        <template #extra>
+          <div class="content">
+            <img class="icon var-elevation--5"
+                 :src="this.$settings.cos_url+`bbs-category/${category_id}.svg`" alt="">
+            <div class="category">
+              <div class="category-title">{{category.category}}</div>
+              <div class="category-desc break">{{category.description}}</div>
+            </div>
+          </div>
+        </template>
+      </var-card>
     </div>
 
     <var-pull-refresh v-model="refreshing" @refresh="refresh" success-duration="1000">
@@ -76,18 +75,6 @@
           </var-menu>
         </div>
 
-        <div class="top">
-          <div class="top-item">
-            <var-chip class="top-chip" type="info" size="small" :round="false">置顶</var-chip>
-            <div class="top-text">123</div>
-          </div>
-          <div class="top-item">
-            <var-chip class="top-chip" type="info" size="small" :round="false">置顶</var-chip>
-            <div class="top-text">456</div>
-          </div>
-        </div>
-        <var-divider margin="0"/>
-
         <div class="article-container">
           <var-list
             :finished="finished"
@@ -98,6 +85,7 @@
               <div v-if="this.$store.state.remove.article.indexOf(article.id)===-1">
                 <transition name="bloom" appear>
                   <article-card
+                    :hide_category="true"
                     :key="article.id"
                     :article="article"
                     @onClickImg="click_img"
@@ -110,6 +98,11 @@
       </div>
     </var-pull-refresh>
 
+    <var-button v-if="category_id!=='1'||this.$store.state.user?.is_staff" class="post-article" type="success" round
+                @click="this.$router.push({path:'/bbs/post-article',query:{category_id:category_id}})">
+      <var-icon size="28" name="plus"/>
+    </var-button>
+
     <var-image-preview style="transition-duration: 0.5s" closeable :images="images" v-model:show="show_img"/>
   </div>
 </template>
@@ -118,22 +111,18 @@
   import ArticleCard from "components/card/ArticleCard";
 
   export default {
-    name: "IndexBBS",
+    name: "Category",
     components: {
       ArticleCard
-    },
-    watch: {
-      show_img(newValue, oldValue) {
-        this.$calc.mutex(this.$store, newValue, oldValue)
-      }
     },
     data() {
       return {
         scroll_percent: 0,
+        category: null,
         show_img: false,
         images: [],
         refreshing: false,
-        category_id: 0,
+        category_id: this.$route.params.category_id,
         show_order: false,
         ordering: "-comment_time",
         order_text: "最新回复",
@@ -214,83 +203,38 @@
         this.next = null
       }
     },
+    created() {
+      this.$request.api.get(
+        `/bbs/category/${this.$route.params.category_id}`
+      ).then(res => {
+        if (res.data.code === 179) {
+          this.category = res.data.result
+        } else {
+          this.$tip({
+            content: res.data.msg,
+            type: "warning",
+            duration: 1000,
+          })
+        }
+      })
+    },
     mounted() {
       let that = this
-      document.addEventListener('plusready', function () {
-        plus.key.addEventListener('backbutton', function () {
-          that.show_img = false
-        })
-      })
       document.addEventListener('scroll', () => {
         let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-        that.scroll_percent = scrollTop / 130
+        that.scroll_percent = scrollTop / 100
       })
-
     }
   }
 </script>
 
 <style scoped>
-  .animation-wrap {
-    background: transparent;
-  }
 
-  .background {
-    background-image: url("https://bc-1304907527.cos.ap-nanjing.myqcloud.com/articles/5579e3f3aab74a73b1a175ab4ccc06be.jpg");
+  .post-article {
     position: fixed;
-    filter: brightness(0.8);
-    left: 0;
-    top: 0;
-    height: 134px;
-    width: 100%;
-    z-index: -1;
-    background-size: auto 100%;
-    background-position: 50% 50%;
-    background-repeat: no-repeat;
+    right: 15px;
+    bottom: 120px;
   }
-
-  .category-wrap {
-    display: flex;
-    justify-content: flex-start;
-    overflow-x: scroll;
-    padding-bottom: 16px;
-  }
-
-  .category-wrap::-webkit-scrollbar {
-    display: none
-  }
-
-  .category {
-    margin: 0 8px;
-    flex: 0 0 40px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .category-icon {
-    width: 40px;
-    height: 40px;
-  }
-
-  .category-text {
-    font-size: 14px;
-    color: whitesmoke;
-  }
-
-  .app-bar {
-    width: 100vw;
-    position: fixed;
-    left: 0;
-    top: 0;
-    z-index: 1;
-  }
-
-  .title {
-    text-align: center;
-    font-weight: bolder;
-  }
-
 
   .body {
     min-height: 100vh;
@@ -307,26 +251,6 @@
     align-items: center;
   }
 
-  .top {
-    padding: 2px 5px;
-    z-index: 10;
-  }
-
-  .top-item {
-    margin: 8px 0;
-    display: flex;
-    justify-content: left;
-  }
-
-  .top-chip {
-    margin: 0 8px;
-  }
-
-  .top-text {
-    line-height: 24px;
-    font-size: 14px;
-  }
-
   .menu {
     background-color: white;
   }
@@ -334,5 +258,52 @@
   .article-container {
     min-height: 100vh;
     background-color: #f0f1f5;
+  }
+
+  .content {
+    padding: 10px;
+    display: flex;
+    justify-content: left;
+  }
+
+  .app-bar {
+    width: 100vw;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1;
+  }
+
+  .title {
+    text-align: center;
+    font-weight: bolder;
+  }
+
+  .head {
+    margin: 10px;
+  }
+
+  .icon {
+    border-radius: 50%;
+    height: 64px;
+    margin: 0 10px;
+  }
+
+  .category {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    flex-grow: 1;
+  }
+
+  .category-title {
+    font-family: "85W";
+    font-size: 17px;
+  }
+
+  .category-desc {
+    color: #888888;
+    font-size: 13px;
   }
 </style>

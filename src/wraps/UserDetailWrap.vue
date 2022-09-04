@@ -9,7 +9,7 @@
       </var-button>
     </div>
 
-    <div class="head var-elevation--3">
+    <div class="head var-elevation--3" v-if="this.$store.state.is_login">
       <div class="right">
         <div class="interact-item" @click="this.$router.push({path:'/user/follow',query:{type:'as_followed'}})">
           <div class="interact-item-num">{{user.fans_num}}</div>
@@ -50,7 +50,7 @@
         <var-tab @click="this.$router.replace('/user/stars')">收藏</var-tab>
       </var-tabs>
       <var-divider margin="0"/>
-      <router-view v-slot="{ Component }">
+      <router-view  v-if="this.$store.state.is_login" v-slot="{ Component }">
         <keep-alive>
           <component @active="change_active" :is="Component"/>
         </keep-alive>

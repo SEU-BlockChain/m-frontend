@@ -1,105 +1,108 @@
 <template>
   <div class="animation-wrap">
-    <img class="profile-back" :src="this.$settings.cos_url+ 'static/profile-back.webp'"/>
-    <div class="user-info">
-      <img class="avatar var-elevation--1" @click="this.$router.push('/user')" :src="icon">
-      <div v-if="this.$store.state.is_login" class="ribbon var-elevation--1" @click="this.$router.push('/user')">个人主页
-        <var-icon name="menu-right"/>
-      </div>
+    <var-pull-refresh v-model="refreshing" @refresh="refresh" success-duration="1000">
 
-      <div class="info-wrap">
-        <div v-if="this.$store.state.is_login">
-          <div class="name">
-            <var-space size="mini">
-              {{this.$store.state.user.username}}
-              <var-chip size="mini" class="id">UID:{{this.$store.state.user.id}}</var-chip>
-              <level-chip :experience="this.$store.state.user.experience" @click="this.$router.push('/user/level')"/>
-            </var-space>
+      <img class="profile-back" :src="this.$settings.cos_url+ 'static/profile-back.webp'"/>
+      <div class="user-info">
+        <img class="avatar var-elevation--1" @click="this.$router.push('/user')" :src="icon">
+        <div v-if="this.$store.state.is_login" class="ribbon var-elevation--1" @click="this.$router.push('/user')">个人主页
+          <var-icon name="menu-right"/>
+        </div>
+
+        <div class="info-wrap">
+          <div v-if="this.$store.state.is_login">
+            <div class="name">
+              <var-space size="mini">
+                {{this.$store.state.user.username}}
+                <var-chip size="mini" class="id">UID:{{this.$store.state.user.id}}</var-chip>
+                <level-chip :experience="this.$store.state.user.experience" @click="this.$router.push('/user/level')"/>
+              </var-space>
+            </div>
+            <var-divider style="--divider-color:#f0f1f5"/>
+            <div class="interact" @click="this.$router.push({path:'/user/follow',query:{type:'as_followed'}})">
+              <span class="interact-num">{{this.$store.state.user.fans_num}}</span>
+              <span class="interact-text">粉丝</span>
+            </div>
+            <div class="interact" @click="this.$router.push({path:'/user/follow',query:{type:'as_follower'}})">
+              <span class="interact-num">{{this.$store.state.user.attention_num}}</span>
+              <span class="interact-text">关注</span>
+            </div>
+            <div class="interact">
+              <span class="interact-num">{{this.$store.state.user.up_num}}</span>
+              <span class="interact-text">获赞</span>
+            </div>
           </div>
-          <var-divider style="--divider-color:#f0f1f5"/>
-          <div class="interact" @click="this.$router.push({path:'/user/follow',query:{type:'as_followed'}})">
-            <span class="interact-num">{{this.$store.state.user.fans_num}}</span>
-            <span class="interact-text">粉丝</span>
-          </div>
-          <div class="interact" @click="this.$router.push({path:'/user/follow',query:{type:'as_follower'}})">
-            <span class="interact-num">{{this.$store.state.user.attention_num}}</span>
-            <span class="interact-text">关注</span>
-          </div>
-          <div class="interact">
-            <span class="interact-num">{{this.$store.state.user.up_num}}</span>
-            <span class="interact-text">获赞</span>
+          <div v-else @click="this.$router.push('/login')">
+            <div class="name">未登录用户</div>
+            <div class="tip">登录后，内容更精彩!</div>
           </div>
         </div>
-        <div v-else @click="this.$router.push('/login')">
-          <div class="name">未登录用户</div>
-          <div class="tip">登录后，内容更精彩!</div>
-        </div>
       </div>
-    </div>
 
-    <Transition name="bloom" appear>
-      <div class="token clear-fix" @click="eth_login">
-        <div class="clear-fix">
-          <div class="account">我的钱包
-            <span class="address" v-if="wallet.init&&wallet.mode===1">
+      <Transition name="bloom" appear>
+        <div class="token clear-fix" @click="eth_login">
+          <div class="clear-fix">
+            <div class="account">我的钱包
+              <span class="address" v-if="wallet.init&&wallet.mode===1">
               {{this.$calc.filters.simple_address(wallet.address)}}
             </span>
+            </div>
+            <div class="balance" v-if="wallet.init&&wallet.mode===1">余额：{{wallet.PMB}}</div>
+            <div class="balance" v-else>尚未登陆以太坊账号</div>
           </div>
-          <div class="balance" v-if="wallet.init&&wallet.mode===1">余额：{{wallet.PMB}}</div>
-          <div class="balance" v-else>尚未登陆以太坊账号</div>
+          <var-row>
+            <var-col :span="11">
+              <div class="token-item clear-fix" @click="to_faucet">
+                <img class="token-img" src="~assets/img/get-token.png" alt="">
+                <div class="token-text">获取PMB</div>
+              </div>
+            </var-col>
+            <var-col :span="11" :offset="2">
+              <div class="token-item clear-fix" @click="to_account">
+                <img class="token-img" src="~assets/img/my-account.png" alt="">
+                <div class="token-text">账户详情</div>
+              </div>
+            </var-col>
+          </var-row>
         </div>
-        <var-row>
-          <var-col :span="11">
-            <div class="token-item clear-fix" @click="to_faucet">
-              <img class="token-img" src="~assets/img/get-token.png" alt="">
-              <div class="token-text">获取PMB</div>
-            </div>
-          </var-col>
-          <var-col :span="11" :offset="2">
-            <div class="token-item clear-fix" @click="to_account">
-              <img class="token-img" src="~assets/img/my-account.png" alt="">
-              <div class="token-text">账户详情</div>
-            </div>
-          </var-col>
-        </var-row>
-      </div>
-    </Transition>
+      </Transition>
 
 
-    <div class="my">
-      <div v-ripple="{ color: '#ccc' }" class="my-item clear-fix">
-        <var-icon class="my-icon left" name="format-list-checkbox"/>
-        <div class="my-text">浏览历史</div>
-        <var-icon class="my-icon right" name="chevron-right"/>
+      <div class="my">
+        <div v-ripple="{ color: '#ccc' }" class="my-item clear-fix">
+          <var-icon class="my-icon left" name="format-list-checkbox"/>
+          <div class="my-text">浏览历史</div>
+          <var-icon class="my-icon right" name="chevron-right"/>
+        </div>
+        <var-divider style="--divider-color:#f0f1f5"/>
+        <div v-ripple="{ color: '#ccc' }" class="my-item clear-fix">
+          <var-icon class="my-icon left" name="pin-outline"/>
+          <div class="my-text">创作中心</div>
+          <var-icon class="my-icon right" name="chevron-right"/>
+        </div>
+        <var-divider style="--divider-color:#f0f1f5"/>
+        <div v-ripple="{ color: '#ccc' }" class="my-item clear-fix">
+          <var-icon class="my-icon left" name="checkbox-marked-circle-outline"/>
+          <div class="my-text">问卷调研</div>
+          <var-icon class="my-icon right" name="chevron-right"/>
+        </div>
       </div>
-      <var-divider style="--divider-color:#f0f1f5"/>
-      <div v-ripple="{ color: '#ccc' }" class="my-item clear-fix">
-        <var-icon class="my-icon left" name="pin-outline"/>
-        <div class="my-text">创作中心</div>
-        <var-icon class="my-icon right" name="chevron-right"/>
-      </div>
-      <var-divider style="--divider-color:#f0f1f5"/>
-      <div v-ripple="{ color: '#ccc' }" class="my-item clear-fix">
-        <var-icon class="my-icon left" name="checkbox-marked-circle-outline"/>
-        <div class="my-text">问卷调研</div>
-        <var-icon class="my-icon right" name="chevron-right"/>
-      </div>
-    </div>
 
-    <div class="system">
-      <div v-ripple="{ color: '#ccc' }" class="my-item clear-fix">
-        <var-icon class="my-icon left" name="message-text-outline"/>
-        <div class="my-text">反馈</div>
-        <var-icon class="my-icon right" name="chevron-right"/>
+      <div class="system">
+        <div v-ripple="{ color: '#ccc' }" class="my-item clear-fix">
+          <var-icon class="my-icon left" name="message-text-outline"/>
+          <div class="my-text">反馈</div>
+          <var-icon class="my-icon right" name="chevron-right"/>
+        </div>
+        <var-divider style="--divider-color:#f0f1f5"/>
+        <div v-ripple="{ color: '#ccc' }" class="my-item clear-fix" @click="this.$router.push('/setting')">
+          <var-icon class="my-icon left" name="cog-outline"/>
+          <div class="my-text">设置</div>
+          <var-icon class="my-icon right" name="chevron-right"/>
+        </div>
       </div>
-      <var-divider style="--divider-color:#f0f1f5"/>
-      <div v-ripple="{ color: '#ccc' }" class="my-item clear-fix" @click="this.$router.push('/setting')">
-        <var-icon class="my-icon left" name="cog-outline"/>
-        <div class="my-text">设置</div>
-        <var-icon class="my-icon right" name="chevron-right"/>
-      </div>
-    </div>
-    <div style="height: 200px"/>
+      <div style="height: 200px"/>
+    </var-pull-refresh>
   </div>
 </template>
 
@@ -114,6 +117,7 @@
     data() {
       return {
         wallet: this.$store.state.wallet,
+        refreshing: false
       }
     },
     computed: {
@@ -122,6 +126,26 @@
       },
     },
     methods: {
+      refresh() {
+        this.$request.api.get(
+          "user/self/info/"
+        ).then(res => {
+          if (res.data.code === 107) {
+            this.$store.commit("login", res.data.result.user)
+            if(this.wallet.address){
+              this.wallet.getAccount(this.wallet.address)
+            }
+            this.refreshing = false
+          } else {
+            this.$tip({
+              content: res.data.msg,
+              type: "warning",
+              duration: 1000,
+            })
+            this.refreshing = false
+          }
+        })
+      },
       to_faucet() {
         if (!this.wallet.address) return
         this.$router.push("/eth/faucet")

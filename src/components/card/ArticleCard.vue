@@ -21,8 +21,10 @@
           <div class="title break" @click="to_article">{{article.title}}</div>
           <div class="content w-container limited-xy" v-html="this.$xss(article.description)" @click="to_article"/>
           <div class="foot">
-            <div class="category">
-              <var-chip size="small" :round="false" @click="change_category(article.category.id)">
+            <div class="category" >
+              <var-chip  v-if="!hide_category" size="small" :round="false"
+                         @click="this.$router.push(`/bbs/category/${article.category.id}`)"
+              >
                 {{article.category.category}}
               </var-chip>
             </div>
@@ -52,17 +54,14 @@
     props: {
       article: null,
       hide_author: false,
-      use_create_time: false
+      use_create_time: false,
+      hide_category: false
     },
     emits: [
-      "onClickCategory",
       "onClickUser",
       "onClickImg",
     ],
     methods: {
-      change_category(id) {
-        this.$emit("onClickCategory", id)
-      },
       to_article(ev) {
         if (ev.target.getAttribute("uid")) {
           this.$emit("onClickUser", `/user/${ev.target.getAttribute("uid")}`)
