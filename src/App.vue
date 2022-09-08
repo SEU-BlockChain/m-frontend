@@ -17,14 +17,17 @@
       <eth-login @onLogin="eth_login" @readOnly="read_only"/>
     </var-popup>
   </div>
+
+  <image-preview/>
 </template>
 
 <script>
   import EthLogin from "./components/eth/EthLogin";
+  import ImagePreview from "./components/fullScreen/ImagePreview";
 
   export default {
     name: "app",
-    components: {EthLogin},
+    components: {ImagePreview, EthLogin},
     watch: {
       "$store.state.show_eth_login"(newValue, oldValue) {
         this.show_eth_login = newValue
@@ -73,9 +76,10 @@
         animation: "",
         init: null,
         wallet: null,
-        show_eth_login: false
+        show_eth_login: false,
       }
     },
+
     methods: {
       read_only() {
         this.show_eth_login = false
@@ -141,8 +145,8 @@
         var webview = plus.webview.currentWebview();
         plus.key.addEventListener('backbutton', function () {
           webview.canBack(function (e) {
-            if (that.$store.state.forbid_back) {
-
+            if (that.$store.state.stack.length) {
+              that.store.commit("popStack")
             } else if (e.canBack && that.$route.meta.depth !== 0) {
               webview.back();
             } else if (that.$route.meta.depth === 0) {

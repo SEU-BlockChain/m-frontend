@@ -452,6 +452,8 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  store.commit("clearStack")
+
   if (to.meta.title) {
     document.title = to.meta.title
   }

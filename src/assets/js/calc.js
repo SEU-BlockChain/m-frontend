@@ -138,14 +138,6 @@ let up_down = function (is_up, obj) {
   }
 }
 
-function mutex(store, newValue, oldValue) {
-  if (newValue) {
-    store.commit("lock")
-  }
-  if (oldValue) {
-    store.commit("unlock")
-  }
-}
 
 export default {
   experience_list,
@@ -153,5 +145,4 @@ export default {
   DateParser,
   filters,
   up_down,
-  mutex
 }

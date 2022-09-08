@@ -14,9 +14,39 @@ export default createStore({
     remove: {
       article: [],
       comment: [],
-    }
+    },
+    image_preview: {
+      show: false,
+      images: []
+    },
+    stack: [],
+    stack_locked: false
   },
   mutations: {
+    pushStack(state, callback) {
+      state.stack.push(callback)
+    },
+    popStack(state) {
+      state.stack.pop()()
+      state.stack_locked = true
+    },
+    unlockStack(state) {
+      state.stack_locked = false
+    },
+    cancelStack(state) {
+      state.stack.pop()
+    },
+    clearStack(state) {
+      state.stack_locked = false
+      state.stack = []
+    },
+    set_image_preview(state, images) {
+      state.image_preview.images = images
+      state.image_preview.show = true
+    },
+    close_image_preview(state) {
+      state.image_preview.show = false
+    },
     eth_login(state, show) {
       state.show_eth_login = show
     },

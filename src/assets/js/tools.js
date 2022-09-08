@@ -1,3 +1,5 @@
+import store from "../../store/index"
+
 function follow(request, user, tip) {
   request.api.post(
     `user/follow/${user.id}/add/`
@@ -93,9 +95,43 @@ function not_black(request, user, tip, dialog) {
   })
 }
 
+function downloadImage(url) {
+  let img = new Image;
+  img.setAttribute("crossOrigin", 'Anonymous')
+  img.src = url
+  img.onload = function () {
+    let cvs = document.createElement("canvas")
+    cvs.width = img.width
+    cvs.height = img.height
+    let ctx = cvs.getContext("2d")
+    ctx.drawImage(img, 0, 0)
+    cvs.toBlob(data => {
+      let aTag = document.createElement('a');
+      aTag.download = (new URL(url)).pathname;
+      aTag.href = URL.createObjectURL(data);
+      aTag.click();
+    })
+  }
+}
+
+
+function mutex(show, callback) {
+  if (show) {
+    store.commit("pushStack", callback)
+  } else {
+    if (store.state.stack_locked) {
+      store.commit("unlockStack")
+    } else {
+      store.commit("cancelStack")
+    }
+  }
+}
+
 export default {
   follow,
   not_follow,
   black,
   not_black,
+  downloadImage,
+  mutex,
 }

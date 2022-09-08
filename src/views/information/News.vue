@@ -46,7 +46,7 @@
           </span>
         </div>
 
-        <div class=" w-container" v-html="this.$xss(news.content)"></div>
+        <div class=" w-container" v-html="this.$xss(news.content)" @click="click_news"></div>
       </div>
     </Transition>
   </div>
@@ -58,12 +58,22 @@
     data() {
       return {
         news: null,
-        news_ready: false
+        news_ready: false,
       }
     },
     computed: {
       delta() {
         return (new Date(this.news.update_time).getTime()) - (new Date(this.news.create_time).getTime())
+      }
+    },
+    methods: {
+      click_img(images) {
+        this.$store.commit("set_image_preview",images)
+      },
+      click_news(ev) {
+        if (ev.target.tagName === "IMG") {
+          this.click_img([ev.target.getAttribute("src")])
+        }
       }
     },
     created() {

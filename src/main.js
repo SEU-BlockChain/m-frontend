@@ -13,6 +13,7 @@ import settings from "./assets/js/settings";
 import tools from "./assets/js/tools";
 import eth from "./assets/js/eth";
 import abi from "./assets/js/abi";
+import share from "./assets/js/share"
 
 const app = createApp(App)
 app.config.globalProperties.$settings = settings
@@ -23,6 +24,7 @@ app.config.globalProperties.$eth = eth
 app.config.globalProperties.$abi = abi
 app.config.globalProperties.$tip = Snackbar
 app.config.globalProperties.$dialog = Dialog
+app.config.globalProperties.$share = share
 
 
 import {whiteList} from "./assets/js/css_white_list";

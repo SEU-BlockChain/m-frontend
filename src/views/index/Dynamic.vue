@@ -63,8 +63,6 @@
         </var-list>
       </var-pull-refresh>
     </div>
-
-    <var-image-preview style="transition-duration: 0.5s" closeable :images="images" v-model:show="show_img"/>
   </div>
 </template>
 
@@ -78,8 +76,6 @@
     emits: ["active"],
     data() {
       return {
-        images: [],
-        show_img: false,
         dynamic_list: [],
         follower_list: [],
         next: null,
@@ -89,15 +85,9 @@
         refreshing: false,
       }
     },
-    watch: {
-      show_img(newValue, oldValue) {
-        this.$calc.mutex(this.$store, newValue, oldValue)
-      },
-    },
     methods: {
       click_img(images) {
-        this.images = images
-        this.show_img = true
+        this.$store.commit("set_image_preview",images)
       },
       refresh() {
         this.dynamic_list = []

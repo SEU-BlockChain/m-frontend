@@ -254,8 +254,6 @@
         @onClickImg="click_img"
       />
     </var-popup>
-
-    <var-image-preview style="transition-duration: 0.5s" closeable :images="images" v-model:show="show_img"/>
   </div>
 </template>
 
@@ -274,33 +272,40 @@
       SimpleAuthorCard
     },
     watch: {
-      show_img(newValue, oldValue) {
-        this.$calc.mutex(this.$store, newValue, oldValue)
+      show_article_option(newValue) {
+        this.$tools.mutex(newValue, () => {
+          this.show_article_option = false
+        })
       },
-      show_article_option(newValue, oldValue) {
-        this.$calc.mutex(this.$store, newValue, oldValue)
+      show_comment_option(newValue) {
+        this.$tools.mutex(newValue, () => {
+          this.show_comment_option = false
+        })
       },
-      show_comment_option(newValue, oldValue) {
-        this.$calc.mutex(this.$store, newValue, oldValue)
-      },
-      show_editor(newValue, oldValue) {
+      show_editor(newValue) {
         this.$store.commit("toggle_hide")
         if (!newValue) {
           this.parent = this.target == null
         }
-        this.$calc.mutex(this.$store, newValue, oldValue)
+        this.$tools.mutex(newValue, () => {
+          this.show_editor = false
+        })
       },
-      show_conversation(newValue, oldValue) {
+      show_conversation(newValue) {
         if (!newValue) {
           this.conversation_list = []
         }
-        this.$calc.mutex(this.$store, newValue, oldValue)
+        this.$tools.mutex(newValue, () => {
+          this.show_conversation = false
+        })
       },
-      show_children_comment(newValue, oldValue) {
+      show_children_comment(newValue) {
         if (!newValue) {
           this.opened_comment = null
         }
-        this.$calc.mutex(this.$store, newValue, oldValue)
+        this.$tools.mutex(newValue, () => {
+          this.show_children_comment = false
+        })
       },
       is_author() {
         this.root_comment_clear()
@@ -308,8 +313,6 @@
     },
     data() {
       return {
-        images: [],
-        show_img: false,
         article: null,
         article_ready: false,
         show_article_option: false,
@@ -373,8 +376,7 @@
         this.$router.push(`/user/${id}`)
       },
       click_img(images) {
-        this.images = images
-        this.show_img = true
+        this.$store.commit("set_image_preview", images)
       },
       click_article(ev) {
         if (ev.target.getAttribute("uid")) {

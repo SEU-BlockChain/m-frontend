@@ -114,8 +114,6 @@ a {
     margin-inline-end: 0;
     line-height: 1.5;
     white-space: normal;
-    word-break: break-all;
-    word-wrap: break-word;
 }
 
 .w-container table th, .w-container table td {
@@ -170,9 +168,14 @@ a {
 }
 
 .w-container {
-    white-space: normal;
-    word-break: break-all;
-    word-wrap: break-word;
+    width: 100%; /* 必须定义宽度 */
+    word-break: break-word; /* 文本行的任意字内断开 */
+    word-wrap: break-word; /* IE */
+    overflow-x: scroll;
+}
+
+.w-container ol {
+    padding-left: 20px;
 }
 
 .w-container div[data-w-e-type="link-card"] {
@@ -202,8 +205,6 @@ a {
 .w-container div[data-w-e-type="link-card"] .info-container span {
     opacity: .5;
     white-space: normal;
-    word-break: break-all;
-    word-wrap: break-word;
 }
 
 .w-container div[data-w-e-type="link-card"] .icon-container {

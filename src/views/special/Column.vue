@@ -197,7 +197,6 @@
         @onClickImg="click_img"
       />
     </var-popup>
-    <var-image-preview style="transition-duration: 0.5s" closeable :images="images" v-model:show="show_img"/>
   </div>
 </template>
 
@@ -216,41 +215,46 @@
       CommentEditor
     },
     watch:{
-      show_img(newValue, oldValue) {
-        this.$calc.mutex(this.$store, newValue, oldValue)
-      },
       show_article_option(newValue, oldValue) {
-        this.$calc.mutex(this.$store, newValue, oldValue)
+        this.$tools.mutex(newValue, () => {
+          this.show_article_option = false
+        })
       },
       show_comment_option(newValue, oldValue) {
-        this.$calc.mutex(this.$store, newValue, oldValue)
+        this.$tools.mutex(newValue, () => {
+          this.show_comment_option = false
+        })
       },
       show_editor(newValue, oldValue) {
         this.$store.commit("toggle_hide")
         if (!newValue) {
           this.parent = this.target == null
         }
-        this.$calc.mutex(this.$store, newValue, oldValue)
+        this.$tools.mutex(newValue, () => {
+          this.show_editor = false
+        })
       },
       show_conversation(newValue, oldValue) {
         if (!newValue) {
           this.conversation_list = []
         }
-        this.$calc.mutex(this.$store, newValue, oldValue)
+        this.$tools.mutex(newValue, () => {
+          this.show_conversation = false
+        })
       },
       show_children_comment(newValue, oldValue) {
         if (!newValue) {
           this.opened_comment = null
         }
-        this.$calc.mutex(this.$store, newValue, oldValue)
+        this.$tools.mutex(newValue, () => {
+          this.show_children_comment = false
+        })
       },
     },
     data() {
       return {
         column: null,
         column_ready: false,
-        images: [],
-        show_img: false,
         parent: null,
         target: null,
         show_editor: false,
@@ -515,8 +519,7 @@
         }
       },
       click_img(images) {
-        this.images = images
-        this.show_img = true
+        this.$store.commit("set_image_preview",images)
       },
       click_column(ev) {
         if (ev.target.tagName === "IMG") {

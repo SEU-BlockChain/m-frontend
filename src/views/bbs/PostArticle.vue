@@ -58,11 +58,11 @@
         clearable/>
       <article-editor ref="editor"/>
     </div>
-    <div class="category var-elevation--5">
+    <div class="category var-elevation--5" v-if="category_list.length">
       <var-radio-group v-model="category">
-        <var-radio v-if="this.$store.state.user?.is_staff" :disabled="this.update_id!==undefined" :checked-value="1">官方
+        <var-radio v-for="category in category_list" :disabled="this.update_id!==undefined"
+                   :checked-value="category.id">{{category.category}}
         </var-radio>
-        <var-radio :disabled="this.update_id!==undefined" :checked-value="2">杂谈</var-radio>
       </var-radio-group>
     </div>
 
@@ -118,7 +118,8 @@
         loading: false,
         next: null,
         draft_id: null,
-        update_id: this.$route.query.id
+        update_id: this.$route.query.id,
+        category_list: []
       }
     },
     methods: {
@@ -309,6 +310,20 @@
       }
     },
     created() {
+      this.$request.api.get('/bbs/category/?type=edit').then(res => {
+        if (res.data.code === 180) {
+          for (let i of res.data.result.results) {
+            this.category_list.push(i)
+          }
+        } else {
+          this.$tip({
+            content: res.data.msg,
+            type: "warning",
+            duration: 1000,
+          })
+        }
+      })
+
       if (this.$route.query.id) {
         this.$request.api.get(
           `bbs/article/${this.$route.query.id}/raw`
@@ -328,7 +343,7 @@
           }
         })
       } else {
-        this.category = Number(this.$route.query.category_id)
+        this.category = this.$route.query.category_id ? Number(this.$route.query.category_id) : 2
       }
     }
   }

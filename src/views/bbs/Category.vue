@@ -48,7 +48,7 @@
         <template #extra>
           <div class="content">
             <img class="icon var-elevation--5"
-                 :src="this.$settings.cos_url+`bbs-category/${category_id}.svg`" alt="">
+                 :src="this.$settings.cos_url+'bbs-category/'+category.icon_detail" alt="">
             <div class="category">
               <div class="category-title">{{category.category}}</div>
               <div class="category-desc break">{{category.description}}</div>
@@ -102,8 +102,6 @@
                 @click="this.$router.push({path:'/bbs/post-article',query:{category_id:category_id}})">
       <var-icon size="28" name="plus"/>
     </var-button>
-
-    <var-image-preview style="transition-duration: 0.5s" closeable :images="images" v-model:show="show_img"/>
   </div>
 </template>
 
@@ -119,8 +117,6 @@
       return {
         scroll_percent: 0,
         category: null,
-        show_img: false,
-        images: [],
         refreshing: false,
         category_id: this.$route.params.category_id,
         show_order: false,
@@ -153,8 +149,7 @@
     },
     methods: {
       click_img(images) {
-        this.images = images
-        this.show_img = true
+        this.$store.commit("set_image_preview",images)
       },
       refresh() {
         this.article_list = []

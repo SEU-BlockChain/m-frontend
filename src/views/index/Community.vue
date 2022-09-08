@@ -94,8 +94,6 @@
 
       </div>
     </var-pull-refresh>
-
-    <var-image-preview style="transition-duration: 0.5s" closeable :images="images" v-model:show="show_img"/>
   </div>
 </template>
 
@@ -115,15 +113,12 @@
         loading: false,
         current: 0,
         post_list: [],
-        images: [],
-        show_img: false,
         refreshing: false
       }
     },
     methods: {
-      click_img(images) {
-        this.images = images
-        this.show_img = true
+      click_img(images) {        this.$store.commit("set_image_preview",images)
+
       },
       reload() {
         this.current = 0

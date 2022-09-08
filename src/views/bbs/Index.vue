@@ -48,14 +48,11 @@
       </template>
     </var-app-bar>
     <div style="height: 54px;"/>
-    <div class="category-wrap">
-      <div class="category" @click="this.$router.push('/bbs/category/1')">
-        <img class="category-icon" src="~assets/img/bbs_category/official.svg" alt="">
-        <div class="category-text">官方</div>
-      </div>
-      <div class="category" @click="this.$router.push('/bbs/category/2')">
-        <img class="category-icon" src="~assets/img/bbs_category/talk.svg" alt="">
-        <div class="category-text">杂谈</div>
+    <div class="category-wrap" v-if="category_list.length">
+      <div class="category" v-for="category in category_list"
+           @click="this.$router.push(`/bbs/category/${category.id}`)">
+        <img class="category-icon" :src="this.$settings.cos_url+'bbs-category/'+category.icon" alt="">
+        <div class="category-text">{{category.category}}</div>
       </div>
     </div>
 
@@ -110,7 +107,10 @@
       </div>
     </var-pull-refresh>
 
-    <var-image-preview style="transition-duration: 0.5s" closeable :images="images" v-model:show="show_img"/>
+    <var-button class="post-article" type="success" round @click="this.$router.push('/bbs/post-article')">
+      <var-icon size="28" name="plus"/>
+    </var-button>
+
   </div>
 </template>
 
@@ -122,16 +122,9 @@
     components: {
       ArticleCard
     },
-    watch: {
-      show_img(newValue, oldValue) {
-        this.$calc.mutex(this.$store, newValue, oldValue)
-      }
-    },
     data() {
       return {
         scroll_percent: 0,
-        show_img: false,
-        images: [],
         refreshing: false,
         category_id: 0,
         show_order: false,
@@ -159,13 +152,13 @@
         finished: false,
         loading: false,
         next: null,
-        article_list: []
+        article_list: [],
+        category_list: []
       }
     },
     methods: {
       click_img(images) {
-        this.images = images
-        this.show_img = true
+        this.$store.commit("set_image_preview",images)
       },
       refresh() {
         this.article_list = []
@@ -214,13 +207,23 @@
         this.next = null
       }
     },
+    created() {
+      this.$request.api.get('/bbs/category/').then(res => {
+        if (res.data.code === 180) {
+          for (let i of res.data.result.results) {
+            this.category_list.push(i)
+          }
+        } else {
+          this.$tip({
+            content: res.data.msg,
+            type: "warning",
+            duration: 1000,
+          })
+        }
+      })
+    },
     mounted() {
       let that = this
-      document.addEventListener('plusready', function () {
-        plus.key.addEventListener('backbutton', function () {
-          that.show_img = false
-        })
-      })
       document.addEventListener('scroll', () => {
         let scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
         that.scroll_percent = scrollTop / 130
@@ -335,4 +338,11 @@
     min-height: 100vh;
     background-color: #f0f1f5;
   }
+
+  .post-article {
+    position: fixed;
+    right: 15px;
+    bottom: 120px;
+  }
+
 </style>
