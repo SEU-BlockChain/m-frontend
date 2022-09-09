@@ -146,7 +146,7 @@
         plus.key.addEventListener('backbutton', function () {
           webview.canBack(function (e) {
             if (that.$store.state.stack.length) {
-              that.store.commit("popStack")
+              that.$store.commit("popStack")
             } else if (e.canBack && that.$route.meta.depth !== 0) {
               webview.back();
             } else if (that.$route.meta.depth === 0) {

@@ -20,7 +20,7 @@ export default createStore({
       images: []
     },
     stack: [],
-    stack_locked: false
+    stack_locked: 0
   },
   mutations: {
     pushStack(state, callback) {
@@ -28,16 +28,16 @@ export default createStore({
     },
     popStack(state) {
       state.stack.pop()()
-      state.stack_locked = true
+      state.stack_locked++
     },
     unlockStack(state) {
-      state.stack_locked = false
+      state.stack_locked--
     },
     cancelStack(state) {
       state.stack.pop()
     },
     clearStack(state) {
-      state.stack_locked = false
+      state.stack_locked = 0
       state.stack = []
     },
     set_image_preview(state, images) {

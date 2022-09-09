@@ -168,10 +168,10 @@ a {
 }
 
 .w-container {
-    width: 100%; /* 必须定义宽度 */
-    word-break: break-word; /* 文本行的任意字内断开 */
-    word-wrap: break-word; /* IE */
-    overflow-x: scroll;
+    width: 100%;
+    word-break: break-word;
+    word-wrap: break-word;
+    overflow-x: hidden;
 }
 
 .w-container ol {

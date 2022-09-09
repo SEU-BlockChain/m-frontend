@@ -48,10 +48,15 @@
       </div>
 
       <div class="body">
-        <div class="notice">
-          <var-icon name="file-document-outline"/>
-          官方公告
-        </div>
+        <Transition name="slide-fade" appear>
+          <div class="notice">
+            <var-icon name="file-document-outline"/>
+            官方公告
+            <div class="sticky-top" v-if="top_list">
+              <div v-for="top in top_list" @click="this.$router.push(top.url)">{{top.text}}</div>
+            </div>
+          </div>
+        </Transition>
         <var-divider margin="0"/>
 
         <div class="recommend">
@@ -113,11 +118,13 @@
         loading: false,
         current: 0,
         post_list: [],
-        refreshing: false
+        refreshing: false,
+        top_list: []
       }
     },
     methods: {
-      click_img(images) {        this.$store.commit("set_image_preview",images)
+      click_img(images) {
+        this.$store.commit("set_image_preview", images)
 
       },
       reload() {
@@ -150,7 +157,7 @@
                 ...i
               })
             }
-            for (let i of _.sortBy(temp, x => -(new Date(x.comment_time||x.update_time||x.create_time).getTime()))) {
+            for (let i of _.sortBy(temp, x => -(new Date(x.comment_time || x.update_time || x.create_time).getTime()))) {
               this.post_list.push(i)
             }
             this.current += 10
@@ -171,6 +178,17 @@
     created() {
       this.$emit("active", 1)
       this.load()
+      this.$request.api.get('/common/sticky/top?category=0').then(res => {
+        if (res.data.code === 178) {
+          this.top_list = res.data.result.top
+        } else {
+          this.$tip({
+            content: res.data.msg,
+            type: "warning",
+            duration: 1000,
+          })
+        }
+      })
     },
     activated() {
       this.$emit("active", 1)
@@ -179,6 +197,19 @@
 </script>
 
 <style scoped>
+  .sticky-top {
+    padding: 10px 0 0;
+  }
+
+  .sticky-top > div {
+    background-color: #f9faff;
+    font-weight: normal;
+    font-size: 14px;
+    border-radius: 3px;
+    padding: 5px 12px;
+    margin: 5px 0;
+  }
+
   .find {
     width: 100vw;
     padding: 20px 10px;

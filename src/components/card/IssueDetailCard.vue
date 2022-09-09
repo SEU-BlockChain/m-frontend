@@ -37,7 +37,9 @@
         <var-space justify="space-around">
           <var-space justify="start" align="center" size="mini">
             <div class="info-text">总体量:</div>
-            <div class="info-value">{{Number(prediction_info._totalShare)+Number(prediction_info._totalPool)*2}}</div>
+            <div class="info-value">
+              {{Number(prediction_info._totalShare)/prediction_info._options.length+Number(prediction_info._totalPool)*prediction_info._options.length}}
+            </div>
           </var-space>
 
           <var-space justify="start" align="center" size="mini">

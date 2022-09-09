@@ -69,7 +69,6 @@
           case 2:
             try {
               plus.runtime.openURL(url);
-              e.preventDefault()
             } catch (e) {
               window.open(url)
             }

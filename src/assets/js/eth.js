@@ -12,10 +12,9 @@ class Wallet {
   mode = 0//read-only
   SEUB_FAUCET = "0x1c78eDe9AC8F1A86B9C3B26e960C740141B64F09"
   PMB_FAUCET = "0x608C628B656bA2f31064EabC30d9db92B57661C5"
+  // MARKET = "0xFb7eEb8d5988A50af5EfD2F438540236c72CD741"
   MARKET = "0x61726f9E00Ac7Da6f064E4D79Ce6F9fccfd270F4"
 
-  constructor() {
-  }
 
   init_wallet() {
     this.web3 = new Web3("https://poa.eth.seutools.com")

@@ -44,18 +44,20 @@
     <div style="height: 54px;"/>
 
     <div class="head" v-if="category">
-      <var-card class="card">
-        <template #extra>
-          <div class="content">
-            <img class="icon var-elevation--5"
-                 :src="this.$settings.cos_url+'bbs-category/'+category.icon_detail" alt="">
-            <div class="category">
-              <div class="category-title">{{category.category}}</div>
-              <div class="category-desc break">{{category.description}}</div>
+      <Transition name="slide-fade" appear>
+        <var-card class="card">
+          <template #extra>
+            <div class="content">
+              <img style="width: 64px;" class="icon var-elevation--5"
+                   :src="this.$settings.cos_url+'bbs-category/'+category.icon_detail" alt="">
+              <div class="category">
+                <div class="category-title">{{category.category}}</div>
+                <div class="category-desc break">{{category.description}}</div>
+              </div>
             </div>
-          </div>
-        </template>
-      </var-card>
+          </template>
+        </var-card>
+      </Transition>
     </div>
 
     <var-pull-refresh v-model="refreshing" @refresh="refresh" success-duration="1000">
@@ -149,7 +151,7 @@
     },
     methods: {
       click_img(images) {
-        this.$store.commit("set_image_preview",images)
+        this.$store.commit("set_image_preview", images)
       },
       refresh() {
         this.article_list = []

@@ -27,9 +27,9 @@
       <var-card class=" card">
         <template #extra>
           <var-space direction="column" size="large" style="padding: 15px;">
-            测试版功能，每天限获取一次。新账户需要联系管理员激活账户。
+            每天限获取一次。
             <var-button class="button" type="success" block @click="get_SEUB">获取 1 SEUB</var-button>
-            <var-button class="button" type="success" block @click="get_PMB">获取 1000 PMB</var-button>
+<!--            <var-button class="button" type="success" block @click="get_PMB">获取 1000 PMB</var-button>-->
           </var-space>
         </template>
       </var-card>

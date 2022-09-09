@@ -73,16 +73,16 @@
           </var-menu>
         </div>
 
-        <div class="top">
-          <div class="top-item">
-            <var-chip class="top-chip" type="info" size="small" :round="false">置顶</var-chip>
-            <div class="top-text">123</div>
+
+        <Transition name="slide-fade" appear>
+          <div class="top" v-if="top_list">
+            <div class="top-item" v-for="top in top_list" @click="this.$router.push(top.url)">
+              <var-chip class="top-chip" type="info" size="small" :round="false">置顶</var-chip>
+              <div class="top-text">{{top.text}}</div>
+            </div>
           </div>
-          <div class="top-item">
-            <var-chip class="top-chip" type="info" size="small" :round="false">置顶</var-chip>
-            <div class="top-text">456</div>
-          </div>
-        </div>
+        </Transition>
+
         <var-divider margin="0"/>
 
         <div class="article-container">
@@ -153,12 +153,13 @@
         loading: false,
         next: null,
         article_list: [],
-        category_list: []
+        category_list: [],
+        top_list: []
       }
     },
     methods: {
       click_img(images) {
-        this.$store.commit("set_image_preview",images)
+        this.$store.commit("set_image_preview", images)
       },
       refresh() {
         this.article_list = []
@@ -208,6 +209,17 @@
       }
     },
     created() {
+      this.$request.api.get('/common/sticky/top?category=1').then(res => {
+        if (res.data.code === 178) {
+          this.top_list = res.data.result.top
+        } else {
+          this.$tip({
+            content: res.data.msg,
+            type: "warning",
+            duration: 1000,
+          })
+        }
+      })
       this.$request.api.get('/bbs/category/').then(res => {
         if (res.data.code === 180) {
           for (let i of res.data.result.results) {
