@@ -18,10 +18,14 @@
             <img class="option-icon" src="~assets/img/news.svg" alt="">
             <div class="option-text">资讯</div>
           </div>
-          <div class="option">
-            <img class="option-icon" src="~assets/img/ask.svg" alt="">
-            <div class="option-text">问答</div>
+          <div class="option" @click="to_activity">
+            <img class="option-icon" src="~assets/img/activity.svg" alt="">
+            <div class="option-text">活动</div>
           </div>
+          <!--          <div class="option">-->
+          <!--            <img class="option-icon" src="~assets/img/ask.svg" alt="">-->
+          <!--            <div class="option-text">问答</div>-->
+          <!--          </div>-->
           <div class="option" @click="this.$router.push('/vote')">
             <img class="option-icon" src="~assets/img/vote.svg" alt="">
             <div class="option-text">投票</div>
@@ -123,6 +127,17 @@
       }
     },
     methods: {
+      to_activity() {
+        if (!this.$store.state.wallet.address) {
+          this.$tip({
+            content: "请先登陆以太坊账号",
+            type: "warning",
+            duration: 1000,
+          })
+        } else {
+          this.$router.push("/activity")
+        }
+      },
       click_img(images) {
         this.$store.commit("set_image_preview", images)
 

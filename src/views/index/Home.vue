@@ -248,6 +248,7 @@
     left: 0;
     top: 0;
     width: 100vw;
+    z-index: 100;
   }
 
 
@@ -266,14 +267,9 @@
 
     .swipe img {
       height: 50vw;
-      width: 100%;
+      width: 100vw;
       object-fit: fill;
     }
-  }
-
-  .swipe img {
-    height: 232px;
-    pointer-events: none;
   }
 
 

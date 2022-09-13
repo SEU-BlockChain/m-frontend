@@ -431,16 +431,17 @@ const routes = [
     component: () => import("views/eth/Issue"),
     meta: {
       depth: 1,
+      keepAlive: true,
       title: "预测详情"
     }
   },
   {
-    path: "/issue/:address",
-    name: "Issue",
-    component: () => import("views/eth/Issue"),
+    path: "/activity",
+    name: "IndexActivity",
+    component: () => import("views/activity/Index"),
     meta: {
-      depth: 1,
-      title: "预测详情"
+      depth: 10,
+      title: "活动"
     }
   },
 ]

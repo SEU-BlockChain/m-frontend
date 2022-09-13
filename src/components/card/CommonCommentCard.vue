@@ -14,7 +14,7 @@
             <level-chip :experience="comment.author.experience"/>
           </div>
 
-          <div v-if="comment.author.id===article.author.id">
+          <div v-if="article&&comment.author.id===article.author.id">
             <var-chip size="mini" type="warning" :round="false"> 楼主</var-chip>
           </div>
         </div>

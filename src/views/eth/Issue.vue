@@ -225,27 +225,169 @@
 
     </var-pull-refresh>
 
-    <div class="comment var-elevation--3">
-      <var-sticky offset-top="10">
-        <div class="comment-text">评论区</div>
-        <var-divider margin="0"/>
-      </var-sticky>
+    <Transition name="slide-fade">
+      <div class="all-comment var-elevation--5" v-if="prediction_info">
+        <var-sticky z-index="0" :offset-top="0">
+          <div class="select">
+            <div class="comment-text">
+              评论区
+            </div>
 
-      <div class="comment-wrap"></div>
+            <div class="order">
+              <var-menu :offset-y="25" :offset-x="-10" v-model:show="show_order">
+                <div @click="show_order = !show_order">{{order_text}}</div>
+                <template #menu>
+                  <div class="menu">
+                    <var-cell @click="change_order(order)" v-for="order in order_list">{{order.text}}
+                    </var-cell>
+                  </div>
+                </template>
+              </var-menu>
+              <var-icon name="menu-down"/>
+            </div>
+
+          </div>
+          <var-divider margin="0"/>
+        </var-sticky>
+        <var-list
+          :finished="root_comment_finished"
+          v-model:loading="root_comment_loading"
+          @load="root_comment_load"
+        >
+          <div v-for="root_comment in root_comment_list">
+            <common-comment-card
+              :parent="null"
+              :comment="root_comment"
+              :show_comment_num="true"
+              @onClickOption="open_comment_option"
+              @onClickContent="open_comment_editor"
+              @onVote="vote_comment"
+              @onClickUser="click_user"
+              @onClickImg="click_img"
+            >
+              <template v-if="root_comment.comment_num" #children-comment>
+                <div class="children-wrap" @click="open_children_comment(root_comment)">
+                  <simple-comment-card
+                    :comment="children_comment"
+                    v-for="children_comment in root_comment.children_comment"
+                  />
+                  <div class="comment-tip" v-if="root_comment.comment_num>2">全部{{root_comment.comment_num}}条评论...</div>
+                </div>
+              </template>
+            </common-comment-card>
+            <var-divider margin="0" :inset="60"/>
+          </div>
+        </var-list>
+      </div>
+    </Transition>
+
+    <div v-if="prediction_info" class="interact var-elevation--5">
+      <div class="fake" @click="open_editor(null,null)">
+        我有话要说...
+      </div>
     </div>
 
-    <div class="comment-input var-elevation--5">
-      <a-textarea style="margin: 3px" placeholder="说点什么" v-model="content" :auto-size="{minRows:1,maxRows:3}"/>
-      <a-button style="margin: 3px" :disabled="!content" status="success">确定</a-button>
-    </div>
+    <var-popup style="border-radius: 10px 10px 0 0" overlay-class="mask" position="bottom" v-model:show="show_editor">
+      <div v-if="target" class="comment">回复:{{target.author.username}}</div>
+      <div v-else class="comment">发表评论</div>
+      <comment-editor ref="editor"/>
+      <var-button
+        class="submit"
+        size="small"
+        type="info"
+        @click="submit_comment"
+      >
+        发布
+      </var-button>
+    </var-popup>
+
+    <var-popup position="bottom" v-model:show="show_comment_option">
+      <div class="option" v-if="is_option_comment_self">
+        <div class="option-item" @click="delete_comment">
+          <var-icon name="trash-can-outline" size="25"/>
+          <div class="option-text">删除</div>
+        </div>
+      </div>
+      <div class="option" v-else>
+        <div class="option-item">
+          <var-icon name="alert-outline" size="25"/>
+          <div class="option-text">举报</div>
+        </div>
+      </div>
+    </var-popup>
+
+    <var-popup position="bottom" style="border-radius: 5px 5px 0 0;width: 100vw" v-model:show="show_children_comment">
+      <div class="children-detail">
+        <div class="children-detail-head">
+          <div class="children-detail-title">评论详情</div>
+          <var-icon size="25" name="window-close" @click="show_children_comment=false"/>
+        </div>
+        <common-comment-card
+          :parent="null"
+          :comment="opened_comment"
+          :show_comment_num="true"
+          @onClickOption="open_comment_option"
+          @onClickContent="open_comment_editor"
+          @onVote="vote_comment"
+          @onClickUser="click_user"
+          @onClickImg="click_img"
+        />
+        <var-divider/>
+        <var-list
+          :finished="children_comment_finished"
+          v-model:loading="children_comment_loading"
+          @load="children_comment_load"
+        >
+          <div v-for="children_comment in children_comment_list">
+            <common-comment-card
+              :parent="opened_comment"
+              :comment="children_comment"
+              :show_comment_num="false"
+              @onClickOption="open_comment_option"
+              @onClickContent="open_comment_editor"
+              @onVote="vote_comment"
+              @onClickConversationDetail="load_conversation"
+              @onClickUser="click_user"
+              @onClickImg="click_img"
+            />
+            <var-divider inset="60" margin="0"/>
+          </div>
+        </var-list>
+        <div style="height: 200px"/>
+      </div>
+    </var-popup>
+    <var-popup style="border-radius: 10px;width: 80vw;max-height: 80vh" position="center" v-if="conversation_list"
+               v-model:show="show_conversation">
+      <common-comment-card
+        :parent="opened_comment"
+        :comment="conversation"
+        :show_comment_num="false"
+        :hide_conversation="k!==0"
+        @onClickOption="open_comment_option"
+        @onClickContent="open_comment_editor"
+        @onVote="vote_comment"
+        @onClickConversationDetail="load_conversation"
+        v-for="(conversation,k) in conversation_list"
+        @onClickUser="click_user"
+        @onClickImg="click_img"
+      />
+    </var-popup>
   </div>
 </template>
 
 <script>
   import * as echarts from "echarts"
+  import CommentEditor from "components/input/CommentEditor";
+  import CommonCommentCard from "components/card/CommonCommentCard";
+  import SimpleCommentCard from "components/card/SimpleCommentCard";
 
   export default {
     name: "Issue",
+    components: {
+      CommentEditor,
+      CommonCommentCard,
+      SimpleCommentCard
+    },
     watch: {
       buy_selected(v1, v2) {
         if (v1 !== v2) {
@@ -258,14 +400,44 @@
           this.short_estimate.show = false
           this.sell_num = null
         }
-      }
+      },
+      show_comment_option(newValue) {
+        this.$tools.mutex(newValue, () => {
+          this.show_comment_option = false
+        })
+      },
+      show_editor(newValue) {
+        this.$store.commit("toggle_hide")
+        if (!newValue) {
+          this.parent = this.target == null
+        }
+        this.$tools.mutex(newValue, () => {
+          this.show_editor = false
+        })
+      },
+      show_conversation(newValue) {
+        if (!newValue) {
+          this.conversation_list = []
+        }
+        this.$tools.mutex(newValue, () => {
+          this.show_conversation = false
+        })
+      },
+      show_children_comment(newValue) {
+        if (!newValue) {
+          this.opened_comment = null
+        }
+        this.$tools.mutex(newValue, () => {
+          this.show_children_comment = false
+        })
+      },
     },
     data() {
       return {
         is_refresh: false,
         wallet: this.$store.state.wallet,
         prediction_info: null,
-        address: this.$route.params.address,
+        address: this.$route.params.address.toUpperCase(),
         active: 0,
         position: {
           share: [],
@@ -292,9 +464,296 @@
         buy_disable: true,
         sell_disable: true,
         content: "",
+
+        show_order: false,
+        ordering: "-comment_time",
+        order_text: "最新发布",
+        order_list: [
+          {
+            text: "最新发布",
+            ordering: "-comment_time",
+          },
+          {
+            text: "最多点赞",
+            ordering: "-up_num",
+          },
+          {
+            text: "最多评论",
+            ordering: "-comment_num",
+          },
+        ],
+
+        parent: null,
+        target: null,
+        show_editor: false,
+        root_comment_list: [],
+        root_comment_next: null,
+        root_comment_loading: false,
+        root_comment_finished: false,
+
+        children_comment_list: [],
+        children_comment_next: null,
+        children_comment_loading: false,
+        children_comment_finished: false,
+
+        show_comment_option: false,
+        is_option_comment_self: false,
+
+        opened_comment: null,
+        show_children_comment: false,
+
+        show_conversation: false,
+        conversation_list: []
       }
     },
     methods: {
+      click_user(id) {
+        this.$router.push(`/user/${id}`)
+      },
+      click_img(images) {
+        this.$store.commit("set_image_preview", images)
+      },
+      load_conversation(comment) {
+        this.show_conversation = true
+        if (!this.conversation_list.length) {
+          this.conversation_list.push(comment)
+        }
+        this.$request.api.get(
+          `/issue/${this.address}/comment/${this.opened_comment.id}/children_comment/${comment.target_id}`
+        ).then(res => {
+          if (res.data.code === 116) {
+            this.conversation_list.unshift(res.data.result)
+          } else {
+            this.$tip({
+              content: res.data.msg,
+              type: "warning",
+              duration: 1000
+            })
+          }
+        }).catch(err => {
+          if (err.response.status === 404) {
+            this.$tip({
+              content: "评论不存在",
+              type: "warning",
+              duration: 1000
+            })
+          }
+        })
+      },
+
+      children_comment_load() {
+        this.$request.api.get(
+          this.children_comment_next || `/issue/${this.address}/comment/${this.opened_comment.id}/children_comment/`,
+        ).then(res => {
+          if (res.data.code === 117) {
+            for (let i of res.data.result.results) {
+              this.children_comment_list.push(i)
+            }
+            this.children_comment_next = res.data.result.next
+            this.children_comment_loading = false
+            this.children_comment_finished = !Boolean(this.children_comment_next)
+          } else {
+            this.$tip({
+              content: res.data.msg,
+              type: "warning",
+              duration: 1000,
+            })
+          }
+        })
+      },
+      open_children_comment(parent) {
+        this.children_comment_clear()
+        this.opened_comment = parent
+        this.show_children_comment = true
+      },
+      vote_comment(is_up, comment) {
+        if (!this.$store.state.is_login) {
+          this.$router.push({path: "/login", query: {bakc: true}})
+          return
+        }
+        this.$request.api.post(
+          `/issue/${this.address}/comment/${comment.id}/vote/`,
+          {
+            is_up
+          }).then(res => {
+          if (res.data.code !== 125) {
+            this.$tip({
+              content: res.data.msg,
+              type: "warning",
+              duration: 1000
+            })
+          } else {
+            this.$calc.up_down(is_up, comment)
+          }
+        })
+      },
+      open_comment_option(comment) {
+        this.is_option_comment_self = comment.author.id === this.$store.state.user.id
+        this.option_comment = comment
+        this.show_comment_option = true
+      },
+      open_comment_editor(parent, target) {
+        this.open_editor(parent, target)
+      },
+      delete_comment() {
+        this.$dialog("是否删除评论").then(res => {
+          if (res !== "confirm") return;
+          let url
+          if (this.opened_comment) {
+            url = `/issue/${this.address}/comment/${this.opened_comment.id}/children_comment/${this.option_comment.id}`
+          } else {
+            url = `/issue/${this.address}/comment/${this.option_comment.id}/`
+          }
+          this.$request.api.delete(
+            url
+          ).then(res => {
+            if (res.data.code === 119) {
+              this.$tip({
+                content: "已删除",
+                type: "success",
+                duration: 1000
+              })
+              let new_root_comment_list = []
+              if (this.opened_comment) {
+                for (let i of this.children_comment_list) {
+                  if (i.id !== this.option_comment.id) {
+                    new_root_comment_list.push(i)
+                  }
+                }
+                this.children_comment_list = new_root_comment_list
+              } else {
+                for (let i of this.root_comment_list) {
+                  if (i.id !== this.option_comment.id) {
+                    new_root_comment_list.push(i)
+                  }
+                }
+                this.root_comment_list = new_root_comment_list
+              }
+              this.show_comment_option = false
+            } else {
+              this.$tip({
+                content: res.data.msg,
+                type: "warning",
+                duration: 1000
+              })
+            }
+          })
+        })
+      },
+      root_comment_clear() {
+        this.root_comment_list = []
+        this.root_comment_finished = false
+        this.root_comment_loading = true
+        this.root_comment_next = null
+      },
+      children_comment_clear() {
+        this.children_comment_list = []
+        this.children_comment_finished = false
+        this.children_comment_next = null
+      },
+      root_comment_reload() {
+        this.root_comment_clear()
+        this.root_comment_load()
+      },
+      change_order(order) {
+        this.ordering = order.ordering
+        this.order_text = order.text
+        this.show_order = false
+        this.root_comment_clear()
+        this.root_comment_reload()
+      },
+      submit_comment() {
+        if (this.$refs.editor.editor.isEmpty()) return;
+
+        if (!this.parent) {
+          this.$request.api.post(
+            `/issue/${this.address}/comment/`,
+            {
+              content: this.$refs.editor.editor.getHtml()
+            }
+          ).then(res => {
+            if (res.data.code === 118) {
+              this.$tip({
+                content: "评论成功",
+                type: "success",
+                duration: 1000,
+              })
+              this.show_editor = false
+              res.data.result.new = true
+              this.root_comment_list.unshift(res.data.result)
+            } else {
+              this.$tip({
+                content: res.data.msg,
+                type: "warning",
+                duration: 1000,
+              })
+            }
+          })
+        } else {
+          this.$request.api.post(
+            `/issue/${this.address}/comment/${this.parent.id}/children_comment/`,
+            {
+              content: this.$refs.editor.editor.getHtml(),
+              target_id: this.target?.id
+            }
+          ).then(res => {
+            if (res.data.code === 118) {
+              this.$tip({
+                content: "评论成功",
+                type: "success",
+                duration: 1000,
+              })
+              res.data.result.new = true
+              if (this.target) {
+                this.children_comment_list.push(res.data.result)
+              } else {
+                this.parent.comment_num++
+                this.children_comment_list.push(res.data.result)
+                this.parent.children_comment.push(res.data.result)
+              }
+              this.show_editor = false
+            } else {
+              this.$tip({
+                content: res.data.msg,
+                type: "warning",
+                duration: 1000,
+              })
+            }
+          })
+        }
+      },
+      open_editor(parent, target) {
+        if (!this.$store.state.is_login) {
+          this.$router.push({path: '/login', query: {back: true}})
+          return
+        }
+        this.parent = parent
+        this.target = target
+        this.show_editor = true
+      },
+      root_comment_load() {
+        let url = `/issue/${this.address}/comment/?ordering=${this.ordering}`
+        this.$request.api.get(
+          this.root_comment_next || url,
+        ).then(res => {
+          if (res.data.code === 117) {
+            for (let i of res.data.result.results) {
+              this.root_comment_list.push(i)
+            }
+            if (res.data.result.next) {
+              this.root_comment_next = res.data.result.next
+            }
+            this.root_comment_finished = !Boolean(res.data.result.next)
+            this.root_comment_loading = false
+          } else {
+            this.$tip({
+              content: res.data.msg,
+              type: "warning",
+              duration: 1000,
+            })
+          }
+        })
+      },
       change_pool(value) {
         this.pool_num = value
       },
@@ -462,6 +921,7 @@
 
           if (this.wallet.address) {
             this.get_position()
+            this.get_my_change()
           }
           this.is_refresh = false
         })
@@ -500,14 +960,12 @@
               } else {
                 lines[line_id].points.push({
                   timestamp: record.timestamp,
-                  value: current_length ? lines[line_id].points[current_length - 1].value : this.prediction_info._init_amount,
+                  value: current_length ? lines[line_id].points[current_length - 1].value : Number(this.prediction_info._init_amount),
                   total: Number(total)
                 })
               }
             }
           }
-
-          let that = this
           let parentTag = document.getElementById("chart-wrap")
           let chartTag = document.createElement("div")
           chartTag.setAttribute("id", "chart")
@@ -556,6 +1014,14 @@
             })
           })
         })
+      },
+      get_my_change() {
+        this.prediction.getPastEvents('LongOptionEvent', {
+          fromBlock: 0,
+          toBlock: 'latest',
+        }).then(res => {
+          console.log(res);
+        })
       }
     },
     computed: {
@@ -575,6 +1041,12 @@
         }
       }
     },
+    mounted() {
+      let that = this
+      document.addEventListener("scroll", () => {
+        that.show_order = false
+      })
+    },
     created() {
       this.prediction = new this.wallet.web3.eth.Contract(this.$abi.binaryPrediction, this.address)
       this.reload()
@@ -583,6 +1055,107 @@
 </script>
 
 <style scoped>
+
+  .children-wrap {
+    background-color: #f4f5f9;
+    border-radius: 5px;
+  }
+
+  .children-detail {
+    height: 85vh;
+    padding: 10px;
+  }
+
+  .children-detail-head {
+    line-height: 40px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .children-detail-title {
+    font-size: 16px;
+  }
+
+  .comment-tip {
+    text-align: right;
+    line-height: 20px;
+    font-size: 13px;
+    color: #666666;
+  }
+
+  .option {
+    padding: 10px;
+    display: flex;
+    justify-content: left;
+  }
+
+  .option-item {
+    margin: 0 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .order {
+    display: flex;
+    justify-content: right;
+    line-height: 44px;
+    font-size: 14px;
+  }
+
+  .menu {
+    background-color: white;
+  }
+
+  .all-comment {
+    margin-top: 10px;
+    min-height: 80vh;
+    background-color: white;
+    padding-bottom: 200px;
+  }
+
+  .select {
+    background-color: white;
+    z-index: 10;
+    display: flex;
+    line-height: 44px;
+    justify-content: space-between;
+  }
+
+  .submit {
+    margin: 10px;
+    float: right;
+  }
+
+  .comment {
+    font-size: 14px;
+    margin: 9px;
+    color: #666;
+  }
+
+  .interact {
+    position: fixed;
+    display: flex;
+    justify-content: space-between;
+    left: 0;
+    bottom: 0;
+    width: 100vw;
+    padding: 5px;
+    background-color: #f6f6f6;
+    z-index: 100;
+  }
+
+  .fake {
+    background-color: white;
+    margin: 0 8px;
+    padding: 7px 10px;
+    font-size: 14px;
+    flex-grow: 1;
+    border-radius: 2px;
+    color: #777777;
+  }
+
   .settle {
     margin: 10px 10px 0;
     border-radius: 5px;
@@ -591,12 +1164,8 @@
     padding: 10px;
   }
 
-  .comment-wrap {
-    min-height: 100px;
-  }
-
   .comment-text {
-    padding: 10px 20px;
+    padding-left: 20px;
     font-weight: bold;
     color: #4ebaee;
   }
@@ -605,18 +1174,6 @@
     background-color: white;
     margin-top: 20px;
     border-radius: 10px 10px 0 0;
-  }
-
-  .comment-input {
-    position: fixed;
-    bottom: 0;
-    width: 100vw;
-    padding: 0 5px;
-    background-color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    z-index: 10;
   }
 
   .pool-wrap {

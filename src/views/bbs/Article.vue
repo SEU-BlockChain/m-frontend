@@ -481,7 +481,6 @@
                 type: "success",
                 duration: 1000
               })
-              console.log(this.article.id);
               this.$store.commit("remove", {
                 type: "article",
                 id: this.article.id
@@ -810,7 +809,7 @@
   }
 
   .option {
-    padding: 20px 10px;
+    padding: 10px;
     display: flex;
     justify-content: left;
   }

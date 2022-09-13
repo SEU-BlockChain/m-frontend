@@ -140,12 +140,26 @@
     text-align: center;
   }
 
-  .swipe img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    pointer-events: none;
+  @media screen and (min-width: 840px) {
+    .swipe {
+      border-radius: 5px;
+      height: 232px;
+    }
   }
+
+  @media screen and (max-width: 840px) {
+    .swipe {
+      border-radius: 5px;
+      height: 50vw;
+    }
+
+    .swipe img {
+      height: 50vw;
+      width: 100vw;
+      object-fit: fill;
+    }
+  }
+
 
   .post-column {
     position: fixed;
