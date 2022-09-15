@@ -291,14 +291,15 @@
       <div v-if="target" class="comment">回复:{{target.author.username}}</div>
       <div v-else class="comment">发表评论</div>
       <comment-editor ref="editor"/>
-      <var-button
-        class="submit"
-        size="small"
-        type="info"
-        @click="submit_comment"
-      >
-        发布
-      </var-button>
+      <var-space align="center" justify="end" style="padding: 10px">
+        <var-button
+          size="small"
+          type="info"
+          @click="submit_comment"
+        >
+          发布
+        </var-button>
+      </var-space>
     </var-popup>
 
     <var-popup position="bottom" v-model:show="show_comment_option">
@@ -410,6 +411,7 @@
         this.$store.commit("toggle_hide")
         if (!newValue) {
           this.parent = this.target == null
+          this.share = false
         }
         this.$tools.mutex(newValue, () => {
           this.show_editor = false
@@ -482,6 +484,7 @@
             ordering: "-comment_num",
           },
         ],
+        share: false,
 
         parent: null,
         target: null,
@@ -669,7 +672,8 @@
           this.$request.api.post(
             `/issue/${this.address}/comment/`,
             {
-              content: this.$refs.editor.editor.getHtml()
+              content: this.$refs.editor.editor.getHtml(),
+              share: this.share
             }
           ).then(res => {
             if (res.data.code === 118) {
@@ -694,7 +698,8 @@
             `/issue/${this.address}/comment/${this.parent.id}/children_comment/`,
             {
               content: this.$refs.editor.editor.getHtml(),
-              target_id: this.target?.id
+              target_id: this.target?.id,
+              share: this.share
             }
           ).then(res => {
             if (res.data.code === 118) {
@@ -1123,10 +1128,6 @@
     justify-content: space-between;
   }
 
-  .submit {
-    margin: 10px;
-    float: right;
-  }
 
   .comment {
     font-size: 14px;

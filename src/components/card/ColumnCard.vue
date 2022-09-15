@@ -20,8 +20,8 @@
             <div class="number">{{column.view_num}}</div>
             <icon-message class="icon"/>
             <div class="number">{{column.comment_num}}</div>
-            <icon-thumb-up class="icon"/>
-            <div class="number">{{column.up_num}}</div>
+            <icon-thumb-up class="icon" :class="{active:column.is_up===true}"/>
+            <div class="number" :class="{active:column.is_up===true}">{{column.up_num}}</div>
           </div>
         </div>
 
@@ -82,5 +82,7 @@
     color: #888;
   }
 
-
+  .active {
+    color: #4ebaee;
+  }
 </style>

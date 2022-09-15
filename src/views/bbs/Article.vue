@@ -150,14 +150,16 @@
       <div v-if="target" class="comment">回复:{{target.author.username}}</div>
       <div v-else class="comment">发表评论</div>
       <comment-editor ref="editor"/>
-      <var-button
-        class="submit"
-        size="small"
-        type="info"
-        @click="submit_comment"
-      >
-        发布
-      </var-button>
+      <var-space align="center" justify="space-between" style="padding: 10px">
+        <var-radio v-model="share">分享到动态</var-radio>
+        <var-button
+          size="small"
+          type="info"
+          @click="submit_comment"
+        >
+          发布
+        </var-button>
+      </var-space>
     </var-popup>
 
     <var-popup position="bottom" v-model:show="show_article_option">
@@ -286,6 +288,7 @@
         this.$store.commit("toggle_hide")
         if (!newValue) {
           this.parent = this.target == null
+          this.share = false
         }
         this.$tools.mutex(newValue, () => {
           this.show_editor = false
@@ -335,7 +338,7 @@
             ordering: "-comment_num",
           },
         ],
-
+        share: false,
         show_editor: false,
 
         root_comment_finished: false,
@@ -503,7 +506,8 @@
           this.$request.api.post(
             `bbs/article/${this.$route.params.id}/comment/`,
             {
-              content: this.$refs.editor.editor.getHtml()
+              content: this.$refs.editor.editor.getHtml(),
+              share: this.share,
             }
           ).then(res => {
             if (res.data.code === 118) {
@@ -528,7 +532,8 @@
             `bbs/article/${this.$route.params.id}/comment/${this.parent.id}/children_comment/`,
             {
               content: this.$refs.editor.editor.getHtml(),
-              target_id: this.target?.id
+              target_id: this.target?.id,
+              share: this.share
             }
           ).then(res => {
             if (res.data.code === 118) {
@@ -797,10 +802,6 @@
     color: #777777;
   }
 
-  .submit {
-    margin: 10px;
-    float: right;
-  }
 
   .comment {
     font-size: 14px;

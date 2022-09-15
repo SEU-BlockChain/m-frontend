@@ -21,9 +21,9 @@
           <div class="title break" @click="to_article">{{article.title}}</div>
           <div class="content w-container limited-xy" v-html="this.$xss(article.description)" @click="to_article"/>
           <div class="foot">
-            <div class="category" >
-              <var-chip  v-if="!hide_category" size="small" :round="false"
-                         @click="this.$router.push(`/bbs/category/${article.category.id}`)"
+            <div class="category">
+              <var-chip v-if="!hide_category" size="small" :round="false"
+                        @click="this.$router.push(`/bbs/category/${article.category.id}`)"
               >
                 {{article.category.category}}
               </var-chip>
@@ -34,8 +34,8 @@
                 <div class="number">{{article.view_num}}</div>
                 <icon-message class="icon"/>
                 <div class="number">{{article.comment_num}}</div>
-                <icon-thumb-up class="icon"/>
-                <div class="number">{{article.up_num}}</div>
+                <icon-thumb-up class="icon" :class="{active:article.is_up===true}"/>
+                <div class="number" :class="{active:article.is_up===true}">{{article.up_num}}</div>
               </div>
             </var-space>
           </div>

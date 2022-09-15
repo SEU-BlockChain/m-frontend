@@ -112,14 +112,16 @@
       <div v-if="target" class="comment">回复:{{target.author.username}}</div>
       <div v-else class="comment">发表评论</div>
       <comment-editor ref="editor"/>
-      <var-button
-        class="submit"
-        size="small"
-        type="info"
-        @click="submit_comment"
-      >
-        发布
-      </var-button>
+      <var-space align="center" justify="space-between" style="padding: 10px">
+        <var-radio v-model="share">分享到动态</var-radio>
+        <var-button
+          size="small"
+          type="info"
+          @click="submit_comment"
+        >
+          发布
+        </var-button>
+      </var-space>
     </var-popup>
 
     <var-popup position="bottom" style="border-radius: 5px 5px 0 0;width: 100vw" v-model:show="show_children_comment">
@@ -214,7 +216,7 @@
       SimpleAuthorCard,
       CommentEditor
     },
-    watch:{
+    watch: {
       show_article_option(newValue, oldValue) {
         this.$tools.mutex(newValue, () => {
           this.show_article_option = false
@@ -229,6 +231,7 @@
         this.$store.commit("toggle_hide")
         if (!newValue) {
           this.parent = this.target == null
+          this.share = false
         }
         this.$tools.mutex(newValue, () => {
           this.show_editor = false
@@ -270,8 +273,9 @@
         children_comment_finished: false,
         children_comment_loading: false,
         children_comment_next: null,
-        show_conversation:false,
-        conversation_list:[],
+        show_conversation: false,
+        conversation_list: [],
+        share: false
       }
     },
     computed: {
@@ -465,7 +469,8 @@
           this.$request.api.post(
             `special/column/${this.$route.params.id}/comment/`,
             {
-              content: this.$refs.editor.editor.getHtml()
+              content: this.$refs.editor.editor.getHtml(),
+              share: this.share
             }
           ).then(res => {
             if (res.data.code === 118) {
@@ -490,7 +495,8 @@
             `special/column/${this.$route.params.id}/comment/${this.parent.id}/children_comment/`,
             {
               content: this.$refs.editor.editor.getHtml(),
-              target_id: this.target?.id
+              target_id: this.target?.id,
+              share: this.share
             }
           ).then(res => {
             if (res.data.code === 118) {
@@ -519,7 +525,7 @@
         }
       },
       click_img(images) {
-        this.$store.commit("set_image_preview",images)
+        this.$store.commit("set_image_preview", images)
       },
       click_column(ev) {
         if (ev.target.tagName === "IMG") {
@@ -603,10 +609,6 @@
     padding: 10px;
   }
 
-  .submit {
-    margin: 10px;
-    float: right;
-  }
 
   .active {
     color: #4ebaee;

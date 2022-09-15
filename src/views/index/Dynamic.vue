@@ -43,22 +43,23 @@
           :immediate-check="false"
         >
           <div v-for="dynamic in dynamic_list">
-            <div v-if="dynamic.origin===0">
-              <transition name="slide-fade2" appear>
-                <article-card
-                  style="width: 100%;"
-                  :article="dynamic.content"
-                  :use_create_time="true"
-                  @onClickImg="click_img"
-                />
-              </transition>
-            </div>
+            <article-card
+              v-if="dynamic.origin===origin.BBS_ARTICLE"
+              :article="dynamic.content"
+              :use_create_time="true"
+              @onClickImg="click_img"
+            />
 
-            <div v-if="dynamic.origin===2">
-              <transition name="slide-fade2" appear>
-                <column-card style="margin-bottom: 5px" :column="dynamic.content"/>
-              </transition>
-            </div>
+            <column-card
+              v-if="dynamic.origin===origin.SPECIAL_COLUMN"
+              style="margin-bottom: 5px"
+              :column="dynamic.content"
+            />
+
+            <comment-card
+              v-if="dynamic.origin===origin.BBS_COMMENT||dynamic.origin===origin.SPECIAL_COMMENT"
+              :comment="dynamic.content"
+            />
           </div>
         </var-list>
       </var-pull-refresh>
@@ -69,10 +70,11 @@
 <script>
   import ArticleCard from "../../components/card/ArticleCard";
   import ColumnCard from "../../components/card/ColumnCard";
+  import CommentCard from "../../components/card/CommentCard";
 
   export default {
     name: "Dynamic",
-    components: {ColumnCard, ArticleCard},
+    components: {CommentCard, ColumnCard, ArticleCard},
     emits: ["active"],
     data() {
       return {
@@ -83,11 +85,18 @@
         finished: false,
         search: "",
         refreshing: false,
+        origin: {
+          BBS_ARTICLE: 0,
+          BBS_COMMENT: 1,
+          SPECIAL_COLUMN: 2,
+          SPECIAL_COMMENT: 3,
+          ISSUE_COMMENT: 4
+        }
       }
     },
     methods: {
       click_img(images) {
-        this.$store.commit("set_image_preview",images)
+        this.$store.commit("set_image_preview", images)
       },
       refresh() {
         this.dynamic_list = []

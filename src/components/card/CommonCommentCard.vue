@@ -81,7 +81,7 @@
               <div class="interact-text" :class="{active:comment.is_up===false}">{{comment.down_num}}</div>
             </div>
 
-            <div v-if="!show_comment_num" class="flex-cente" @click="on_click_conversation">
+            <div v-if="!show_comment_num" class="flex-center" @click="on_click_conversation">
               <img class="interact-icon" src="~assets/img/comment.svg" height="16" alt="">
             </div>
           </div>
