@@ -1,6 +1,6 @@
 <template>
   <div class="article-container">
-    <profile-article-list @onClickImg="click_img" :author_id="this.$store.state.user.id"/>
+    <profile-article-list @onClickImg="click_img"/>
   </div>
 </template>
 

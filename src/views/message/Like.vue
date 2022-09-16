@@ -51,7 +51,7 @@
                       class="tip">等{{like.new||like.total}}人赞了我的评论</span></div>
                     <div class="time">{{this.$calc.filters.date(like.time)}}</div>
                   </div>
-                  <div class="comment" v-html="like.content.description"/>
+                  <div class="comment break" v-html="like.content.description"/>
                 </div>
               </transition>
             </div>
@@ -81,7 +81,7 @@
                       class="tip">等{{like.new||like.total}}人赞了我的评论</span></div>
                     <div class="time">{{this.$calc.filters.date(like.time)}}</div>
                   </div>
-                  <div class="comment" v-html="like.content.description"/>
+                  <div class="comment break" v-html="like.content.description"/>
                 </div>
               </transition>
             </div>
@@ -144,7 +144,7 @@
       this.load()
       if (this.$store.state.message) {
         this.$store.state.message.like = 0
-      }else {
+      } else {
         this.$request.api.get(
           "user/self/message/"
         ).then(res => {

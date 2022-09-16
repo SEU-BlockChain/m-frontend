@@ -1,5 +1,5 @@
 <template>
-  <profile-comment-list/>
+  <profile-comment-list @onClickImg="click_img"/>
 </template>
 
 <script>
@@ -11,6 +11,11 @@
       ProfileCommentList
     },
     emits: ["active"],
+    methods: {
+      click_img(images) {
+        this.$store.commit("set_image_preview", images)
+      }
+    },
     created() {
       this.$emit("active", 1)
     },

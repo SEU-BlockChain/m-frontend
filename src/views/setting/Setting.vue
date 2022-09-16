@@ -15,9 +15,9 @@
     </var-app-bar>
     <div style="height: 64px;"/>
 
-    <div v-if="this.$store.state.is_login" class="option" v-ripple="{ color: '#ccc' }">
-      <div class="option-text">版本:Beta1.0.0</div>
-      <div v-if="new_version.length&&new_version>old_version" style="color: red;">有新版本!</div>
+    <div class="option" v-ripple="{ color: '#ccc' }">
+      <div class="option-text">版本:Beta1.0.1</div>
+      <div v-if="new_version&&new_version>old_version" style="color: red;" @click="download">点击下载新版本!</div>
       <div v-else>已是最新版本</div>
     </div>
 
@@ -27,7 +27,7 @@
       <var-icon name="chevron-right"/>
     </div>
 
-    <div class="logout">
+    <div v-if="this.$store.state.is_login" class="logout">
       <var-button block type="danger" @click="logout">退出登陆</var-button>
     </div>
   </div>
@@ -38,13 +38,8 @@
     name: "Setting",
     data() {
       return {
-        old_version: [0, 1, 0, 0],
-        new_version: []
-      }
-    },
-    computed: {
-      low() {
-
+        old_version: [0, 1, 0, 1],
+        new_version: null
       }
     },
     methods: {
@@ -59,6 +54,15 @@
           }
         })
       },
+      download() {
+        let url = this.$settings.cos_url + "apk/" + `OurChain_${this.new_version.join(".")}.apk`
+        try {
+          plus.runtime.openURL(url);
+          e.preventDefault()
+        } catch (e) {
+          window.open(url)
+        }
+      }
     },
     created() {
       this.$request.api.get("/other/info/version").then(res => {

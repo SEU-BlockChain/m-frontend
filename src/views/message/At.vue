@@ -75,7 +75,7 @@
                         alt="">
                     </div>
                     <div class="time">{{this.$calc.filters.date(at.time)}}</div>
-                    <div class="description" v-html="this.$xss(at.content.description)"/>
+                    <div class="description break" v-html="this.$xss(at.content.description)"/>
                     <div class="article">{{at.content.article.title}}</div>
                   </div>
                 </div>
@@ -105,7 +105,7 @@
                         alt="">
                     </div>
                     <div class="time">{{this.$calc.filters.date(at.time)}}</div>
-                    <div class="description" v-html="this.$xss(at.content.description)"/>
+                    <div class="description break" v-html="this.$xss(at.content.description)"/>
                     <div class="article">{{at.content.column.title}}</div>
                   </div>
                 </div>
@@ -164,7 +164,6 @@
         ).then(res => {
           if (res.data.code === 143) {
             for (let i of res.data.result.results) {
-              console.log(i);
               this.at_list.push(i)
             }
             this.next = res.data.result.next

@@ -54,7 +54,7 @@
             <var-col :span="11">
               <div class="token-item clear-fix" @click="to_faucet">
                 <img class="token-img" src="~assets/img/get-token.png" alt="">
-                <div class="token-text">获取PMB</div>
+                <div class="token-text">获取SEUB</div>
               </div>
             </var-col>
             <var-col :span="11" :offset="2">

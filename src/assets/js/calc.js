@@ -87,7 +87,7 @@ let filters = {
     let nowDate = new DateParser()
     let valueDate = new DateParser(value)
     if (nowDate.year() > valueDate.year()) return valueDate.year_month_day()
-    if (nowDate.month_day() > valueDate.month_day()) return valueDate.month_day()
+    if (nowDate.month_day() > valueDate.month_day()) return valueDate.month_day() + " " + valueDate.hours_minutes()
     if (nowDate.hours() > valueDate.hours()) return `${nowDate.hours() - valueDate.hours()}小时前`
     if (nowDate.minutes() > valueDate.minutes()) return `${nowDate.minutes() - valueDate.minutes()}分钟前`
     if (nowDate.seconds() > valueDate.seconds()) return `${nowDate.seconds() - valueDate.seconds()}秒前`

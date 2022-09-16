@@ -92,7 +92,6 @@
             @load="load_article"
           >
             <div v-for="article in article_list">
-              <div v-if="this.$store.state.remove.article.indexOf(article.id)===-1">
                 <transition name="bloom" appear>
                   <article-card
                     :key="article.id"
@@ -100,7 +99,6 @@
                     @onClickImg="click_img"
                   />
                 </transition>
-              </div>
             </div>
           </var-list>
         </div>

@@ -484,10 +484,6 @@
                 type: "success",
                 duration: 1000
               })
-              this.$store.commit("remove", {
-                type: "article",
-                id: this.article.id
-              })
               this.$router.return("/bbs")
             } else {
               this.$tip({

@@ -1,5 +1,5 @@
 <template>
-  <div class="order">
+  <div class="order" v-if="!author_id">
     <var-menu :offset-y="25" :offset-x="-10" v-model:show="show_order">
       <div class="order-text" @click="show_order = !show_order">{{order_text}}
         <var-icon style="margin: 5px 0" name="menu-down"/>
@@ -13,6 +13,7 @@
       </template>
     </var-menu>
   </div>
+
   <var-list
     :finished="finished"
     v-model:loading="loading"
@@ -20,27 +21,34 @@
     :offset="200"
     :immediate-check="false"
   >
-    <div class="article-card" v-for="article in article_list">
-      <var-card  v-if="this.$store.state.remove.article.indexOf(article.id)===-1" class="card" elevation="1">
-        <template #extra>
-          <article-card
-            :key="article.id"
-            :article="article"
-            :hide_author="true"
-            @onClickImg="click_img"
-          />
-        </template>
-      </var-card>
+    <div class="post-card" v-for="post in post_list">
+      <Transition appear name="bloom">
+        <article-card
+          v-if="post.type==='article'"
+          :article="post"
+          :hide_author="true"
+          @onClickImg="click_img"
+        />
+      </Transition>
+      <Transition appear name="bloom">
+        <column-card
+          v-if="post.type==='column'"
+          :column="post"
+        />
+      </Transition>
     </div>
   </var-list>
 </template>
 
 <script>
   import ArticleCard from "../card/ArticleCard";
+  import _ from "lodash";
+  import ColumnCard from "../card/ColumnCard";
 
   export default {
     name: "ProfileArticleList",
     components: {
+      ColumnCard,
       ArticleCard
     },
     props: {
@@ -73,8 +81,8 @@
           },
         ],
 
-        article_list: [],
-        next: null,
+        post_list: [],
+        current: null,
         loading: true,
         finished: false,
       }
@@ -90,23 +98,50 @@
         this.reload()
       },
       reload() {
-        this.article_list = []
+        this.post_list = []
         this.finished = false
         this.loading = true
-        this.next = null
+        this.current = null
         this.load()
       },
       load() {
         this.$request.api.get(
-          this.next || `/bbs/article/?ordering=${this.ordering}&author__id=${this.author_id}`,
+          this.author_id ? `/user/info/post/?offset=${this.current || 0}&user_id=${this.author_id}` : `/user/self/post/?offset=${this.current || 0}&order=${this.ordering}`,
         ).then(res => {
-          if (res.data.code === 112) {
-            for (let i of res.data.result.results) {
-              this.article_list.push(i)
+          if (res.data.code === 181) {
+            let temp = []
+            for (let i of res.data.result.content.article) {
+              temp.push({
+                type: "article",
+                ...i
+              })
             }
-            this.next = res.data.result.next
+            for (let i of res.data.result.content.column) {
+              temp.push({
+                type: "column",
+                ...i
+              })
+            }
+
+
+            for (let i of _.sortBy(temp, x => {
+              switch (this.ordering) {
+                case "-update_time":
+                  return -(new Date(x.update_time).getTime())
+                case "-create_time":
+                  return -(new Date(x.create_time).getTime())
+                case "-up_num":
+                  return -(x.up_num)
+                case "-comment_num":
+                  return -(x.comment_num)
+              }
+            })) {
+              this.post_list.push(i)
+            }
+            this.current += 10
             this.loading = false
-            this.finished = !Boolean(this.next)
+            this.finished = res.data.result.end
+            this.refreshing = false
           } else {
             this.$tip({
               content: res.data.msg,
@@ -140,7 +175,7 @@
     background-color: white;
   }
 
-  .article-card {
+  .post-card {
     margin: 10px;
   }
 </style>

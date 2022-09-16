@@ -4,7 +4,7 @@
       <template #extra>
         <div class="comment-container" @click="this.$router.push(to)">
           <var-space justify="space-between" align="center">
-            <var-space justify="start" align="center" size="mini"
+            <var-space justify="start" align="center" size="mini" v-if="!simple"
                        @click="this.$router.push(`/user/${comment.author.id}`)">
               <img class="avatar" :src="this.$settings.cos_url+comment.author.icon">
               <div class="username">{{comment.author.username}}</div>
@@ -12,10 +12,12 @@
             </var-space>
             <div class="time">{{this.$calc.filters.date(comment.comment_time)}}</div>
           </var-space>
-          <div class="w-container" v-html="this.$xss(comment.content)"/>
-          
-          <div class="to" v-if="comment.target||comment.parent" v-html="(comment.target||comment.parent).description"/>
+          <div class="w-container" v-html="this.$xss(comment.content)" @click.stop="on_click_content"/>
 
+          <div class="to" v-if="comment.target||comment.parent">
+            <span class="name">{{(comment.target||comment.parent).author.username}}:</span>
+            <span class="break" v-html="(comment.target||comment.parent).description"/>
+          </div>
           <var-space justify="end" align="center" size="mini">
             <img v-if="comment.is_up===true"
                  class="interact-icon"
@@ -62,6 +64,12 @@
               {{comment.column.title}}
             </var-space>
           </div>
+          <div v-if="comment.issue" class="post">
+            <var-space size="small">
+              <var-chip size="mini" :round="false" type="warning">话题</var-chip>
+              <div class="address">{{this.$calc.filters.simple_address(comment.issue.address)}}</div>
+            </var-space>
+          </div>
         </div>
       </template>
     </var-card>
@@ -72,13 +80,33 @@
   export default {
     name: "CommentCard",
     props: {
-      comment: null
+      comment: null,
+      simple: false
     },
+    emits: [
+      "onClickUser",
+      "onClickImg",
+    ],
     computed: {
       to() {
         if (this.comment.article) return `/bbs/article/${this.comment.article.id}`
         if (this.comment.column) return `/special/column/${this.comment.column.id}`
+        if (this.comment.issue) return `/issue/${this.comment.issue.address}`
       }
+    },
+    methods: {
+      on_click_content(ev) {
+        if (ev.target.getAttribute("uid")) {
+          this.$emit("onClickUser", ev.target.getAttribute("uid"))
+          return;
+        }
+        if (ev.target.tagName === "IMG") {
+          this.$emit("onClickImg", [ev.target.getAttribute("src")])
+          return;
+        }
+
+        this.$router.push(this.to)
+      },
     }
   }
 </script>
@@ -140,6 +168,16 @@
 
   .comment-container {
     padding: 3px 5px;
+  }
+
+  .name {
+    margin-right: 10px;
+    color: black;
+  }
+
+  .address {
+    font-size: 12px;
+    color: #888888;
   }
 
   .active {

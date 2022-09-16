@@ -11,10 +11,6 @@ export default createStore({
     message: null,
     forbid_back: 0,
     show_eth_login: false,
-    remove: {
-      article: [],
-      comment: [],
-    },
     image_preview: {
       show: false,
       images: []
@@ -52,15 +48,6 @@ export default createStore({
     },
     web3(state, wallet) {
       state.wallet = wallet
-    },
-    remove(state, payload) {
-      state.remove[payload.type].push(payload.id)
-    },
-    lock(state) {
-      state.forbid_back += 1
-    },
-    unlock(state) {
-      state.forbid_back -= 1
     },
     toggle_hide(state) {
       state.hide_top = !state.hide_top
